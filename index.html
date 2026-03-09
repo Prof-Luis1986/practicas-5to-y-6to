@@ -3,18 +3,297 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Práctica 6 - Sensor Ultrasónico</title>
+  <title>Prácticas de Arduino por Fases</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="hero">
-    <p class="tag">3er periodo</p>
-    <h1>Práctica 6: Sensor ultrasónico con LEDs y buzzer</h1>
-    <p class="subtitle">Guía completa para identificar resistencias, conectar el circuito y programar el sistema de alerta.</p>
+    <p class="tag">Informática - Arduino</p>
+    <h1>Prácticas divididas por Fase I, Fase II y Fase III</h1>
+    <p class="subtitle">Material organizado para trabajar por etapas, desde fundamentos hasta proyectos de integración.</p>
   </header>
 
-  <main class="container">
-    <section class="card">
+  <div class="page-layout">
+    <aside class="side-menu">
+      <h2>Menú de fases</h2>
+      <nav>
+        <a href="#fase-i" class="phase-link" data-phase="fase-i">Fase I</a>
+        <a href="#fase-ii" class="phase-link" data-phase="fase-ii">Fase II</a>
+        <a href="#fase-iii" class="phase-link" data-phase="fase-iii">Fase III</a>
+      </nav>
+    </aside>
+
+    <main class="container">
+    <section class="card" id="fase-i" data-phase="fase-i">
+      <h2>Fase I - Fundamentos de Arduino</h2>
+      <p><strong>(3 prácticas)</strong></p>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>Práctica de introducción (antes de la Práctica 1)</h2>
+      <h3>Guía de Trabajo: Introducción a la Robótica, Ética y Arduino</h3>
+      <p><strong>6° Semestre - Tecnologías</strong><br /><strong>Profesor:</strong> Luis Alfonso Martínez Alfaro</p>
+
+      <h3>1. Propósito de la actividad</h3>
+      <p>Analizar el origen histórico de la robótica y el impacto de las ideas de Isaac Asimov en la ética tecnológica, para establecer bases conceptuales sólidas antes de desarrollar proyectos con Arduino y sistemas robóticos programables.</p>
+      <p>Se busca que el estudiante comprenda que la robótica no inicia con la electrónica moderna, sino con procesos históricos, filosóficos y científicos que hoy influyen directamente en la programación, la inteligencia artificial y la automatización.</p>
+
+      <h3>2. Competencias a desarrollar</h3>
+      <ul>
+        <li>Pensamiento crítico y análisis histórico-tecnológico.</li>
+        <li>Reflexión ética aplicada a la tecnología.</li>
+        <li>Capacidad de síntesis y documentación académica.</li>
+        <li>Trabajo colaborativo estructurado.</li>
+        <li>Comunicación visual profesional.</li>
+      </ul>
+
+      <h3>3. Materiales necesarios</h3>
+      <ul>
+        <li>Dispositivo con acceso a internet.</li>
+        <li>Acceso al NotebookLM del profesor.</li>
+        <li>Acceso al podcast asignado.</li>
+        <li>Video de Classroom (formato de impresión desde Canva).</li>
+        <li>Google Docs (trabajo colaborativo).</li>
+        <li>Cuenta institucional de Canva.</li>
+      </ul>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>4. Actividades</h2>
+      <h3>A. Análisis del video - Origen de la Robótica</h3>
+      <ul>
+        <li>Acceder al enlace de NotebookLM.</li>
+        <li>Visualizar el material completo.</li>
+        <li>En un documento colaborativo de Google Docs, registrar:</li>
+        <li>5 ideas centrales desarrolladas en el video.</li>
+        <li>Línea histórica resumida (con fechas clave).</li>
+        <li>Inventos o dispositivos precursores mencionados.</li>
+        <li>Evolución del concepto de robot.</li>
+        <li>Reflexión: ¿Cómo influyen estos antecedentes en la robótica actual y en Arduino?</li>
+      </ul>
+      <p>El análisis debe ser argumentado, no solo descriptivo.</p>
+
+      <h3>B. Análisis del Podcast - Isaac Asimov y Ética Robótica</h3>
+      <ul>
+        <li>Escuchar el podcast completo.</li>
+        <li>Registrar en el mismo documento:</li>
+        <li>Contexto histórico y científico de Isaac Asimov.</li>
+        <li>Importancia de su obra en la cultura tecnológica.</li>
+        <li>Explicación técnica de las Tres Leyes de la Robótica.</li>
+        <li>Análisis crítico: ¿Son viables en la robótica moderna?</li>
+        <li>Relación entre las Tres Leyes, la programación y el desarrollo de sistemas automatizados con Arduino.</li>
+        <li>Ejemplo aplicado: ¿Cómo podrían integrarse principios éticos en un proyecto con sensores y actuadores?</li>
+      </ul>
+      <p>Se evaluará profundidad de análisis.</p>
+
+      <h3>C. Desarrollo de Infografía Académica en Canva</h3>
+      <p>La infografía debe tener carácter profesional y académico.</p>
+      <p><strong>Contenido obligatorio:</strong></p>
+      <ul>
+        <li>Título formal: Origen de la Robótica y Fundamentación Ética en la Tecnología Moderna.</li>
+        <li>Línea del tiempo (mínimo 8 eventos históricos con fecha).</li>
+        <li>Biografía técnica de Isaac Asimov: formación científica, aportaciones e impacto en la cultura tecnológica.</li>
+        <li>Las Tres Leyes explicadas desde una perspectiva técnica.</li>
+        <li>Sección de análisis: impacto en IA, impacto en sistemas autónomos, relación con proyectos Arduino y conexión con robótica educativa actual.</li>
+        <li>Uso adecuado de imágenes, íconos técnicos y jerarquía visual.</li>
+      </ul>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>Video integrado de apoyo</h2>
+      <div class="video-embed">
+        <iframe
+          src="https://www.youtube.com/embed/fzKiWTADQDk?start=1"
+          title="Video de apoyo - Introducción a la Robótica, Ética y Arduino"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>5. Entregables</h2>
+      <ul>
+        <li>Documento de Google Docs compartido (con portada y conclusiones).</li>
+        <li>Infografía impresa en formato carta (según lineamientos del video de Classroom).</li>
+        <li>Conclusión individual (media cuartilla): ¿Por qué es importante entender la ética antes de programar?</li>
+      </ul>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>6. Criterios de Evaluación</h2>
+      <ul>
+        <li>Análisis crítico en Google Docs: 30%.</li>
+        <li>Rigor histórico y conceptual: 20%.</li>
+        <li>Aplicación ética a Arduino: 20%.</li>
+        <li>Calidad visual y organización en Canva: 20%.</li>
+        <li>Trabajo colaborativo y participación: 10%.</li>
+      </ul>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>7. Cierre reflexivo</h2>
+      <p>Antes de programar sensores, motores y sistemas automatizados, es necesario comprender el contexto histórico y las implicaciones éticas de la tecnología.</p>
+      <p>Arduino no es solo electrónica; es una herramienta que puede transformar entornos reales.</p>
+      <p>Entender el pasado y reflexionar sobre la responsabilidad tecnológica permitirá desarrollar proyectos más conscientes, funcionales y socialmente responsables.</p>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>Práctica 1: Control de LED con botón usando Arduino</h2>
+      <p><strong>Profesor:</strong> Luis Alfonso Martínez Alfaro</p>
+      <p><strong>Asignatura:</strong> Tecnologías / Robótica</p>
+      <p><strong>Tema:</strong> Entradas y salidas digitales con Arduino</p>
+      <p><strong>Duración estimada:</strong> 1 sesión</p>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>1. Propósito de la actividad</h2>
+      <p>Comprender cómo Arduino puede recibir información del entorno mediante sensores o botones y responder activando dispositivos electrónicos, en este caso un LED.</p>
+      <p>Esta práctica permitirá aprender los conceptos básicos de circuitos electrónicos simples, entradas digitales, salidas digitales y programación básica en Arduino.</p>
+      <p>Estos conocimientos serán fundamentales para proyectos posteriores como robots, sensores y sistemas automatizados.</p>
+
+      <h2>2. Materiales</h2>
+      <p>Para cada equipo de trabajo se requiere:</p>
+      <ul>
+        <li>1 Arduino UNO.</li>
+        <li>1 cable USB.</li>
+        <li>1 protoboard.</li>
+        <li>1 LED.</li>
+        <li>1 botón (push button).</li>
+        <li>2 resistencias (220&Omega; o 330&Omega;).</li>
+        <li>Cables jumper.</li>
+        <li>Computadora con Arduino IDE.</li>
+      </ul>
+
+      <h2>3. Descripción del circuito</h2>
+      <p>El circuito funciona de la siguiente manera:</p>
+      <ul>
+        <li>El LED se conecta a un pin digital de Arduino.</li>
+        <li>El botón se conecta a otro pin digital configurado como entrada.</li>
+        <li>Cuando se presiona el botón, Arduino detecta la señal y enciende el LED.</li>
+      </ul>
+      <p>Esto representa un sistema común en electrónica: <strong>Entrada -&gt; Procesamiento -&gt; Salida</strong>.</p>
+      <p>Ejemplo: Botón presionado -&gt; Arduino detecta señal -&gt; LED se enciende.</p>
+
+      <h2>4. Armado del circuito</h2>
+      <p>Armar el circuito siguiendo el diagrama proporcionado por el profesor.</p>
+      <p><strong>Conexiones principales:</strong></p>
+      <h3>LED</h3>
+      <ul>
+        <li>Pin positivo del LED -&gt; resistencia -&gt; pin 13 de Arduino.</li>
+        <li>Pin negativo del LED -&gt; GND.</li>
+      </ul>
+      <h3>Botón</h3>
+      <ul>
+        <li>Una pata del botón -&gt; pin 7 de Arduino.</li>
+        <li>Otra pata del botón -&gt; 5V.</li>
+        <li>Resistencia -&gt; GND.</li>
+      </ul>
+      <p>La resistencia protege el circuito y evita que pase demasiada corriente.</p>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>5. Programación en Arduino</h2>
+      <p>Una vez armado el circuito, cargar el siguiente programa:</p>
+      <pre><code>int led = 13;
+int boton = 7;
+int estadoBoton = 0;
+
+void setup() {
+  pinMode(led, OUTPUT);
+  pinMode(boton, INPUT);
+}
+
+void loop() {
+  estadoBoton = digitalRead(boton);
+
+  if (estadoBoton == HIGH) {
+    digitalWrite(led, HIGH);
+  } 
+  else {
+    digitalWrite(led, LOW);
+  }
+}</code></pre>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>6. Funcionamiento del programa</h2>
+      <ul>
+        <li>Define el pin del LED.</li>
+        <li>Define el pin del botón.</li>
+        <li>Lee constantemente el estado del botón.</li>
+        <li>Si el botón está presionado, el LED se enciende.</li>
+        <li>Si el botón no está presionado, el LED se apaga.</li>
+      </ul>
+      <p>Este proceso ocurre de forma continua dentro del ciclo <code>loop()</code>.</p>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>Diagrama de la práctica</h2>
+      <figure>
+        <img src="Practica1.png" alt="Diagrama de práctica de Arduino en protoboard" />
+        <figcaption>Diagrama de conexión para control de LED con botón.</figcaption>
+      </figure>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>7. Actividad de aprendizaje</h2>
+      <p>Después de probar el circuito, experimentar con el programa:</p>
+      <ul>
+        <li>Modificar el código para que el LED permanezca encendido 3 segundos al presionar el botón.</li>
+        <li>Modificar el programa para que el LED parpadee cuando se presione el botón.</li>
+        <li>Intentar hacer que el LED cambie de estado cada vez que se presione el botón (encendido -&gt; apagado -&gt; encendido).</li>
+      </ul>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>8. Evidencia de aprendizaje</h2>
+      <ul>
+        <li>Fotografía del circuito armado.</li>
+        <li>Captura del código utilizado.</li>
+        <li>Breve explicación del funcionamiento.</li>
+        <li>Video corto mostrando el circuito funcionando.</li>
+      </ul>
+      <p>La evidencia deberá integrarse en el Google Sites del alumno correspondiente a la materia.</p>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>9. Reflexión</h2>
+      <p>Responder las siguientes preguntas:</p>
+      <ul>
+        <li>¿Qué es una entrada digital?</li>
+        <li>¿Qué es una salida digital?</li>
+        <li>¿Por qué se utilizan resistencias en los circuitos electrónicos?</li>
+        <li>¿En qué otros dispositivos de la vida cotidiana se utilizan botones para controlar sistemas?</li>
+      </ul>
+    </section>
+
+    <section class="card" data-phase="fase-i">
+      <h2>10. Conexión con proyectos futuros</h2>
+      <p>Este tipo de circuito es la base para proyectos más avanzados como:</p>
+      <ul>
+        <li>Robots.</li>
+        <li>Alarmas.</li>
+        <li>Sensores de movimiento.</li>
+        <li>Sistemas automáticos.</li>
+        <li>Proyectos de robótica educativa.</li>
+      </ul>
+      <p>En próximas prácticas se integrarán motores, sensores y sistemas de control, aplicando lo aprendido en esta actividad.</p>
+    </section>
+
+    <section class="card challenge" id="fase-ii" data-phase="fase-ii">
+      <h2>Fase II</h2>
+      <p>Espacio reservado para las siguientes prácticas de la Fase II.</p>
+    </section>
+
+    <section class="card" id="fase-iii" data-phase="fase-iii">
+      <h2>Fase III (práctica existente en el sitio)</h2>
+      <h3>Práctica 6: Sensor ultrasónico con LEDs y buzzer</h3>
+      <p>Guía completa para identificar resistencias, conectar el circuito y programar el sistema de alerta.</p>
+    </section>
+
+    <section class="card" data-phase="fase-iii">
       <h2>Código de colores de resistencia</h2>
       <ul>
         <li>Violeta = 7</li>
@@ -24,39 +303,39 @@
       <p>Esto les permitirá identificar el valor real de la resistencia utilizada.</p>
     </section>
 
-    <section class="card">
+    <section class="card" data-phase="fase-iii">
       <h2>8. Conexión del circuito</h2>
 
       <h3>Sensor ultrasónico</h3>
       <ul>
-        <li>VCC &rarr; 5V</li>
-        <li>GND &rarr; GND</li>
-        <li>TRIG &rarr; pin 9</li>
-        <li>ECHO &rarr; pin 10</li>
+        <li>VCC -&gt; 5V</li>
+        <li>GND -&gt; GND</li>
+        <li>TRIG -&gt; pin 9</li>
+        <li>ECHO -&gt; pin 10</li>
       </ul>
       <p><strong>Función de cada conexión:</strong></p>
       <ul>
-        <li><strong>VCC &rarr; 5V:</strong> Alimenta el sensor ultrasónico con energía.</li>
-        <li><strong>GND &rarr; GND:</strong> Cierra el circuito y establece la referencia de tierra.</li>
-        <li><strong>TRIG &rarr; pin 9:</strong> Pin de salida del Arduino que envía el pulso para iniciar la medición.</li>
-        <li><strong>ECHO &rarr; pin 10:</strong> Pin de entrada del Arduino que recibe el tiempo de rebote del ultrasonido.</li>
+        <li><strong>VCC -&gt; 5V:</strong> Alimenta el sensor ultrasónico con energía.</li>
+        <li><strong>GND -&gt; GND:</strong> Cierra el circuito y establece la referencia de tierra.</li>
+        <li><strong>TRIG -&gt; pin 9:</strong> Pin de salida del Arduino que envía el pulso para iniciar la medición.</li>
+        <li><strong>ECHO -&gt; pin 10:</strong> Pin de entrada del Arduino que recibe el tiempo de rebote del ultrasonido.</li>
       </ul>
 
       <h3>LEDs</h3>
       <ul>
-        <li>LED rojo &rarr; pin 3</li>
-        <li>LED verde &rarr; pin 4</li>
+        <li>LED rojo -&gt; pin 3</li>
+        <li>LED verde -&gt; pin 4</li>
       </ul>
       <p>Cada LED debe llevar una resistencia previamente calculada.</p>
 
       <h3>Buzzer</h3>
       <ul>
-        <li>Positivo &rarr; pin 8</li>
-        <li>Negativo &rarr; GND</li>
+        <li>Positivo -&gt; pin 8</li>
+        <li>Negativo -&gt; GND</li>
       </ul>
     </section>
 
-    <section class="card">
+    <section class="card" data-phase="fase-iii">
       <h2>9. Desarrollo del código por bloques</h2>
 
       <h3>Bloque 1 - Definición de pines</h3>
@@ -133,7 +412,7 @@ const int DISTANCIA_ALERTA = 30;</code></pre>
 }</code></pre>
     </section>
 
-    <section class="card">
+    <section class="card" data-phase="fase-iii">
       <h2>10. Evidencias del proyecto</h2>
       <ul>
         <li>Circuito funcionando</li>
@@ -144,7 +423,7 @@ const int DISTANCIA_ALERTA = 30;</code></pre>
       </ul>
     </section>
 
-    <section class="card challenge">
+    <section class="card challenge" data-phase="fase-iii">
       <h2>11. Reto extra (desafío)</h2>
       <ul>
         <li>Modificar el programa para que el buzzer suene más rápido mientras el objeto esté más cerca.</li>
@@ -152,7 +431,7 @@ const int DISTANCIA_ALERTA = 30;</code></pre>
       </ul>
     </section>
 
-    <section class="card">
+    <section class="card" data-phase="fase-iii">
       <h2>Diagrama de referencia (Tinkercad)</h2>
       <figure>
         <img src="diagrama-tinkercad.png" alt="Diagrama de conexión del circuito en Tinkercad" />
@@ -160,7 +439,7 @@ const int DISTANCIA_ALERTA = 30;</code></pre>
       </figure>
     </section>
 
-    <section class="card">
+    <section class="card" data-phase="fase-iii">
       <h2>Código completo</h2>
       <pre><code>// ===== RADAR SIMPLE CON ALERTA =====
 // LED verde = normal
@@ -235,8 +514,38 @@ void loop() {
   delay(200);
 }</code></pre>
     </section>
-  </main>
+    </main>
+  </div>
+
   <script>
+    const validPhases = ["fase-i", "fase-ii", "fase-iii"];
+    const phaseLinks = document.querySelectorAll(".phase-link");
+    const phaseSections = document.querySelectorAll(".container .card[data-phase]");
+
+    function showPhase(phase) {
+      phaseSections.forEach((section) => {
+        section.hidden = section.dataset.phase !== phase;
+      });
+
+      phaseLinks.forEach((link) => {
+        link.classList.toggle("active", link.dataset.phase === phase);
+      });
+    }
+
+    phaseLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const selectedPhase = link.dataset.phase;
+        showPhase(selectedPhase);
+        history.replaceState(null, "", `#${selectedPhase}`);
+      });
+    });
+
+    const initialPhase = validPhases.includes(window.location.hash.slice(1))
+      ? window.location.hash.slice(1)
+      : "fase-i";
+    showPhase(initialPhase);
+
     function escapeHtml(text) {
       return text
         .replace(/&/g, "&amp;")
