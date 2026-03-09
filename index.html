@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 6 - Sensor Ultrasónico</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <p class="tag">3er periodo</p>
+    <h1>Práctica 6: Sensor ultrasónico con LEDs y buzzer</h1>
+    <p class="subtitle">Guía completa para identificar resistencias, conectar el circuito y programar el sistema de alerta.</p>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Código de colores de resistencia</h2>
+      <ul>
+        <li>Violeta = 7</li>
+        <li>Gris = 8</li>
+        <li>Blanco = 9</li>
+      </ul>
+      <p>Esto les permitirá identificar el valor real de la resistencia utilizada.</p>
+    </section>
+
+    <section class="card">
+      <h2>8. Conexión del circuito</h2>
+
+      <h3>Sensor ultrasónico</h3>
+      <ul>
+        <li>VCC &rarr; 5V</li>
+        <li>GND &rarr; GND</li>
+        <li>TRIG &rarr; pin 9</li>
+        <li>ECHO &rarr; pin 10</li>
+      </ul>
+      <p><strong>Función de cada conexión:</strong></p>
+      <ul>
+        <li><strong>VCC &rarr; 5V:</strong> Alimenta el sensor ultrasónico con energía.</li>
+        <li><strong>GND &rarr; GND:</strong> Cierra el circuito y establece la referencia de tierra.</li>
+        <li><strong>TRIG &rarr; pin 9:</strong> Pin de salida del Arduino que envía el pulso para iniciar la medición.</li>
+        <li><strong>ECHO &rarr; pin 10:</strong> Pin de entrada del Arduino que recibe el tiempo de rebote del ultrasonido.</li>
+      </ul>
+
+      <h3>LEDs</h3>
+      <ul>
+        <li>LED rojo &rarr; pin 3</li>
+        <li>LED verde &rarr; pin 4</li>
+      </ul>
+      <p>Cada LED debe llevar una resistencia previamente calculada.</p>
+
+      <h3>Buzzer</h3>
+      <ul>
+        <li>Positivo &rarr; pin 8</li>
+        <li>Negativo &rarr; GND</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>9. Desarrollo del código por bloques</h2>
+
+      <h3>Bloque 1 - Definición de pines</h3>
+      <pre><code>const int TRIG = 9;
+const int ECHO = 10;
+
+const int LED_ROJO = 3;
+const int LED_VERDE = 4;
+const int BUZZER = 8;
+
+const int DISTANCIA_ALERTA = 30;</code></pre>
+
+      <h3>Bloque 2 - Configuración inicial</h3>
+      <pre><code>void setup() {
+
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+
+  pinMode(LED_ROJO, OUTPUT);
+  pinMode(LED_VERDE, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+
+  Serial.begin(9600);
+
+}</code></pre>
+
+      <h3>Bloque 3 - Medición de distancia</h3>
+      <pre><code>long medirDistancia() {
+
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long duracion = pulseIn(ECHO, HIGH, 30000);
+
+  if (duracion == 0) return -1;
+
+  long distancia = duracion / 58;
+
+  return distancia;
+}</code></pre>
+
+      <h3>Bloque 4 - Lectura de distancia</h3>
+      <pre><code>void loop() {
+
+  long distancia = medirDistancia();
+
+  Serial.print("Distancia: ");
+  Serial.print(distancia);
+  Serial.println(" cm");</code></pre>
+
+      <h3>Bloque 5 - Sistema de alerta</h3>
+      <pre><code>  if (distancia &gt; 0 && distancia &lt;= DISTANCIA_ALERTA) {
+
+    digitalWrite(LED_ROJO, HIGH);
+    digitalWrite(LED_VERDE, LOW);
+
+    tone(BUZZER, 1000);
+
+  } else {
+
+    digitalWrite(LED_ROJO, LOW);
+    digitalWrite(LED_VERDE, HIGH);
+
+    noTone(BUZZER);
+
+  }
+
+  delay(200);
+
+}</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>10. Evidencias del proyecto</h2>
+      <ul>
+        <li>Circuito funcionando</li>
+        <li>Simulación en Tinkercad</li>
+        <li>Código del radar</li>
+        <li>Fotografías del montaje</li>
+        <li>Practicario resuelto</li>
+      </ul>
+    </section>
+
+    <section class="card challenge">
+      <h2>11. Reto extra (desafío)</h2>
+      <ul>
+        <li>Modificar el programa para que el buzzer suene más rápido mientras el objeto esté más cerca.</li>
+        <li>Hacer que el LED cambie de comportamiento dependiendo de la distancia.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Diagrama de referencia (Tinkercad)</h2>
+      <figure>
+        <img src="diagrama-tinkercad.png" alt="Diagrama de conexión del circuito en Tinkercad" />
+        <figcaption>Imagen de referencia del diagrama en Tinkercad.</figcaption>
+      </figure>
+    </section>
+
+    <section class="card">
+      <h2>Código completo</h2>
+      <pre><code>// ===== RADAR SIMPLE CON ALERTA =====
+// LED verde = normal
+// LED rojo + buzzer = objeto detectado
+
+// -------- Pines --------
+const int TRIG = 9;
+const int ECHO = 10;
+
+const int LED_ROJO = 3;
+const int LED_VERDE = 4;
+const int BUZZER = 8;
+
+// Distancia de alerta (ajústala)
+const int DISTANCIA_ALERTA = 30; // centímetros
+
+// -------- Función para medir distancia --------
+long medirDistancia() {
+
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long duracion = pulseIn(ECHO, HIGH, 30000);
+
+  if (duracion == 0) return -1;
+
+  long distancia = duracion / 58;
+  return distancia;
+}
+
+void setup() {
+
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+
+  pinMode(LED_ROJO, OUTPUT);
+  pinMode(LED_VERDE, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+
+  long distancia = medirDistancia();
+
+  Serial.print("Distancia: ");
+  Serial.print(distancia);
+  Serial.println(" cm");
+
+  if (distancia > 0 && distancia <= DISTANCIA_ALERTA) {
+
+    // ALERTA
+    digitalWrite(LED_ROJO, HIGH);
+    digitalWrite(LED_VERDE, LOW);
+
+    tone(BUZZER, 1000); // sonido
+
+  } else {
+
+    // NORMAL
+    digitalWrite(LED_ROJO, LOW);
+    digitalWrite(LED_VERDE, HIGH);
+
+    noTone(BUZZER);
+  }
+
+  delay(200);
+}</code></pre>
+    </section>
+  </main>
+  <script>
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function highlightArduinoCode(source) {
+      const escaped = escapeHtml(source);
+      const tokenPattern =
+        /(\/\/.*$|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(^\s*#\s*\w+)|(&lt;[^&\n]+&gt;)|\b(const|int|long|void|unsigned|float|double|char|bool|byte)\b|\b(if|else|return)\b|\b(HIGH|LOW|INPUT|OUTPUT|true|false|Serial)\b|\b([A-Z_]{2,})\b|\b(\d+)\b|\b([A-Za-z_]\w*)(?=\s*\()/gm;
+
+      return escaped.replace(
+        tokenPattern,
+        (
+          match,
+          comment,
+          string,
+          preproc,
+          includePath,
+          typeWord,
+          keywordWord,
+          knownConst,
+          upperConst,
+          numberWord,
+          functionWord
+        ) => {
+          if (comment) return `<span class="token-comment">${match}</span>`;
+          if (string) return `<span class="token-string">${match}</span>`;
+          if (preproc) return `<span class="token-preproc">${match}</span>`;
+          if (includePath) return `<span class="token-include">${match}</span>`;
+          if (typeWord) return `<span class="token-type">${match}</span>`;
+          if (keywordWord) return `<span class="token-keyword">${match}</span>`;
+          if (knownConst || upperConst) return `<span class="token-const">${match}</span>`;
+          if (numberWord) return `<span class="token-number">${match}</span>`;
+          if (functionWord) return `<span class="token-function">${match}</span>`;
+          return match;
+        }
+      );
+    }
+
+    document.querySelectorAll("pre code").forEach((block) => {
+      const raw = block.textContent || "";
+      block.innerHTML = highlightArduinoCode(raw);
+    });
+
+    document.querySelectorAll("pre, code").forEach((node) => {
+      node.addEventListener("copy", (event) => event.preventDefault());
+      node.addEventListener("cut", (event) => event.preventDefault());
+      node.addEventListener("paste", (event) => event.preventDefault());
+      node.addEventListener("contextmenu", (event) => event.preventDefault());
+      node.addEventListener("dragstart", (event) => event.preventDefault());
+
+      node.addEventListener("keydown", (event) => {
+        const k = event.key.toLowerCase();
+        if ((event.ctrlKey || event.metaKey) && (k === "c" || k === "x" || k === "v")) {
+          event.preventDefault();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
