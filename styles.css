@@ -20,6 +20,14 @@ body {
   line-height: 1.5;
 }
 
+body.locked-content,
+body.locked-content * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
 .hero {
   padding: 3rem 1rem 2rem;
   text-align: center;

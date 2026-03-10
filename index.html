@@ -6,7 +6,7 @@
   <title>Prácticas de Arduino por Fases</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="locked-content">
   <header class="hero">
     <p class="tag">Informática - Arduino</p>
     <h1>Prácticas divididas por Fase I, Fase II y Fase III</h1>
@@ -592,19 +592,26 @@ void loop() {
       block.innerHTML = highlightArduinoCode(raw);
     });
 
-    document.querySelectorAll("pre, code").forEach((node) => {
-      node.addEventListener("copy", (event) => event.preventDefault());
-      node.addEventListener("cut", (event) => event.preventDefault());
-      node.addEventListener("paste", (event) => event.preventDefault());
-      node.addEventListener("contextmenu", (event) => event.preventDefault());
-      node.addEventListener("dragstart", (event) => event.preventDefault());
+    [
+      "copy",
+      "cut",
+      "paste",
+      "contextmenu",
+      "dragstart",
+      "selectstart"
+    ].forEach((eventName) => {
+      document.addEventListener(eventName, (event) => event.preventDefault());
+    });
 
-      node.addEventListener("keydown", (event) => {
-        const k = event.key.toLowerCase();
-        if ((event.ctrlKey || event.metaKey) && (k === "c" || k === "x" || k === "v")) {
-          event.preventDefault();
-        }
-      });
+    document.addEventListener("keydown", (event) => {
+      const key = event.key.toLowerCase();
+      const isModifierPressed = event.ctrlKey || event.metaKey;
+
+      if (!isModifierPressed) return;
+
+      if (["a", "c", "s", "u", "v", "x", "p"].includes(key)) {
+        event.preventDefault();
+      }
     });
   </script>
 </body>
