@@ -192,19 +192,89 @@ figure {
   margin: 0;
 }
 
-img {
+figure img {
   width: 100%;
   max-height: 520px;
   object-fit: contain;
   background: var(--accent-soft);
   border: 1px solid #cce6db;
   border-radius: 12px;
+  cursor: zoom-in;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+figure img:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(16, 24, 32, 0.12);
 }
 
 figcaption {
   margin-top: 0.5rem;
   color: var(--muted);
   font-size: 0.95rem;
+}
+
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(16, 24, 32, 0.82);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 999;
+}
+
+.image-lightbox.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.image-lightbox__dialog {
+  position: relative;
+  width: min(96vw, 1100px);
+  max-height: 92vh;
+  padding: 0.9rem;
+  border-radius: 18px;
+  background: #f7fbf8;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.image-lightbox__close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(16, 24, 32, 0.88);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.image-lightbox__figure {
+  margin: 0;
+}
+
+.image-lightbox__image {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: calc(92vh - 5rem);
+  object-fit: contain;
+  background: #eaf6f0;
+  border-radius: 12px;
+}
+
+.image-lightbox__caption {
+  margin-top: 0.75rem;
+  color: var(--muted);
+  text-align: center;
 }
 
 .video-embed {
@@ -240,6 +310,15 @@ figcaption {
 
   .card {
     padding: 0.9rem;
+  }
+
+  .image-lightbox {
+    padding: 0.75rem;
+  }
+
+  .image-lightbox__dialog {
+    width: 100%;
+    padding: 0.75rem;
   }
 
   pre {

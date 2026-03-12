@@ -282,9 +282,292 @@ void loop() {
       <p>En próximas prácticas se integrarán motores, sensores y sistemas de control, aplicando lo aprendido en esta actividad.</p>
     </section>
 
-    <section class="card challenge" id="fase-ii" data-phase="fase-ii">
+    <section class="card" id="fase-ii" data-phase="fase-ii">
       <h2>Fase II</h2>
-      <p>Espacio reservado para las siguientes prácticas de la Fase II.</p>
+      <h3>Guía de trabajo</h3>
+      <p><strong>Proyecto:</strong> Juego de Memoria con Luces y Sonidos (Tipo SIMON DICE)</p>
+      <p><strong>Asignatura:</strong> Tecnologías / Pensamiento Computacional</p>
+      <p><strong>Forma de trabajo:</strong> Equipos de 2 o 3 alumnos</p>
+    </section>
+
+    <section class="card" data-phase="fase-ii">
+      <h2>¿Qué vamos a aprender?</h2>
+      <p>En este proyecto aprenderás a crear un juego de memoria usando una tarjeta Arduino, botones, luces y sonidos.</p>
+      <p>El reto será recordar una secuencia de colores que el sistema te mostrará y repetirla correctamente.</p>
+    </section>
+
+    <section class="card" data-phase="fase-ii">
+      <h2>Aprendizajes esperados</h2>
+      <ul>
+        <li>Reconocer entradas (botones) y salidas (luces y sonido).</li>
+        <li>Seguir instrucciones paso a paso.</li>
+        <li>Comprender qué es una secuencia.</li>
+        <li>Relacionar acciones físicas con instrucciones digitales.</li>
+        <li>Trabajar en equipo y resolver problemas.</li>
+      </ul>
+    </section>
+
+    <section class="card" data-phase="fase-ii">
+      <h2>Materiales</h2>
+      <ul>
+        <li>1 Arduino UNO.</li>
+        <li>1 protoboard.</li>
+        <li>4 LEDs (rojo, verde, amarillo y azul).</li>
+        <li>4 resistencias para LEDs.</li>
+        <li>4 botones.</li>
+        <li>1 buzzer.</li>
+        <li>Cables Dupont.</li>
+        <li>Computadora con Arduino IDE.</li>
+      </ul>
+    </section>
+
+    <section class="card" data-phase="fase-ii">
+      <h2>Descripción del funcionamiento</h2>
+      <ul>
+        <li>El juego muestra una secuencia de luces y sonidos.</li>
+        <li>El jugador debe presionar los botones en el mismo orden.</li>
+        <li>Si acierta, el juego agrega un nuevo color.</li>
+        <li>Si falla, el juego termina y muestra el nivel alcanzado.</li>
+      </ul>
+    </section>
+
+    <section class="card" data-phase="fase-ii">
+      <h2>Reglas del juego</h2>
+      <ul>
+        <li>Solo se puede presionar un botón a la vez.</li>
+        <li>El juego empieza seleccionando un nivel.</li>
+        <li>Cada color tiene su propio sonido.</li>
+        <li>El juego termina cuando la secuencia es incorrecta.</li>
+      </ul>
+    </section>
+
+    <section class="card" data-phase="fase-ii">
+      <h2>Organización del equipo</h2>
+      <ul>
+        <li><strong>Programador:</strong> Carga y revisa el código.</li>
+        <li><strong>Constructor:</strong> Realiza las conexiones.</li>
+        <li><strong>Supervisor:</strong> Revisa que el juego funcione correctamente.</li>
+      </ul>
+    </section>
+
+    <section class="card challenge" data-phase="fase-ii">
+      <h2>Reglas de seguridad</h2>
+      <ul>
+        <li>No conectar el Arduino sin revisar cables.</li>
+        <li>No tocar conexiones con el Arduino encendido.</li>
+        <li>Mantener orden en la mesa de trabajo.</li>
+      </ul>
+    </section>
+
+    <section class="card" data-phase="fase-ii">
+      <h2>Diagrama de referencia</h2>
+      <figure>
+        <img src="Simon Dice.png" alt="Diagrama del proyecto Simon Dice con Arduino" />
+        <figcaption>Referencia visual del montaje del juego de memoria Simon Dice.</figcaption>
+      </figure>
+    </section>
+
+    <section class="card" data-phase="fase-ii">
+      <h2>Código explicado por partes</h2>
+
+      <h3>Bloque 1 - Pines y sonidos</h3>
+      <pre><code>const int leds[4] = {2, 3, 4, 5};
+const int botones[4] = {6, 7, 8, 9};
+const int tonos[4] = {262, 330, 392, 523};
+const int buzzer = 10;</code></pre>
+      <p>En este bloque se definen los 4 LEDs, los 4 botones, los sonidos de cada color y el pin donde se conecta el buzzer.</p>
+
+      <h3>Bloque 2 - Variables del juego</h3>
+      <pre><code>const int MAX_RONDAS = 20;
+int secuencia[MAX_RONDAS];
+int nivelActual = 1;</code></pre>
+      <p>Aquí se guarda la secuencia del juego y se define cuántas rondas máximas se podrán jugar.</p>
+
+      <h3>Bloque 3 - Configuración inicial</h3>
+      <pre><code>void setup() {
+  for (int i = 0; i &lt; 4; i++) {
+    pinMode(leds[i], OUTPUT);
+    pinMode(botones[i], INPUT_PULLUP);
+  }
+
+  pinMode(buzzer, OUTPUT);
+  randomSeed(analogRead(A0));
+}</code></pre>
+      <p>Arduino prepara los pines, configura los botones como entrada y genera una semilla aleatoria para que la secuencia cambie en cada partida.</p>
+
+      <h3>Bloque 4 - Mostrar la secuencia</h3>
+      <pre><code>void mostrarSecuencia(int nivel) {
+  for (int i = 0; i &lt; nivel; i++) {
+    int color = secuencia[i];
+    digitalWrite(leds[color], HIGH);
+    tone(buzzer, tonos[color], 350);
+    delay(450);
+    digitalWrite(leds[color], LOW);
+    delay(180);
+  }
+}</code></pre>
+      <p>Esta función prende cada LED en orden y activa su sonido para que el jugador observe la secuencia que deberá repetir.</p>
+
+      <h3>Bloque 5 - Lectura del jugador</h3>
+      <pre><code>int leerBoton() {
+  while (true) {
+    for (int i = 0; i &lt; 4; i++) {
+      if (digitalRead(botones[i]) == LOW) {
+        digitalWrite(leds[i], HIGH);
+        tone(buzzer, tonos[i], 200);
+        delay(250);
+        digitalWrite(leds[i], LOW);
+
+        while (digitalRead(botones[i]) == LOW) {
+        }
+
+        delay(120);
+        return i;
+      }
+    }
+  }
+}</code></pre>
+      <p>Arduino espera a que el jugador presione un botón. Cuando detecta uno, enciende su LED, reproduce su sonido y regresa el número del color seleccionado.</p>
+
+      <h3>Bloque 6 - Validación y avance de nivel</h3>
+      <pre><code>bool turnoJugador(int nivel) {
+  for (int i = 0; i &lt; nivel; i++) {
+    int respuesta = leerBoton();
+
+    if (respuesta != secuencia[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}</code></pre>
+      <p>En este bloque el programa compara cada botón presionado con la secuencia correcta. Si hay un error, el juego termina.</p>
+    </section>
+
+    <section class="card" data-phase="fase-ii">
+      <h2>Código completo</h2>
+      <pre><code>const int leds[4] = {2, 3, 4, 5};
+const int botones[4] = {6, 7, 8, 9};
+const int tonos[4] = {262, 330, 392, 523};
+const int buzzer = 10;
+
+const int MAX_RONDAS = 20;
+int secuencia[MAX_RONDAS];
+int nivelActual = 1;
+
+void encenderTodos(int tiempo) {
+  for (int i = 0; i &lt; 4; i++) {
+    digitalWrite(leds[i], HIGH);
+  }
+
+  tone(buzzer, 700, tiempo);
+  delay(tiempo);
+
+  for (int i = 0; i &lt; 4; i++) {
+    digitalWrite(leds[i], LOW);
+  }
+}
+
+void mostrarSecuencia(int nivel) {
+  for (int i = 0; i &lt; nivel; i++) {
+    int color = secuencia[i];
+    digitalWrite(leds[color], HIGH);
+    tone(buzzer, tonos[color], 350);
+    delay(450);
+    digitalWrite(leds[color], LOW);
+    delay(180);
+  }
+}
+
+int leerBoton() {
+  while (true) {
+    for (int i = 0; i &lt; 4; i++) {
+      if (digitalRead(botones[i]) == LOW) {
+        digitalWrite(leds[i], HIGH);
+        tone(buzzer, tonos[i], 200);
+        delay(250);
+        digitalWrite(leds[i], LOW);
+
+        while (digitalRead(botones[i]) == LOW) {
+        }
+
+        delay(120);
+        return i;
+      }
+    }
+  }
+}
+
+bool turnoJugador(int nivel) {
+  for (int i = 0; i &lt; nivel; i++) {
+    int respuesta = leerBoton();
+
+    if (respuesta != secuencia[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+void juegoPerdido() {
+  for (int i = 0; i &lt; 3; i++) {
+    encenderTodos(180);
+    delay(120);
+  }
+}
+
+void iniciarJuego() {
+  for (int i = 0; i &lt; MAX_RONDAS; i++) {
+    secuencia[i] = random(0, 4);
+  }
+
+  nivelActual = 1;
+}
+
+void setup() {
+  for (int i = 0; i &lt; 4; i++) {
+    pinMode(leds[i], OUTPUT);
+    pinMode(botones[i], INPUT_PULLUP);
+  }
+
+  pinMode(buzzer, OUTPUT);
+  randomSeed(analogRead(A0));
+  iniciarJuego();
+}
+
+void loop() {
+  mostrarSecuencia(nivelActual);
+
+  if (turnoJugador(nivelActual)) {
+    tone(buzzer, 900, 250);
+    delay(350);
+    nivelActual++;
+
+    if (nivelActual &gt; MAX_RONDAS) {
+      nivelActual = MAX_RONDAS;
+      encenderTodos(800);
+      iniciarJuego();
+    }
+  } else {
+    juegoPerdido();
+    iniciarJuego();
+    delay(600);
+  }
+
+  delay(400);
+}</code></pre>
+    </section>
+
+    <section class="card" data-phase="fase-ii">
+      <h2>Explicación general del juego</h2>
+      <ul>
+        <li>Arduino genera una secuencia aleatoria de colores.</li>
+        <li>El sistema muestra la secuencia con LEDs y sonidos.</li>
+        <li>El jugador intenta repetirla con los botones.</li>
+        <li>Si responde bien, avanza al siguiente nivel.</li>
+        <li>Si se equivoca, el juego reinicia.</li>
+      </ul>
     </section>
 
     <section class="card" id="fase-iii" data-phase="fase-iii">
@@ -517,6 +800,16 @@ void loop() {
     </main>
   </div>
 
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
   <script>
     const validPhases = ["fase-i", "fase-ii", "fase-iii"];
     const phaseLinks = document.querySelectorAll(".phase-link");
@@ -592,6 +885,52 @@ void loop() {
       block.innerHTML = highlightArduinoCode(raw);
     });
 
+    const lightbox = document.getElementById("image-lightbox");
+    const lightboxImage = document.getElementById("image-lightbox-image");
+    const lightboxCaption = document.getElementById("image-lightbox-caption");
+    const lightboxClose = document.getElementById("image-lightbox-close");
+    const zoomableImages = document.querySelectorAll("figure img");
+
+    function closeLightbox() {
+      lightbox.classList.remove("open");
+      lightbox.setAttribute("aria-hidden", "true");
+      lightboxImage.removeAttribute("src");
+      lightboxImage.alt = "";
+      lightboxCaption.textContent = "";
+      document.body.style.overflow = "";
+    }
+
+    function openLightbox(image) {
+      lightboxImage.src = image.src;
+      lightboxImage.alt = image.alt || "Imagen ampliada";
+      lightboxCaption.textContent = image.closest("figure")?.querySelector("figcaption")?.textContent || image.alt || "";
+      lightbox.classList.add("open");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    zoomableImages.forEach((image) => {
+      image.tabIndex = 0;
+      image.setAttribute("role", "button");
+      image.setAttribute("aria-label", `${image.alt || "Imagen"}: abrir ampliada`);
+
+      image.addEventListener("click", () => openLightbox(image));
+      image.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openLightbox(image);
+        }
+      });
+    });
+
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    lightboxClose.addEventListener("click", closeLightbox);
+
     [
       "copy",
       "cut",
@@ -604,6 +943,11 @@ void loop() {
     });
 
     document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && lightbox.classList.contains("open")) {
+        closeLightbox();
+        return;
+      }
+
       const key = event.key.toLowerCase();
       const isModifierPressed = event.ctrlKey || event.metaKey;
 
