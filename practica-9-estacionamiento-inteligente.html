@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 9 - Estacionamiento Inteligente</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="practica-9-estacionamiento-inteligente">
+  <header class="hero">
+    <p class="tag">Fase III</p>
+    <h1>Práctica 9: Estacionamiento Inteligente con Arduino</h1>
+    <p class="subtitle">Proyecto de automatización con sensor ultrasónico, semáforo, servomotor y pantalla LCD para simular un acceso inteligente.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Proyecto:</strong> Estacionamiento Inteligente con Arduino</p>
+        <p><strong>Nivel:</strong> Bachillerato Tecnológico</p>
+        <p><strong>Duración sugerida:</strong> 3 a 4 sesiones de 2 horas (ajustable según grupo)</p>
+        <p><strong>Recursos principales:</strong> Arduino UNO, sensor ultrasónico HC-SR04, módulo semáforo, servomotor SG90, LCD 16x2 con I2C, protoboard, cables, resistencias y cable USB.</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre del alumno</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <p class="worksheet-note">Primero completa tus respuestas en esta hoja. Cuando termines, usa el botón para abrir la versión de impresión y guardar un PDF con tus propias respuestas.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>1. Propósito del proyecto</h2>
+        <p>Diseñar y construir un sistema de estacionamiento inteligente capaz de detectar la presencia de un vehículo mediante un sensor ultrasónico, indicar disponibilidad con un semáforo, controlar una barrera con un servomotor y mostrar mensajes informativos en una pantalla LCD, utilizando Arduino como unidad de control.</p>
+      </section>
+
+      <section class="card">
+        <h2>2. Aprendizajes esperados</h2>
+        <ul>
+          <li>Comprender el funcionamiento del sensor ultrasónico y su uso para medición de distancia.</li>
+          <li>Integrar actuadores (LED y servomotor) a un sistema automatizado.</li>
+          <li>Utilizar una pantalla LCD para mostrar información en tiempo real.</li>
+          <li>Programar en Arduino aplicando estructuras condicionales y funciones.</li>
+          <li>Probar, ajustar y documentar un sistema electrónico funcional.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>3. Contextualización</h2>
+        <p>Los estacionamientos modernos utilizan sensores y sistemas automatizados para optimizar el acceso de vehículos, mejorar la seguridad y agilizar el flujo. Este proyecto simula un sistema real a pequeña escala, acercando al alumno a aplicaciones prácticas de la electrónica y la automatización.</p>
+      </section>
+
+      <section class="card">
+        <h2>4. Descripción general del sistema</h2>
+        <ul>
+          <li>El sensor ultrasónico detecta la distancia de un objeto (vehículo).</li>
+          <li>Si la distancia es menor al valor definido, el semáforo cambia a rojo, el servomotor baja la barrera y la pantalla LCD muestra “Estacionamiento ocupado”.</li>
+          <li>Si no hay vehículo, el semáforo cambia a verde, la barrera se mantiene abierta y la pantalla LCD muestra “Espacio disponible”.</li>
+        </ul>
+        <figure>
+          <img src="estacionamiento.png" alt="Diagrama del estacionamiento inteligente con Arduino" />
+          <figcaption>Referencia visual del sistema de estacionamiento inteligente con sensor, barrera y semáforo.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Video de referencia</h2>
+        <video class="media-player" controls preload="metadata">
+          <source src="Estaciona.mp4" type="video/mp4" />
+        </video>
+      </section>
+
+      <section class="card">
+        <h2>5. Reglas de trabajo</h2>
+        <ul>
+          <li>Trabajar con orden y cuidado del material.</li>
+          <li>Verificar conexiones antes de energizar el circuito.</li>
+          <li>No modificar el código de otro equipo sin autorización.</li>
+          <li>Registrar evidencias del proceso (fotos, videos, capturas).</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>6. Evidencias a entregar</h2>
+        <ul>
+          <li>Diagrama de conexiones (foto o esquema).</li>
+          <li>Código funcional comentado.</li>
+          <li>Video corto del sistema en funcionamiento.</li>
+          <li>Conclusión individual del alumno.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Instrucción para ingresar a Tinkercad</h2>
+        <ol>
+          <li>Abre tu navegador de internet (Chrome, Edge o Firefox).</li>
+          <li>Ingresa a la siguiente dirección: <code>https://www.tinkercad.com</code>.</li>
+          <li>Haz clic en <strong>Iniciar sesión</strong> (Sign in).</li>
+          <li>Selecciona una de estas opciones para entrar: Cuenta de Google, Cuenta de Microsoft o Cuenta de Autodesk.</li>
+          <li>Una vez dentro de la plataforma, entra a la sección <strong>Circuits</strong> (Circuitos).</li>
+          <li>Presiona el botón <strong>Create new Circuit</strong> (Crear nuevo circuito).</li>
+          <li>Dentro del simulador podrás agregar un Arduino Uno, sensor ultrasónico, LEDs, servomotor, LCD I2C y escribir el código del programa.</li>
+          <li>Finalmente presiona <strong>Start Simulation</strong> para ejecutar el circuito y verificar que funcione correctamente.</li>
+        </ol>
+        <p><strong>Indicaciones importantes:</strong></p>
+        <ul>
+          <li>Guarda tu proyecto con el nombre: <code>EstacionamientoInteligente_Arduino_TuNombre</code>.</li>
+          <li>Verifica que el semáforo, la barrera y la pantalla LCD respondan correctamente.</li>
+          <li>Comprueba que el circuito no tenga errores de conexión.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>PRACTICARIO</h2>
+
+        <h3>Práctica 1: Conociendo los componentes</h3>
+        <p><strong>Objetivo:</strong> Identificar y comprender la función de cada componente del proyecto.</p>
+        <div class="worksheet-field">
+          <label for="p1a">Investiga qué es y cómo funciona el sensor ultrasónico HC-SR04.</label>
+          <textarea class="worksheet-textarea" id="p1a" name="answer_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p1b">Explica qué es y cómo funciona un servomotor.</label>
+          <textarea class="worksheet-textarea" id="p1b" name="answer_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p1c">Explica qué es y cómo funciona una pantalla LCD 16x2.</label>
+          <textarea class="worksheet-textarea" id="p1c" name="answer_3"></textarea>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Función dentro del sistema</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Sensor ultrasónico HC-SR04</td><td><textarea class="worksheet-textarea" name="comp_sensor"></textarea></td></tr>
+            <tr><td>Servomotor</td><td><textarea class="worksheet-textarea" name="comp_servo"></textarea></td></tr>
+            <tr><td>Pantalla LCD 16x2</td><td><textarea class="worksheet-textarea" name="comp_lcd"></textarea></td></tr>
+          </tbody>
+        </table>
+
+        <h3>Práctica 2: Sensor ultrasónico y medición de distancia</h3>
+        <p><strong>Objetivo:</strong> Medir distancias usando el sensor ultrasónico.</p>
+        <div class="worksheet-field">
+          <label for="p2a">Describe cómo conectaste el sensor ultrasónico al Arduino.</label>
+          <textarea class="worksheet-textarea" id="p2a" name="answer_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p2b">Anota los valores obtenidos al probar diferentes distancias.</label>
+          <textarea class="worksheet-textarea" id="p2b" name="answer_5"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p2c">Escribe tus conclusiones sobre la medición.</label>
+          <textarea class="worksheet-textarea" id="p2c" name="answer_6"></textarea>
+        </div>
+
+        <h3>Práctica 3: Control del semáforo</h3>
+        <p><strong>Objetivo:</strong> Controlar LEDs según la distancia detectada.</p>
+        <div class="worksheet-field">
+          <label for="p3a">Explica cuándo se enciende el LED verde.</label>
+          <textarea class="worksheet-textarea" id="p3a" name="answer_7"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p3b">Explica cuándo se enciende el LED rojo.</label>
+          <textarea class="worksheet-textarea" id="p3b" name="answer_8"></textarea>
+        </div>
+
+        <h3>Práctica 4: Control de barrera con servomotor</h3>
+        <p><strong>Objetivo:</strong> Simular la apertura y cierre de la barrera del estacionamiento.</p>
+        <div class="worksheet-field">
+          <label for="p4a">Describe cómo conectaste el servomotor al Arduino.</label>
+          <textarea class="worksheet-textarea" id="p4a" name="answer_9"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p4b">Explica la diferencia entre la posición de apertura y cierre.</label>
+          <textarea class="worksheet-textarea" id="p4b" name="answer_10"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p4c">Relaciona el movimiento del servo con la distancia detectada.</label>
+          <textarea class="worksheet-textarea" id="p4c" name="answer_11"></textarea>
+        </div>
+
+        <h3>Práctica 5: Uso de pantalla LCD</h3>
+        <p><strong>Objetivo:</strong> Mostrar información del sistema en una pantalla LCD.</p>
+        <div class="worksheet-field">
+          <label for="p5a">¿Qué mensajes muestra la pantalla LCD en este proyecto?</label>
+          <textarea class="worksheet-textarea" id="p5a" name="answer_12"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p5b">¿Cómo cambia el mensaje según el estado del sistema?</label>
+          <textarea class="worksheet-textarea" id="p5b" name="answer_13"></textarea>
+        </div>
+
+        <h3>Práctica 6: Integración del sistema completo</h3>
+        <p><strong>Objetivo:</strong> Integrar todos los componentes en un solo programa.</p>
+        <div class="worksheet-field">
+          <label for="p6a">Explica cómo uniste el código del sensor, semáforo, servo y LCD.</label>
+          <textarea class="worksheet-textarea" id="p6a" name="answer_14"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p6b">¿Qué ajustes hiciste en distancias o tiempos?</label>
+          <textarea class="worksheet-textarea" id="p6b" name="answer_15"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p6c">Describe el resultado final del sistema funcional.</label>
+          <textarea class="worksheet-textarea" id="p6c" name="answer_16"></textarea>
+        </div>
+
+        <h3>Reflexión final</h3>
+        <div class="worksheet-field">
+          <label for="rf1">¿Qué fue lo más complicado del proyecto?</label>
+          <textarea class="worksheet-textarea" id="rf1" name="answer_17"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="rf2">¿Qué mejorarías del sistema?</label>
+          <textarea class="worksheet-textarea" id="rf2" name="answer_18"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="rf3">¿Dónde se podría aplicar este proyecto en la vida real?</label>
+          <textarea class="worksheet-textarea" id="rf3" name="answer_19"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Código del proyecto</h2>
+        <pre><code>#include &lt;Servo.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// LEDs (semaforo)
+const int rojo = 13;
+const int amarillo = 12;
+const int verde = 11;
+
+// Ultrasonico HC-SR04
+const int TRIG = 2;
+const int ECHO = 3;
+
+// Servo
+Servo barrera;
+const int pinServo = 9;
+const int POS_ABIERTO = 0;
+const int POS_CERRADO = 90;
+
+// Config
+const int UMBRAL_CM = 25;
+const int HISTERESIS = 10;
+
+long medirCM() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long dur = pulseIn(ECHO, HIGH, 30000);
+  if (dur == 0) return 999;
+
+  long cm = (long)(dur * 0.0343 / 2.0);
+  if (cm < 0) cm = 999;
+  if (cm > 999) cm = 999;
+  return cm;
+}
+
+void setLeds(bool r, bool y, bool g) {
+  digitalWrite(rojo, r);
+  digitalWrite(amarillo, y);
+  digitalWrite(verde, g);
+}
+
+void mostrarMensaje(const char* l1, const char* l2, int tiempo) {
+  lcd.clear();
+  lcd.setCursor(0, 0); lcd.print(l1);
+  lcd.setCursor(0, 1); lcd.print(l2);
+  delay(tiempo);
+}
+
+void cuentaRegresiva(int segundos, int ledPin, int posicionServo,
+                     const char* msg1, const char* msg2,
+                     bool moverServoAlFinal = false) {
+  digitalWrite(rojo, LOW);
+  digitalWrite(amarillo, LOW);
+  digitalWrite(verde, LOW);
+
+  digitalWrite(ledPin, HIGH);
+
+  if (!moverServoAlFinal) {
+    barrera.write(posicionServo);
+  }
+
+  for (int i = segundos; i >= 0; i--) {
+    lcd.clear();
+    lcd.setCursor(0, 0); lcd.print(msg1);
+    lcd.setCursor(0, 1);
+    lcd.print(msg2);
+    lcd.print(" ");
+    lcd.print(i);
+    lcd.print("s");
+    delay(1000);
+  }
+
+  if (moverServoAlFinal) {
+    barrera.write(posicionServo);
+  }
+
+  digitalWrite(ledPin, LOW);
+}
+
+void setup() {
+  lcd.init();
+  lcd.backlight();
+
+  pinMode(rojo, OUTPUT);
+  pinMode(amarillo, OUTPUT);
+  pinMode(verde, OUTPUT);
+
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+
+  barrera.attach(pinServo);
+  barrera.write(POS_CERRADO);
+
+  setLeds(true, false, false);
+  mostrarMensaje("Estacionamiento", "Sistema listo", 1500);
+}
+
+void loop() {
+  long cm = medirCM();
+
+  barrera.write(POS_CERRADO);
+  setLeds(true, false, false);
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Acceso cerrado");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Dist: ");
+  lcd.print(cm);
+  lcd.print("cm");
+
+  delay(200);
+
+  if (cm <= UMBRAL_CM) {
+    cuentaRegresiva(5, verde, POS_ABIERTO, "Bienvenido!", "Acceso abierto:", false);
+    mostrarMensaje("Pase, por favor", "Gracias!", 1200);
+
+    cuentaRegresiva(2, amarillo, POS_CERRADO, "Atencion!", "Cerrando en:", true);
+    mostrarMensaje("Barrera bajando", "Espere un momento", 1200);
+
+    cuentaRegresiva(5, rojo, POS_CERRADO, "Acceso denegado", "Espere luz verde:", false);
+    mostrarMensaje("No pase", "Espere luz verde", 1200);
+
+    while (medirCM() <= (UMBRAL_CM + HISTERESIS)) {
+      setLeds(true, false, false);
+      lcd.clear();
+      lcd.setCursor(0, 0); lcd.print("Retire el auto");
+      lcd.setCursor(0, 1); lcd.print("Para reiniciar");
+      delay(400);
+    }
+
+    lcd.clear();
+  }
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Observación docente</h2>
+        <p>Este proyecto refuerza la lógica de programación, la integración hardware-software y el pensamiento tecnológico aplicado a situaciones reales.</p>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

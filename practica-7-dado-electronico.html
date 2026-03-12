@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 7 - Dado Electrónico</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="practica-7-dado-electronico">
+  <header class="hero">
+    <p class="tag">Fase II</p>
+    <h1>Práctica 7: Dado Electrónico</h1>
+    <p class="subtitle">Proyecto con Arduino para simular un dado real usando LEDs, un botón y números aleatorios.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Proyecto:</strong> Dado Electrónico</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre del alumno</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <p class="worksheet-note">Primero completa tus respuestas en esta hoja. Cuando termines, usa el botón para abrir la versión de impresión y guardar un PDF con tus propias respuestas.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Propósito</h2>
+        <ul>
+          <li>Construir y programar un dado electrónico.</li>
+          <li>Usar un botón para “lanzar” el dado.</li>
+          <li>Encender LEDs según el número que salga.</li>
+          <li>Generar un número aleatorio del 1 al 6.</li>
+          <li>Hacer que funcione como un dado real, pero electrónico.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>¿Qué vamos a aprender?</h2>
+        <ul>
+          <li>Qué es una entrada (botón).</li>
+          <li>Qué es una salida (LED).</li>
+          <li>Cómo encender y apagar LEDs.</li>
+          <li>Qué es un número aleatorio.</li>
+          <li>Cómo usar condiciones (<code>if</code>) en programación.</li>
+          <li>Cómo hacer que un proyecto funcione como un juego real.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Material</h2>
+        <ul>
+          <li>1 Arduino UNO</li>
+          <li>7 LEDs</li>
+          <li>7 resistencias 220Ω</li>
+          <li>1 botón</li>
+          <li>1 resistencia 10kΩ (si no se usa <code>INPUT_PULLUP</code>)</li>
+          <li>Protoboard</li>
+          <li>Cables</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Imagen de referencia</h2>
+        <figure>
+          <img src="Dado.png" alt="Diagrama del dado electrónico con Arduino" />
+          <figcaption>Referencia visual del proyecto de dado electrónico con Arduino y LEDs.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Desarrollo del proyecto</h2>
+
+        <h3>Paso 1. Conexión</h3>
+        <ul>
+          <li>Conectar los 7 LEDs a los pines digitales 2 al 8.</li>
+          <li>Conectar el botón al pin 9.</li>
+          <li>Revisar que todas las tierras (GND) estén conectadas correctamente.</li>
+        </ul>
+
+        <h3>Paso 2. Programación</h3>
+        <p>El programa debe:</p>
+        <ul>
+          <li>Esperar a que el botón esté presionado.</li>
+          <li>Encender todos los LEDs por medio segundo.</li>
+          <li>Apagar todos los LEDs.</li>
+          <li>Generar un número del 1 al 6.</li>
+          <li>Encender los LEDs que representen ese número.</li>
+        </ul>
+
+        <h3>Paso 3. Prueba</h3>
+        <ul>
+          <li>Presiona el botón.</li>
+          <li>Observa cómo “rueda” el dado.</li>
+          <li>Verifica que el número cambie cada vez.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Evaluación</h2>
+        <ul>
+          <li>Conexión correcta.</li>
+          <li>Código funcional.</li>
+          <li>Que el botón funcione bien.</li>
+          <li>Que el número cambie.</li>
+          <li>Trabajo en equipo.</li>
+          <li>Presentación del proyecto.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Instrucción para ingresar a Tinkercad</h2>
+        <ol>
+          <li>Abre tu navegador de internet (Chrome, Edge o Firefox).</li>
+          <li>Ingresa a la siguiente dirección: <code>https://www.tinkercad.com</code>.</li>
+          <li>Haz clic en <strong>Iniciar sesión</strong> (Sign in).</li>
+          <li>Selecciona una de estas opciones para entrar: Cuenta de Google, Cuenta de Microsoft o Cuenta de Autodesk.</li>
+          <li>Una vez dentro de la plataforma, entra a la sección <strong>Circuits</strong> (Circuitos).</li>
+          <li>Presiona el botón <strong>Create new Circuit</strong> (Crear nuevo circuito).</li>
+          <li>Dentro del simulador podrás agregar un Arduino Uno, insertar LEDs, colocar resistencias, conectar buzzer, añadir un botón y escribir el código del programa.</li>
+          <li>Finalmente presiona <strong>Start Simulation</strong> para ejecutar el circuito y verificar que funcione correctamente.</li>
+        </ol>
+        <p><strong>Indicaciones importantes:</strong></p>
+        <ul>
+          <li>Guarda tu proyecto con el nombre: <code>DadoElectronico_Arduino_TuNombre</code>.</li>
+          <li>Verifica que el número cambie cada vez.</li>
+          <li>Comprueba que el circuito no tenga errores de conexión.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Código de la práctica</h2>
+        <pre><code>//Pin to to turn dice on &amp; off
+int button = 2;
+//LED for DICE
+int bottomLeft = 3;
+int middleLeft = 4;
+int upperLeft = 5;
+int middle = 6;
+int bottomRight = 7;
+int middleRight = 8;
+int upperRight = 9;
+
+int state = 0;
+long randNumber; 
+
+//Initial setup
+void setup(){
+  pinMode(bottomLeft, OUTPUT);
+  pinMode(middleLeft, OUTPUT);
+  pinMode(upperLeft, OUTPUT);
+  pinMode(middle, OUTPUT);
+  pinMode(bottomRight, OUTPUT);
+  pinMode(middleRight, OUTPUT);
+  pinMode(upperRight, OUTPUT);
+  
+  pinMode(button, INPUT);
+  Serial.begin(9600);
+  randomSeed(analogRead(0));
+}
+
+ void loop(){
+  //Read our button if high then run dice
+  if (digitalRead(button) == HIGH && state == 0){
+    state = 1;
+    randNumber = random(1, 7);
+    delay(100);
+    Serial.println(randNumber);
+
+    if (randNumber == 6){
+      six();
+    }
+    if (randNumber == 5){
+      five();
+    }
+    if (randNumber == 4){
+      four();
+    }
+    if (randNumber == 3){
+      three();
+    }
+    if (randNumber == 2){
+      two();
+    }
+    if (randNumber == 1){
+      one();
+    }
+    delay(5000);
+    clearAll();
+    state = 0;
+  }
+}
+
+//Create a function for each of our "sides" of the die
+ void six()
+{
+  digitalWrite(bottomLeft, HIGH);
+  digitalWrite(middleLeft, HIGH);
+  digitalWrite(upperLeft, HIGH);
+  digitalWrite(bottomRight, HIGH);
+  digitalWrite(middleRight, HIGH);
+  digitalWrite(upperRight, HIGH);
+}
+
+void five()
+{
+  digitalWrite(upperLeft, HIGH);
+  digitalWrite(bottomLeft, HIGH);
+  digitalWrite(middle, HIGH);
+  digitalWrite(upperRight, HIGH);
+  digitalWrite(bottomRight, HIGH);
+}
+
+void four()
+{
+  digitalWrite(upperLeft, HIGH);
+  digitalWrite(bottomLeft, HIGH);
+  digitalWrite(upperRight, HIGH);
+  digitalWrite(bottomRight, HIGH);
+}
+
+void three()
+{
+  digitalWrite(upperLeft, HIGH);
+  digitalWrite(middle, HIGH);
+  digitalWrite(bottomRight, HIGH);
+}
+
+void two()
+{
+  digitalWrite(bottomRight, HIGH);
+  digitalWrite(upperLeft, HIGH);
+}
+
+void one(){
+  digitalWrite(middle, HIGH);
+}
+
+void clearAll(){
+  digitalWrite(bottomLeft, LOW);
+  digitalWrite(middleLeft, LOW);
+  digitalWrite(upperLeft, LOW);
+  digitalWrite(middle,LOW);
+  digitalWrite(bottomRight, LOW);
+  digitalWrite(middleRight, LOW);
+  digitalWrite(upperRight, LOW);
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Practicario</h2>
+
+        <h3>Parte 1. Comprensión</h3>
+        <div class="worksheet-field">
+          <label for="c1">¿Qué es una entrada en Arduino?</label>
+          <textarea class="worksheet-textarea" id="c1" name="answer_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="c2">¿Qué es una salida?</label>
+          <textarea class="worksheet-textarea" id="c2" name="answer_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="c3">¿Para qué sirve el botón en este proyecto?</label>
+          <textarea class="worksheet-textarea" id="c3" name="answer_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="c4">¿Qué hace la función <code>random()</code>?</label>
+          <textarea class="worksheet-textarea" id="c4" name="answer_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="c5">¿Por qué usamos números del 1 al 6?</label>
+          <textarea class="worksheet-textarea" id="c5" name="answer_5"></textarea>
+        </div>
+
+        <h3>Parte 2. Análisis del código</h3>
+        <div class="worksheet-field">
+          <label for="a1">¿Qué hace esta línea: <code>pinMode(9, INPUT);</code>?</label>
+          <textarea class="worksheet-textarea" id="a1" name="answer_6"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="a2">¿Qué significa <code>HIGH</code>?</label>
+          <textarea class="worksheet-textarea" id="a2" name="answer_7"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="a3">¿Qué significa <code>LOW</code>?</label>
+          <textarea class="worksheet-textarea" id="a3" name="answer_8"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="a4">¿Qué hace <code>digitalWrite(4, HIGH);</code>?</label>
+          <textarea class="worksheet-textarea" id="a4" name="answer_9"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="a5">¿Por qué usamos condiciones como <code>if (randNumber == 3)</code>?</label>
+          <textarea class="worksheet-textarea" id="a5" name="answer_10"></textarea>
+        </div>
+
+        <h3>Parte 3. Reflexión</h3>
+        <div class="worksheet-field">
+          <label for="r1">¿Qué fue lo más difícil del proyecto?</label>
+          <textarea class="worksheet-textarea" id="r1" name="answer_11"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="r2">¿Qué fue lo más divertido?</label>
+          <textarea class="worksheet-textarea" id="r2" name="answer_12"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="r3">¿Cómo podrías mejorar este dado?</label>
+          <textarea class="worksheet-textarea" id="r3" name="answer_13"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="r4">¿Podrías agregar sonido?</label>
+          <textarea class="worksheet-textarea" id="r4" name="answer_14"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="r5">¿Podrías hacerlo más rápido o más lento?</label>
+          <textarea class="worksheet-textarea" id="r5" name="answer_15"></textarea>
+        </div>
+
+        <h3>Reto extra (Opcional)</h3>
+        <ul>
+          <li>Agregar un buzzer.</li>
+          <li>Hacer que el dado “ruede” más rápido.</li>
+          <li>Agregar luces que parpadeen antes de mostrar el número.</li>
+        </ul>
+        <div class="worksheet-field">
+          <label for="challenge">Describe tu mejora.</label>
+          <textarea class="worksheet-textarea" id="challenge" name="answer_16"></textarea>
+        </div>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
