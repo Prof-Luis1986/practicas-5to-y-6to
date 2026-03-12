@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 1 - LED con botón</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="practica-1-led-boton">
+  <header class="hero">
+    <p class="tag">Fase I</p>
+    <h1>Práctica 1: Control de LED con botón</h1>
+    <p class="subtitle">Entradas y salidas digitales con Arduino mediante un circuito sencillo en protoboard.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Práctica 1: Control de LED con botón usando Arduino</h2>
+        <p><strong>Profesor:</strong> Luis Alfonso Martínez Alfaro</p>
+        <p><strong>Asignatura:</strong> Tecnologías / Robótica</p>
+        <p><strong>Tema:</strong> Entradas y salidas digitales con Arduino</p>
+        <p><strong>Duración estimada:</strong> 1 sesión</p>
+      </section>
+
+      <section class="card">
+        <h2>Practicario</h2>
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="p1-name">Nombre del alumno</label>
+            <input class="worksheet-input" id="p1-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="p1-group">Grupo</label>
+            <input class="worksheet-input" id="p1-group" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="p1-date">Fecha</label>
+            <input class="worksheet-input" id="p1-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+        <p class="worksheet-note">Primero completa tus respuestas en esta hoja. Cuando termines, usa el botón para abrir la versión de impresión y guardar un PDF con tus propias respuestas.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>1. Propósito de la actividad</h2>
+        <p>Comprender cómo Arduino puede recibir información del entorno mediante sensores o botones y responder activando dispositivos electrónicos, en este caso un LED.</p>
+        <p>Esta práctica permitirá aprender los conceptos básicos de circuitos electrónicos simples, entradas digitales, salidas digitales y programación básica en Arduino.</p>
+        <p>Estos conocimientos serán fundamentales para proyectos posteriores como robots, sensores y sistemas automatizados.</p>
+
+        <h2>2. Materiales</h2>
+        <p>Para cada equipo de trabajo se requiere:</p>
+        <ul>
+          <li>1 Arduino UNO.</li>
+          <li>1 cable USB.</li>
+          <li>1 protoboard.</li>
+          <li>1 LED.</li>
+          <li>1 botón (push button).</li>
+          <li>2 resistencias (220&Omega; o 330&Omega;).</li>
+          <li>Cables jumper.</li>
+          <li>Computadora con Arduino IDE.</li>
+        </ul>
+
+        <h2>3. Descripción del circuito</h2>
+        <p>El circuito funciona de la siguiente manera:</p>
+        <ul>
+          <li>El LED se conecta a un pin digital de Arduino.</li>
+          <li>El botón se conecta a otro pin digital configurado como entrada.</li>
+          <li>Cuando se presiona el botón, Arduino detecta la señal y enciende el LED.</li>
+        </ul>
+        <p>Esto representa un sistema común en electrónica: <strong>Entrada -&gt; Procesamiento -&gt; Salida</strong>.</p>
+        <p>Ejemplo: Botón presionado -&gt; Arduino detecta señal -&gt; LED se enciende.</p>
+
+        <h2>4. Armado del circuito</h2>
+        <p>Armar el circuito siguiendo el diagrama proporcionado por el profesor.</p>
+        <p><strong>Conexiones principales:</strong></p>
+        <h3>LED</h3>
+        <ul>
+          <li>Pin positivo del LED -&gt; resistencia -&gt; pin 13 de Arduino.</li>
+          <li>Pin negativo del LED -&gt; GND.</li>
+        </ul>
+        <h3>Botón</h3>
+        <ul>
+          <li>Una pata del botón -&gt; pin 7 de Arduino.</li>
+          <li>Otra pata del botón -&gt; 5V.</li>
+          <li>Resistencia -&gt; GND.</li>
+        </ul>
+        <p>La resistencia protege el circuito y evita que pase demasiada corriente.</p>
+      </section>
+
+      <section class="card">
+        <h2>5. Programación en Arduino</h2>
+        <p>Una vez armado el circuito, cargar el siguiente programa:</p>
+        <pre><code>int led = 13;
+int boton = 7;
+int estadoBoton = 0;
+
+void setup() {
+  pinMode(led, OUTPUT);
+  pinMode(boton, INPUT);
+}
+
+void loop() {
+  estadoBoton = digitalRead(boton);
+
+  if (estadoBoton == HIGH) {
+    digitalWrite(led, HIGH);
+  } 
+  else {
+    digitalWrite(led, LOW);
+  }
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>6. Funcionamiento del programa</h2>
+        <ul>
+          <li>Define el pin del LED.</li>
+          <li>Define el pin del botón.</li>
+          <li>Lee constantemente el estado del botón.</li>
+          <li>Si el botón está presionado, el LED se enciende.</li>
+          <li>Si el botón no está presionado, el LED se apaga.</li>
+        </ul>
+        <p>Este proceso ocurre de forma continua dentro del ciclo <code>loop()</code>.</p>
+      </section>
+
+      <section class="card">
+        <h2>Diagrama de la práctica</h2>
+        <figure>
+          <img src="Practica1.png" alt="Diagrama de práctica de Arduino en protoboard" />
+          <figcaption>Diagrama de conexión para control de LED con botón.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Instrucción para ingresar a Tinkercad</h2>
+        <ol>
+          <li>Abre tu navegador de internet (Chrome, Edge o Firefox).</li>
+          <li>Ingresa a la siguiente dirección: <code>https://www.tinkercad.com</code>.</li>
+          <li>Haz clic en <strong>Iniciar sesión</strong> (Sign in).</li>
+          <li>Selecciona una de estas opciones para entrar: Cuenta de Google, Cuenta de Microsoft o Cuenta de Autodesk.</li>
+          <li>Una vez dentro de la plataforma, entra a la sección <strong>Circuits</strong> (Circuitos).</li>
+          <li>Presiona el botón <strong>Create new Circuit</strong> (Crear nuevo circuito).</li>
+          <li>Dentro del simulador podrás agregar un Arduino Uno, insertar LEDs, colocar resistencias, conectar buzzer y escribir el código del programa.</li>
+          <li>Finalmente presiona <strong>Start Simulation</strong> para ejecutar el circuito y verificar que funcione correctamente.</li>
+        </ol>
+        <p><strong>Indicaciones importantes:</strong></p>
+        <ul>
+          <li>Guarda tu proyecto con el nombre: <code>HimnoAlegria_Arduino_TuNombre</code>.</li>
+          <li>Verifica que el circuito no tenga errores de conexión.</li>
+          <li>Comprueba que los componentes del proyecto funcionen correctamente en la simulación.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>7. Actividad de aprendizaje</h2>
+        <p>Después de probar el circuito, experimentar con el programa:</p>
+        <ul>
+          <li>Modificar el código para que el LED permanezca encendido 3 segundos al presionar el botón.</li>
+          <li>Modificar el programa para que el LED parpadee cuando se presione el botón.</li>
+          <li>Intentar hacer que el LED cambie de estado cada vez que se presione el botón (encendido -&gt; apagado -&gt; encendido).</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>8. Evidencia de aprendizaje</h2>
+        <ul>
+          <li>Fotografía del circuito armado.</li>
+          <li>Captura del código utilizado.</li>
+          <li>Breve explicación del funcionamiento.</li>
+          <li>Video corto mostrando el circuito funcionando.</li>
+        </ul>
+        <p>La evidencia deberá integrarse en el Google Sites del alumno correspondiente a la materia.</p>
+      </section>
+
+      <section class="card">
+        <h2>9. Reflexión</h2>
+        <p>Responder las siguientes preguntas:</p>
+        <ul>
+          <li>¿Qué es una entrada digital?</li>
+          <li>¿Qué es una salida digital?</li>
+          <li>¿Por qué se utilizan resistencias en los circuitos electrónicos?</li>
+          <li>¿En qué otros dispositivos de la vida cotidiana se utilizan botones para controlar sistemas?</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>10. Conexión con proyectos futuros</h2>
+        <p>Este tipo de circuito es la base para proyectos más avanzados como:</p>
+        <ul>
+          <li>Robots.</li>
+          <li>Alarmas.</li>
+          <li>Sensores de movimiento.</li>
+          <li>Sistemas automáticos.</li>
+          <li>Proyectos de robótica educativa.</li>
+        </ul>
+        <p>En próximas prácticas se integrarán motores, sensores y sistemas de control, aplicando lo aprendido en esta actividad.</p>
+      </section>
+
+      <section class="card">
+        <h2>Respuestas del practicario</h2>
+        <div class="worksheet-field">
+          <label for="p1-r1">1. Explica qué es una entrada digital.</label>
+          <textarea class="worksheet-textarea" id="p1-r1" name="answer_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p1-r2">2. Explica qué es una salida digital.</label>
+          <textarea class="worksheet-textarea" id="p1-r2" name="answer_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p1-r3">3. Describe cómo funciona el circuito.</label>
+          <textarea class="worksheet-textarea" id="p1-r3" name="answer_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p1-r4">4. ¿Por qué se usan resistencias?</label>
+          <textarea class="worksheet-textarea" id="p1-r4" name="answer_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p1-r5">5. ¿Qué modificación harías al programa?</label>
+          <textarea class="worksheet-textarea" id="p1-r5" name="answer_5"></textarea>
+        </div>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

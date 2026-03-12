@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 5 - Resistencias y Ley de Ohm</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content">
+  <header class="hero">
+    <p class="tag">Fase II</p>
+    <h1>Práctica 5: Resistencias y Ley de Ohm</h1>
+    <p class="subtitle">Hoja de trabajo editable para resolver ejercicios, reflexionar y guardar la práctica en PDF.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Asignatura:</strong> Tecnologías</p>
+        <p><strong>Grado:</strong> 5° de primaria</p>
+        <p><strong>Duración:</strong> 1 sesión (60 minutos)</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre del alumno</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <p class="worksheet-note">Primero completa tus respuestas en esta hoja. Cuando termines, usa el botón para abrir la versión de impresión y guardar un PDF con tus propias respuestas.</p>
+        <div class="button-row">
+          <button class="action-button" id="print-worksheet" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" id="reset-worksheet" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Aprendizaje esperado</h2>
+        <ul>
+          <li>Identifica qué es una resistencia y su función en un circuito.</li>
+          <li>Comprende la relación entre voltaje, corriente y resistencia.</li>
+          <li>Realiza operaciones usando la Ley de Ohm.</li>
+          <li>Interpreta el valor de una resistencia mediante su código de colores.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>1. ¿Qué es una resistencia?</h2>
+        <p>Una resistencia es un componente electrónico que controla o limita el paso de la corriente eléctrica.</p>
+        <p>Su función principal es proteger otros componentes, como focos o LEDs, evitando que reciban demasiada electricidad y se dañen.</p>
+        <p><strong>Ejemplo sencillo:</strong> Así como una llave controla el paso del agua en una tubería, la resistencia controla el paso de la electricidad en un circuito.</p>
+      </section>
+
+      <section class="card">
+        <h2>2. Ley de Ohm</h2>
+        <p><strong>Ley de Ohm</strong></p>
+        <p>La Ley de Ohm explica la relación entre tres elementos fundamentales de la electricidad:</p>
+
+        <p><strong>Voltaje (V)</strong><br />Es la fuerza que impulsa a los electrones para que se muevan por un circuito eléctrico.</p>
+        <p><strong>Corriente (I)</strong><br />Es la cantidad de electricidad que circula por un conductor.</p>
+        <p><strong>Resistencia (R)</strong><br />Es la oposición o dificultad que tiene la corriente para pasar por un material.</p>
+
+        <p><strong>Fórmulas de la Ley de Ohm</strong></p>
+        <ul>
+          <li>V = I × R</li>
+          <li>R = V ÷ I</li>
+          <li>I = V ÷ R</li>
+        </ul>
+
+        <figure>
+          <img src="Resistencia.gif" alt="Animación de apoyo sobre voltaje en la Ley de Ohm" />
+          <figcaption>Apoyo visual para relacionar voltaje, corriente y resistencia dentro de la Ley de Ohm.</figcaption>
+        </figure>
+
+        <p><strong>Unidades de medida</strong></p>
+        <table>
+          <thead>
+            <tr>
+              <th>Magnitud</th>
+              <th>Nombre</th>
+              <th>Unidad</th>
+              <th>Símbolo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Voltaje</td>
+              <td>Volt</td>
+              <td>Volt</td>
+              <td>V</td>
+            </tr>
+            <tr>
+              <td>Corriente</td>
+              <td>Ampere</td>
+              <td>Ampere</td>
+              <td>A</td>
+            </tr>
+            <tr>
+              <td>Resistencia</td>
+              <td>Ohm</td>
+              <td>Ohm</td>
+              <td>Ω</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p><strong>Ejemplo sencillo</strong></p>
+        <p>Si tenemos:</p>
+        <ul>
+          <li>Voltaje = 9 V</li>
+          <li>Resistencia = 3 Ω</li>
+        </ul>
+        <p>Entonces:</p>
+        <p><code>I = V ÷ R</code><br /><code>I = 9 ÷ 3</code><br /><code>I = 3 A</code></p>
+        <p>La corriente que circula en el circuito es de 3 amperes.</p>
+      </section>
+
+      <section class="card" id="calculation-section">
+        <h2>3. Actividades de cálculo</h2>
+        <p class="worksheet-note">Cada problema incluye espacio para escribir la operación, verla con formato tipo cuaderno y después anotar la respuesta final.</p>
+
+        <h3>Parte A: Calcula la Resistencia (R)</h3>
+        <div class="exercise-list">
+          <div class="exercise-item"><span class="exercise-prompt">V = 12V | I = 3A</span><input class="worksheet-input" name="calc_a_1" type="text" placeholder="R = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">V = 18V | I = 6A</span><input class="worksheet-input" name="calc_a_2" type="text" placeholder="R = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">V = 24V | I = 4A</span><input class="worksheet-input" name="calc_a_3" type="text" placeholder="R = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">V = 30V | I = 5A</span><input class="worksheet-input" name="calc_a_4" type="text" placeholder="R = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">V = 16V | I = 2A</span><input class="worksheet-input" name="calc_a_5" type="text" placeholder="R = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">V = 20V | I = 4A</span><input class="worksheet-input" name="calc_a_6" type="text" placeholder="R = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">V = 9V | I = 3A</span><input class="worksheet-input" name="calc_a_7" type="text" placeholder="R = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">V = 15V | I = 5A</span><input class="worksheet-input" name="calc_a_8" type="text" placeholder="R = ..." /></div>
+        </div>
+
+        <h3>Parte B: Calcula el Voltaje (V)</h3>
+        <div class="exercise-list">
+          <div class="exercise-item"><span class="exercise-prompt">R = 5Ω | I = 2A</span><input class="worksheet-input" name="calc_b_1" type="text" placeholder="V = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">R = 4Ω | I = 3A</span><input class="worksheet-input" name="calc_b_2" type="text" placeholder="V = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">R = 6Ω | I = 5A</span><input class="worksheet-input" name="calc_b_3" type="text" placeholder="V = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">R = 10Ω | I = 2A</span><input class="worksheet-input" name="calc_b_4" type="text" placeholder="V = ..." /></div>
+        </div>
+
+        <h3>Parte C: Calcula la Corriente (I)</h3>
+        <div class="exercise-list">
+          <div class="exercise-item"><span class="exercise-prompt">V = 12V | R = 4Ω</span><input class="worksheet-input" name="calc_c_1" type="text" placeholder="I = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">V = 18V | R = 6Ω</span><input class="worksheet-input" name="calc_c_2" type="text" placeholder="I = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">V = 20V | R = 5Ω</span><input class="worksheet-input" name="calc_c_3" type="text" placeholder="I = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">V = 24V | R = 8Ω</span><input class="worksheet-input" name="calc_c_4" type="text" placeholder="I = ..." /></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>4. Código de colores de las resistencias</h2>
+        <p>Las resistencias tienen bandas de colores que indican su valor.</p>
+        <p>En una resistencia de 3 bandas:</p>
+        <ul>
+          <li>La primera banda indica el primer número.</li>
+          <li>La segunda banda indica el segundo número.</li>
+          <li>La tercera banda indica la cantidad de ceros que se agregan.</li>
+        </ul>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Color</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Negro</td><td>0</td></tr>
+            <tr><td>Café</td><td>1</td></tr>
+            <tr><td>Rojo</td><td>2</td></tr>
+            <tr><td>Naranja</td><td>3</td></tr>
+            <tr><td>Amarillo</td><td>4</td></tr>
+            <tr><td>Verde</td><td>5</td></tr>
+            <tr><td>Azul</td><td>6</td></tr>
+            <tr><td>Violeta</td><td>7</td></tr>
+            <tr><td>Gris</td><td>8</td></tr>
+            <tr><td>Blanco</td><td>9</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Ejemplo:</strong> Rojo – Violeta – Café = 270 ohms (Ω).</p>
+      </section>
+
+      <section class="card">
+        <h2>5. Actividad: Descifra el valor</h2>
+        <div class="exercise-list">
+          <div class="exercise-item"><span class="exercise-prompt">Café – Negro – Rojo</span><input class="worksheet-input" name="colors_1" type="text" placeholder="Valor = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">Amarillo – Violeta – Naranja</span><input class="worksheet-input" name="colors_2" type="text" placeholder="Valor = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">Verde – Azul – Rojo</span><input class="worksheet-input" name="colors_3" type="text" placeholder="Valor = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">Rojo – Rojo – Café</span><input class="worksheet-input" name="colors_4" type="text" placeholder="Valor = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">Azul – Gris – Amarillo</span><input class="worksheet-input" name="colors_5" type="text" placeholder="Valor = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">Naranja – Blanco – Rojo</span><input class="worksheet-input" name="colors_6" type="text" placeholder="Valor = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">Verde – Verde – Café</span><input class="worksheet-input" name="colors_7" type="text" placeholder="Valor = ..." /></div>
+          <div class="exercise-item"><span class="exercise-prompt">Rojo – Negro – Naranja</span><input class="worksheet-input" name="colors_8" type="text" placeholder="Valor = ..." /></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>6. Actividad integradora</h2>
+        <div class="worksheet-field">
+          <label for="integrator-1">Un LED funciona con 2 amperes y se conecta a una batería de 12 volts. ¿Qué resistencia se necesita?</label>
+          <textarea class="worksheet-textarea" id="integrator-1" name="integrator_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="integrator-2">Si encuentras una resistencia con colores Rojo – Rojo – Café, ¿es adecuada para el circuito? Explica por qué.</label>
+          <textarea class="worksheet-textarea" id="integrator-2" name="integrator_2"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>7. Reflexión final</h2>
+        <div class="worksheet-field">
+          <label for="reflection-1">¿Para qué sirve una resistencia?</label>
+          <textarea class="worksheet-textarea" id="reflection-1" name="reflection_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-2">¿Por qué no debemos conectar un LED directamente a una batería?</label>
+          <textarea class="worksheet-textarea" id="reflection-2" name="reflection_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-3">¿Qué fue lo más interesante que aprendiste hoy?</label>
+          <textarea class="worksheet-textarea" id="reflection-3" name="reflection_3"></textarea>
+        </div>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+        <p>Observaciones: ________________________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const worksheetStorageKey = "practica-5-resistencias-ohm";
+    const printButton = document.getElementById("print-worksheet");
+    const resetButton = document.getElementById("reset-worksheet");
+
+    function getWorksheetFields() {
+      return Array.from(document.querySelectorAll(".worksheet-input, .worksheet-textarea"));
+    }
+
+    function insertSymbol(field, symbol) {
+      if (!field) return;
+
+      const start = field.selectionStart ?? field.value.length;
+      const end = field.selectionEnd ?? field.value.length;
+      field.value = `${field.value.slice(0, start)}${symbol}${field.value.slice(end)}`;
+      const nextPosition = start + symbol.length;
+      field.focus();
+      field.setSelectionRange(nextPosition, nextPosition);
+      saveWorksheet();
+    }
+
+    function saveWorksheet() {
+      const data = {};
+      getWorksheetFields().forEach((field) => {
+        data[field.name] = field.value;
+      });
+      localStorage.setItem(worksheetStorageKey, JSON.stringify(data));
+    }
+
+    function loadWorksheet() {
+      const raw = localStorage.getItem(worksheetStorageKey);
+      if (!raw) return;
+
+      try {
+        const data = JSON.parse(raw);
+        getWorksheetFields().forEach((field) => {
+          if (typeof data[field.name] === "string") {
+            field.value = data[field.name];
+          }
+        });
+      } catch (error) {
+        localStorage.removeItem(worksheetStorageKey);
+      }
+    }
+
+    function formatMathText(text) {
+      return text
+        .replace(/\*/g, "×")
+        .replace(/\//g, "÷")
+        .replace(/ohms?/gi, "Ω")
+        .replace(/\bamp(?:ere)?s?\b/gi, "A")
+        .replace(/\bvolts?\b/gi, "V");
+    }
+
+    function createSymbolSelect(field, wrapper) {
+      const symbolRow = document.createElement("div");
+      symbolRow.className = "field-with-symbol";
+      wrapper.appendChild(symbolRow);
+      symbolRow.appendChild(field);
+
+      const select = document.createElement("select");
+      select.className = "symbol-select";
+      select.setAttribute("aria-label", "Insertar simbolo");
+      select.innerHTML = `
+        <option value="">Agregar simbolo</option>
+        <option value="Ω">Ω - Ohm</option>
+        <option value="V">V - Voltaje</option>
+        <option value="I">I - Corriente</option>
+        <option value="A">A - Ampere</option>
+      `;
+
+      select.addEventListener("change", () => {
+        if (!select.value) return;
+        insertSymbol(field, select.value);
+        select.value = "";
+      });
+
+      symbolRow.appendChild(select);
+    }
+
+    function createExerciseWorkspace(field) {
+      const item = field.closest(".exercise-item");
+      if (!item) return;
+
+      const response = document.createElement("div");
+      response.className = "exercise-response";
+
+      const work = document.createElement("div");
+      work.className = "math-work";
+
+      const stepsLabel = document.createElement("span");
+      stepsLabel.className = "math-work__label";
+      stepsLabel.textContent = "Operacion";
+
+      const steps = document.createElement("textarea");
+      steps.className = "worksheet-textarea math-work__steps";
+      steps.name = `${field.name}_work`;
+      steps.placeholder = "Escribe aqui el procedimiento.\nEjemplo:\nR = V ÷ I\nR = 12 ÷ 3\nR = 4 Ω";
+
+      const preview = document.createElement("div");
+      preview.className = "math-preview";
+      preview.textContent = "Vista previa de la operacion";
+
+      steps.addEventListener("input", () => {
+        const text = steps.value.trim();
+        preview.textContent = text ? formatMathText(text) : "Vista previa de la operacion";
+        saveWorksheet();
+      });
+
+      work.appendChild(stepsLabel);
+      work.appendChild(steps);
+      work.appendChild(preview);
+      response.appendChild(work);
+
+      item.replaceChild(response, field);
+      createSymbolSelect(field, response);
+    }
+
+    function addSymbolSelectToField(field) {
+      if (field.closest(".field-with-symbol")) return;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "exercise-response";
+      field.parentNode.insertBefore(wrapper, field);
+      createSymbolSelect(field, wrapper);
+    }
+
+    document.querySelectorAll("#calculation-section .exercise-item .worksheet-input").forEach((field) => {
+      createExerciseWorkspace(field);
+    });
+
+    document.querySelectorAll(".exercise-item .worksheet-input").forEach((field) => {
+      addSymbolSelectToField(field);
+    });
+
+    getWorksheetFields().forEach((field) => {
+      field.addEventListener("input", saveWorksheet);
+    });
+
+    printButton.addEventListener("click", () => {
+      saveWorksheet();
+      window.print();
+    });
+
+    resetButton.addEventListener("click", () => {
+      getWorksheetFields().forEach((field) => {
+        field.value = "";
+      });
+      localStorage.removeItem(worksheetStorageKey);
+      document.querySelectorAll(".math-preview").forEach((preview) => {
+        preview.textContent = "Vista previa de la operacion";
+      });
+    });
+
+    loadWorksheet();
+
+    document.querySelectorAll(".math-work__steps").forEach((field) => {
+      const preview = field.parentElement?.querySelector(".math-preview");
+      if (!preview) return;
+      const text = field.value.trim();
+      preview.textContent = text ? formatMathText(text) : "Vista previa de la operacion";
+    });
+  </script>
+</body>
+</html>

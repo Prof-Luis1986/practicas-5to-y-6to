@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 6 - Sensor ultrasónico</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="practica-6-ultrasonico">
+  <header class="hero">
+    <p class="tag">Fase III</p>
+    <h1>Práctica 6: Sensor ultrasónico con LEDs y buzzer</h1>
+    <p class="subtitle">Guía completa para identificar resistencias, conectar el circuito y programar un sistema de alerta.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Fase III</h2>
+        <h3>Práctica 6: Sensor ultrasónico con LEDs y buzzer</h3>
+        <p>Guía completa para identificar resistencias, conectar el circuito y programar el sistema de alerta.</p>
+      </section>
+
+      <section class="card">
+        <h2>Practicario</h2>
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="u-name">Nombre del alumno</label>
+            <input class="worksheet-input" id="u-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="u-group">Grupo</label>
+            <input class="worksheet-input" id="u-group" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="u-date">Fecha</label>
+            <input class="worksheet-input" id="u-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+        <p class="worksheet-note">Primero completa tus respuestas en esta hoja. Cuando termines, usa el botón para abrir la versión de impresión y guardar un PDF con tus propias respuestas.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Código de colores de resistencia</h2>
+        <ul>
+          <li>Violeta = 7</li>
+          <li>Gris = 8</li>
+          <li>Blanco = 9</li>
+        </ul>
+        <p>Esto les permitirá identificar el valor real de la resistencia utilizada.</p>
+      </section>
+
+      <section class="card">
+        <h2>8. Conexión del circuito</h2>
+
+        <h3>Sensor ultrasónico</h3>
+        <ul>
+          <li>VCC -&gt; 5V</li>
+          <li>GND -&gt; GND</li>
+          <li>TRIG -&gt; pin 9</li>
+          <li>ECHO -&gt; pin 10</li>
+        </ul>
+        <p><strong>Función de cada conexión:</strong></p>
+        <ul>
+          <li><strong>VCC -&gt; 5V:</strong> Alimenta el sensor ultrasónico con energía.</li>
+          <li><strong>GND -&gt; GND:</strong> Cierra el circuito y establece la referencia de tierra.</li>
+          <li><strong>TRIG -&gt; pin 9:</strong> Pin de salida del Arduino que envía el pulso para iniciar la medición.</li>
+          <li><strong>ECHO -&gt; pin 10:</strong> Pin de entrada del Arduino que recibe el tiempo de rebote del ultrasonido.</li>
+        </ul>
+
+        <h3>LEDs</h3>
+        <ul>
+          <li>LED rojo -&gt; pin 3</li>
+          <li>LED verde -&gt; pin 4</li>
+        </ul>
+        <p>Cada LED debe llevar una resistencia previamente calculada.</p>
+
+        <h3>Buzzer</h3>
+        <ul>
+          <li>Positivo -&gt; pin 8</li>
+          <li>Negativo -&gt; GND</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>9. Desarrollo del código por bloques</h2>
+
+        <h3>Bloque 1 - Definición de pines</h3>
+        <pre><code>const int TRIG = 9;
+const int ECHO = 10;
+
+const int LED_ROJO = 3;
+const int LED_VERDE = 4;
+const int BUZZER = 8;
+
+const int DISTANCIA_ALERTA = 30;</code></pre>
+
+        <h3>Bloque 2 - Configuración inicial</h3>
+        <pre><code>void setup() {
+
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+
+  pinMode(LED_ROJO, OUTPUT);
+  pinMode(LED_VERDE, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+
+  Serial.begin(9600);
+
+}</code></pre>
+
+        <h3>Bloque 3 - Medición de distancia</h3>
+        <pre><code>long medirDistancia() {
+
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long duracion = pulseIn(ECHO, HIGH, 30000);
+
+  if (duracion == 0) return -1;
+
+  long distancia = duracion / 58;
+
+  return distancia;
+}</code></pre>
+
+        <h3>Bloque 4 - Lectura de distancia</h3>
+        <pre><code>void loop() {
+
+  long distancia = medirDistancia();
+
+  Serial.print("Distancia: ");
+  Serial.print(distancia);
+  Serial.println(" cm");</code></pre>
+
+        <h3>Bloque 5 - Sistema de alerta</h3>
+        <pre><code>  if (distancia &gt; 0 && distancia &lt;= DISTANCIA_ALERTA) {
+
+    digitalWrite(LED_ROJO, HIGH);
+    digitalWrite(LED_VERDE, LOW);
+
+    tone(BUZZER, 1000);
+
+  } else {
+
+    digitalWrite(LED_ROJO, LOW);
+    digitalWrite(LED_VERDE, HIGH);
+
+    noTone(BUZZER);
+
+  }
+
+  delay(200);
+
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>10. Evidencias del proyecto</h2>
+        <ul>
+          <li>Circuito funcionando</li>
+          <li>Simulación en Tinkercad</li>
+          <li>Código del radar</li>
+          <li>Fotografías del montaje</li>
+          <li>Practicario resuelto</li>
+        </ul>
+      </section>
+
+      <section class="card challenge">
+        <h2>11. Reto extra (desafío)</h2>
+        <ul>
+          <li>Modificar el programa para que el buzzer suene más rápido mientras el objeto esté más cerca.</li>
+          <li>Hacer que el LED cambie de comportamiento dependiendo de la distancia.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Diagrama de referencia (Tinkercad)</h2>
+        <figure>
+          <img src="diagrama-tinkercad.png" alt="Diagrama de conexión del circuito en Tinkercad" />
+          <figcaption>Imagen de referencia del diagrama en Tinkercad.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Instrucción para ingresar a Tinkercad</h2>
+        <ol>
+          <li>Abre tu navegador de internet (Chrome, Edge o Firefox).</li>
+          <li>Ingresa a la siguiente dirección: <code>https://www.tinkercad.com</code>.</li>
+          <li>Haz clic en <strong>Iniciar sesión</strong> (Sign in).</li>
+          <li>Selecciona una de estas opciones para entrar: Cuenta de Google, Cuenta de Microsoft o Cuenta de Autodesk.</li>
+          <li>Una vez dentro de la plataforma, entra a la sección <strong>Circuits</strong> (Circuitos).</li>
+          <li>Presiona el botón <strong>Create new Circuit</strong> (Crear nuevo circuito).</li>
+          <li>Dentro del simulador podrás agregar un Arduino Uno, insertar LEDs, colocar resistencias, conectar buzzer y escribir el código del programa.</li>
+          <li>Finalmente presiona <strong>Start Simulation</strong> para ejecutar el circuito y verificar que funcione correctamente.</li>
+        </ol>
+        <p><strong>Indicaciones importantes:</strong></p>
+        <ul>
+          <li>Guarda tu proyecto con el nombre: <code>HimnoAlegria_Arduino_TuNombre</code>.</li>
+          <li>Verifica que el sensor detecte la distancia, que los LEDs cambien y que el buzzer responda correctamente.</li>
+          <li>Comprueba que el circuito no tenga errores de conexión.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Código completo</h2>
+        <pre><code>// ===== RADAR SIMPLE CON ALERTA =====
+// LED verde = normal
+// LED rojo + buzzer = objeto detectado
+
+// -------- Pines --------
+const int TRIG = 9;
+const int ECHO = 10;
+
+const int LED_ROJO = 3;
+const int LED_VERDE = 4;
+const int BUZZER = 8;
+
+// Distancia de alerta (ajústala)
+const int DISTANCIA_ALERTA = 30; // centímetros
+
+// -------- Función para medir distancia --------
+long medirDistancia() {
+
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long duracion = pulseIn(ECHO, HIGH, 30000);
+
+  if (duracion == 0) return -1;
+
+  long distancia = duracion / 58;
+  return distancia;
+}
+
+void setup() {
+
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+
+  pinMode(LED_ROJO, OUTPUT);
+  pinMode(LED_VERDE, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+
+  long distancia = medirDistancia();
+
+  Serial.print("Distancia: ");
+  Serial.print(distancia);
+  Serial.println(" cm");
+
+  if (distancia > 0 && distancia <= DISTANCIA_ALERTA) {
+
+    // ALERTA
+    digitalWrite(LED_ROJO, HIGH);
+    digitalWrite(LED_VERDE, LOW);
+
+    tone(BUZZER, 1000); // sonido
+
+  } else {
+
+    // NORMAL
+    digitalWrite(LED_ROJO, LOW);
+    digitalWrite(LED_VERDE, HIGH);
+
+    noTone(BUZZER);
+  }
+
+  delay(200);
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Respuestas del practicario</h2>
+        <div class="worksheet-field">
+          <label for="u-r1">1. ¿Cuál es la función del sensor ultrasónico?</label>
+          <textarea class="worksheet-textarea" id="u-r1" name="answer_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="u-r2">2. Explica la función de TRIG y ECHO.</label>
+          <textarea class="worksheet-textarea" id="u-r2" name="answer_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="u-r3">3. ¿Qué ocurre cuando un objeto entra en la distancia de alerta?</label>
+          <textarea class="worksheet-textarea" id="u-r3" name="answer_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="u-r4">4. ¿Qué hace la función <code>medirDistancia()</code>?</label>
+          <textarea class="worksheet-textarea" id="u-r4" name="answer_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="u-r5">5. Describe una mejora para este sistema de alerta.</label>
+          <textarea class="worksheet-textarea" id="u-r5" name="answer_5"></textarea>
+        </div>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

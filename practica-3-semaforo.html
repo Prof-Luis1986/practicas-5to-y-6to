@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 3 - Semáforo con Arduino</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="practica-3-semaforo">
+  <header class="hero">
+    <p class="tag">Fase I</p>
+    <h1>Práctica 3: Simulación de Semáforo con Arduino</h1>
+    <p class="subtitle">Actividad para 5° año sobre secuencias, pines digitales y control de tiempos en Arduino.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Asignatura:</strong> Tecnología / Programación y Electrónica</p>
+        <p><strong>Grado:</strong> 5° año</p>
+        <p><strong>Práctica:</strong> Simulación de Semáforo con Arduino</p>
+        <p><strong>Duración estimada:</strong> 2 sesiones de 50 minutos</p>
+      </section>
+
+      <section class="card">
+        <h2>Practicario</h2>
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="p3-name">Nombre del alumno</label>
+            <input class="worksheet-input" id="p3-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="p3-group">Grupo</label>
+            <input class="worksheet-input" id="p3-group" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="p3-date">Fecha</label>
+            <input class="worksheet-input" id="p3-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+        <p class="worksheet-note">Primero completa tus respuestas en esta hoja. Cuando termines, usa el botón para abrir la versión de impresión y guardar un PDF con tus propias respuestas.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>1. Propósito de la práctica</h2>
+        <p>Que el estudiante:</p>
+        <ul>
+          <li>Comprenda el funcionamiento de un sistema secuencial.</li>
+          <li>Identifique la función de pines digitales en Arduino.</li>
+          <li>Programe tiempos de espera con <code>delay()</code>.</li>
+          <li>Analice la lógica de un semáforo real.</li>
+          <li>Desarrolle pensamiento algorítmico aplicado a la vida cotidiana.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>2. Materiales</h2>
+        <ul>
+          <li>1 Arduino UNO.</li>
+          <li>1 Protoboard.</li>
+          <li>3 LEDs (rojo, amarillo, verde).</li>
+          <li>3 resistencias de 220&Omega;.</li>
+          <li>Cables jumper.</li>
+          <li>Cable USB.</li>
+          <li>Computadora con Arduino IDE.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>3. Conexiones</h2>
+        <ul>
+          <li>LED Verde -&gt; Pin 8.</li>
+          <li>LED Amarillo -&gt; Pin 5.</li>
+          <li>LED Rojo -&gt; Pin 4.</li>
+        </ul>
+        <p>Cada LED debe tener resistencia en serie hacia GND.</p>
+      </section>
+
+      <section class="card">
+        <h2>Imagen de referencia</h2>
+        <figure>
+          <img src="Semaforo.png" alt="Diagrama de semáforo con Arduino" />
+          <figcaption>Referencia visual del circuito de simulación de semáforo con Arduino.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Instrucción para ingresar a Tinkercad</h2>
+        <ol>
+          <li>Abre tu navegador de internet (Chrome, Edge o Firefox).</li>
+          <li>Ingresa a la siguiente dirección: <code>https://www.tinkercad.com</code>.</li>
+          <li>Haz clic en <strong>Iniciar sesión</strong> (Sign in).</li>
+          <li>Selecciona una de estas opciones para entrar: Cuenta de Google, Cuenta de Microsoft o Cuenta de Autodesk.</li>
+          <li>Una vez dentro de la plataforma, entra a la sección <strong>Circuits</strong> (Circuitos).</li>
+          <li>Presiona el botón <strong>Create new Circuit</strong> (Crear nuevo circuito).</li>
+          <li>Dentro del simulador podrás agregar un Arduino Uno, insertar LEDs, colocar resistencias, conectar buzzer y escribir el código del programa.</li>
+          <li>Finalmente presiona <strong>Start Simulation</strong> para ejecutar el circuito y verificar que funcione correctamente.</li>
+        </ol>
+        <p><strong>Indicaciones importantes:</strong></p>
+        <ul>
+          <li>Guarda tu proyecto con el nombre: <code>HimnoAlegria_Arduino_TuNombre</code>.</li>
+          <li>Verifica que los LEDs enciendan en la secuencia correcta del semáforo.</li>
+          <li>Comprueba que el circuito no tenga errores de conexión.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>4. Código base</h2>
+        <pre><code>int rojo=4;
+int amarillo=5;
+int verde=8;
+
+void setup(){
+  pinMode(verde,OUTPUT);
+  pinMode(amarillo,OUTPUT);
+  pinMode(rojo,OUTPUT);
+}
+
+void loop(){
+  digitalWrite(verde,HIGH);
+  delay(20000);
+  digitalWrite(verde,LOW);
+  delay(300);
+  
+  digitalWrite(amarillo,HIGH);
+  delay(3000);
+  digitalWrite(amarillo,LOW);
+  delay(300);
+  
+  digitalWrite(rojo,HIGH);
+  delay(15000);
+  digitalWrite(rojo,LOW);
+  delay(300);
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>5. Explicación técnica</h2>
+        <ul>
+          <li><code>pinMode()</code> configura el pin como salida.</li>
+          <li><code>digitalWrite(HIGH)</code> enciende el LED.</li>
+          <li><code>delay()</code> pausa el programa en milisegundos.</li>
+          <li>El sistema funciona de forma secuencial, no paralela.</li>
+          <li>El ciclo se repite indefinidamente gracias a <code>loop()</code>.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>6. Actividades de análisis</h2>
+        <ul>
+          <li>¿Cuántos segundos dura encendido cada color?</li>
+          <li>¿Qué pasaría si quitamos los <code>delay(300)</code>?</li>
+          <li>¿Cómo modificarías el código para que el amarillo parpadee?</li>
+          <li>¿Este sistema es eficiente en la vida real? ¿Por qué?</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>7. Rúbrica de evaluación</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Criterio</th>
+              <th>Excelente</th>
+              <th>Bueno</th>
+              <th>Suficiente</th>
+              <th>Insuficiente</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Conexión correcta</td>
+              <td>Funciona al primer intento</td>
+              <td>Ajustes mínimos</td>
+              <td>Necesitó ayuda</td>
+              <td>No funciona</td>
+            </tr>
+            <tr>
+              <td>Comprensión del código</td>
+              <td>Explica cada parte</td>
+              <td>Explica parcialmente</td>
+              <td>Lee sin entender</td>
+              <td>No comprende</td>
+            </tr>
+            <tr>
+              <td>Funcionamiento</td>
+              <td>Secuencia perfecta</td>
+              <td>Error menor</td>
+              <td>Desfase de tiempos</td>
+              <td>No ejecuta</td>
+            </tr>
+            <tr>
+              <td>Reflexión técnica</td>
+              <td>Análisis profundo</td>
+              <td>Reflexión básica</td>
+              <td>Respuestas simples</td>
+              <td>Sin análisis</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Respuestas del practicario</h2>
+        <div class="worksheet-field">
+          <label for="p3-r1">1. ¿Cuánto dura cada color encendido?</label>
+          <textarea class="worksheet-textarea" id="p3-r1" name="answer_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p3-r2">2. ¿Qué función cumplen <code>pinMode()</code> y <code>digitalWrite()</code>?</label>
+          <textarea class="worksheet-textarea" id="p3-r2" name="answer_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p3-r3">3. ¿Qué ocurriría si quitamos los <code>delay(300)</code>?</label>
+          <textarea class="worksheet-textarea" id="p3-r3" name="answer_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p3-r4">4. Explica cómo harías parpadear el LED amarillo.</label>
+          <textarea class="worksheet-textarea" id="p3-r4" name="answer_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p3-r5">5. ¿Por qué el semáforo es un sistema secuencial?</label>
+          <textarea class="worksheet-textarea" id="p3-r5" name="answer_5"></textarea>
+        </div>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

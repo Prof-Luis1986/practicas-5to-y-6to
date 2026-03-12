@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 4 - Himno de la Alegría</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content">
+  <header class="hero">
+    <p class="tag">Fase II</p>
+    <h1>Práctica 4: Himno de la Alegría con LEDs y buzzer</h1>
+    <p class="subtitle">Hoja de trabajo editable para analizar el circuito, el código y las modificaciones del proyecto con Arduino.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Práctica:</strong> Reproducción del Himno de la Alegría con secuencia de luces usando Arduino</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre del alumno</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grado y grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <p class="worksheet-note">Primero completa tus respuestas en esta hoja. Cuando termines, usa el botón para abrir la versión de impresión y guardar un PDF con tus propias respuestas.</p>
+        <div class="button-row">
+          <button class="action-button" id="print-worksheet" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" id="reset-worksheet" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Propósito de la práctica</h2>
+        <p>Programar un circuito con Arduino Uno, 8 LEDs y un buzzer para reproducir una melodía del Himno de la Alegría, mientras los LEDs se encienden en secuencia conforme avanza cada nota musical.</p>
+      </section>
+
+      <section class="card">
+        <h2>Aprendizajes esperados</h2>
+        <ul>
+          <li>Identificar el uso de arreglos en Arduino.</li>
+          <li>Comprender cómo se controla una secuencia de LEDs.</li>
+          <li>Utilizar la función <code>tone()</code> para generar sonidos con un buzzer.</li>
+          <li>Relacionar una nota musical con una duración específica.</li>
+          <li>Analizar cómo se sincronizan luz y sonido en un programa.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Materiales</h2>
+        <ul>
+          <li>1 Arduino Uno</li>
+          <li>1 protoboard</li>
+          <li>8 LEDs</li>
+          <li>8 resistencias de 220 Ω</li>
+          <li>1 buzzer</li>
+          <li>Cables Dupont</li>
+          <li>1 cable USB</li>
+          <li>Computadora con Arduino IDE</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Descripción general del circuito</h2>
+        <ul>
+          <li>Los 8 LEDs están conectados a los pines 2, 3, 4, 5, 6, 7, 8 y 9.</li>
+          <li>El buzzer está conectado al pin 10.</li>
+          <li>Cada LED tiene una resistencia para protegerlo.</li>
+          <li>El programa reproduce la melodía y en cada nota se enciende un LED distinto.</li>
+        </ul>
+        <figure>
+          <img src="Himno.png" alt="Diagrama del Himno de la Alegría con Arduino, LEDs y buzzer" />
+          <figcaption>Referencia visual del montaje para reproducir el Himno de la Alegría con secuencia de luces.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Instrucción para ingresar a Tinkercad</h2>
+        <ol>
+          <li>Abre tu navegador de internet (Chrome, Edge o Firefox).</li>
+          <li>Ingresa a la siguiente dirección: <code>https://www.tinkercad.com</code>.</li>
+          <li>Haz clic en <strong>Iniciar sesión</strong> (Sign in).</li>
+          <li>Selecciona una de estas opciones para entrar: Cuenta de Google, Cuenta de Microsoft o Cuenta de Autodesk.</li>
+          <li>Una vez dentro de la plataforma, entra a la sección <strong>Circuits</strong> (Circuitos).</li>
+          <li>Presiona el botón <strong>Create new Circuit</strong> (Crear nuevo circuito).</li>
+          <li>Dentro del simulador podrás agregar un Arduino Uno, insertar LEDs, colocar resistencias, conectar buzzer y escribir el código del programa.</li>
+          <li>Finalmente presiona <strong>Start Simulation</strong> para ejecutar el circuito y verificar que funcione correctamente.</li>
+        </ol>
+        <p><strong>Indicaciones importantes:</strong></p>
+        <ul>
+          <li>Guarda tu proyecto con el nombre: <code>HimnoAlegria_Arduino_TuNombre</code>.</li>
+          <li>Verifica que los LEDs enciendan en secuencia.</li>
+          <li>Comprueba que el buzzer reproduzca la melodía y que el circuito no tenga errores de conexión.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Conceptos previos</h2>
+        <h3>1. ¿Qué es un arreglo?</h3>
+        <p>Un arreglo es una estructura que permite guardar varios valores en una sola variable.</p>
+        <pre><code>int leds[] = {2, 3, 4, 5, 6, 7, 8, 9};</code></pre>
+        <p>Aquí se almacenan los pines donde están conectados los LEDs.</p>
+
+        <h3>2. ¿Qué hace <code>tone()</code>?</h3>
+        <p>La función <code>tone(pin, frecuencia)</code> genera un sonido en el buzzer según la frecuencia indicada.</p>
+        <pre><code>tone(buzzer, 262);</code></pre>
+        <p>Esto hace que el buzzer reproduzca una nota musical.</p>
+
+        <h3>3. ¿Qué hace <code>noTone()</code>?</h3>
+        <p>Detiene el sonido que se está reproduciendo en el buzzer.</p>
+
+        <h3>4. ¿Qué es <code>millis()</code>?</h3>
+        <p><code>millis()</code> devuelve el tiempo transcurrido desde que inició el programa. Sirve para controlar tiempos sin detener completamente el código.</p>
+      </section>
+
+      <section class="card">
+        <h2>Código de la práctica</h2>
+        <pre><code>int leds[] = {2, 3, 4, 5, 6, 7, 8, 9};
+int buzzer = 10;
+
+int melody[] = {
+  262, 262, 294, 330, 330, 294, 262, 247, 220,
+  220, 247, 262, 262, 247, 247,
+  262, 262, 294, 330, 330, 294, 262, 247, 220,
+  220, 247, 262, 247, 220, 220
+};
+
+int durations[] = {
+  400, 400, 400, 400, 400, 400, 400, 400, 600,
+  400, 400, 400, 400, 600, 600,
+  400, 400, 400, 400, 400, 400, 400, 400, 600,
+  400, 400, 400, 600, 600, 800
+};
+
+int currentNote = 0;
+unsigned long previousMillis = 0;
+bool notePlaying = false;
+
+void setup() {
+  for (int i = 0; i < 8; i++) {
+    pinMode(leds[i], OUTPUT);
+  }
+  pinMode(buzzer, OUTPUT);
+}
+
+void loop() {
+  unsigned long currentMillis = millis();
+
+  if (currentNote < sizeof(melody) / sizeof(melody[0])) {
+    if (!notePlaying) {
+      tone(buzzer, melody[currentNote]);
+
+      int ledIndex = currentNote % 8;
+      for (int i = 0; i < 8; i++) {
+        digitalWrite(leds[i], i == ledIndex ? HIGH : LOW);
+      }
+
+      previousMillis = currentMillis;
+      notePlaying = true;
+    }
+
+    if (notePlaying && currentMillis - previousMillis >= durations[currentNote]) {
+      noTone(buzzer);
+      currentNote++;
+      notePlaying = false;
+    }
+  } else {
+    for (int i = 0; i < 8; i++) {
+      digitalWrite(leds[i], LOW);
+    }
+    noTone(buzzer);
+    currentNote = 0;
+    notePlaying = false;
+  }
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Desarrollo de la práctica</h2>
+
+        <h3>Parte 1. Observación del circuito</h3>
+        <p>Observa el diagrama de conexión e identifica cuántos LEDs hay, qué pin usa el buzzer, qué función cumplen las resistencias y dónde está conectado GND.</p>
+        <div class="worksheet-field">
+          <label for="obs-a">a) ¿Cuántos LEDs tiene el circuito?</label>
+          <textarea class="worksheet-textarea" id="obs-a" name="obs_a"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="obs-b">b) ¿En qué pin está conectado el buzzer?</label>
+          <textarea class="worksheet-textarea" id="obs-b" name="obs_b"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="obs-c">c) ¿Para qué sirven las resistencias en los LEDs?</label>
+          <textarea class="worksheet-textarea" id="obs-c" name="obs_c"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="obs-d">d) ¿Qué pasaría si un LED se conecta sin resistencia?</label>
+          <textarea class="worksheet-textarea" id="obs-d" name="obs_d"></textarea>
+        </div>
+
+        <h3>Parte 2. Análisis del código</h3>
+        <div class="worksheet-field">
+          <label for="code-1">1. ¿Qué información guarda el arreglo <code>leds[]</code>?</label>
+          <textarea class="worksheet-textarea" id="code-1" name="code_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="code-2">2. ¿Qué información guarda el arreglo <code>melody[]</code>?</label>
+          <textarea class="worksheet-textarea" id="code-2" name="code_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="code-3">3. ¿Qué información guarda el arreglo <code>durations[]</code>?</label>
+          <textarea class="worksheet-textarea" id="code-3" name="code_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="code-4">4. ¿Qué hace la variable <code>currentNote</code>?</label>
+          <textarea class="worksheet-textarea" id="code-4" name="code_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="code-5">5. ¿Qué significa esta línea: <code>int ledIndex = currentNote % 8;</code>?</label>
+          <textarea class="worksheet-textarea" id="code-5" name="code_5"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="code-6">6. ¿Por qué se usa <code>% 8</code>?</label>
+          <textarea class="worksheet-textarea" id="code-6" name="code_6"></textarea>
+        </div>
+
+        <h3>Parte 3. Relación entre música y luces</h3>
+        <div class="worksheet-field">
+          <label for="music-1">1. Cuando suena una nota, ¿qué ocurre con los LEDs?</label>
+          <textarea class="worksheet-textarea" id="music-1" name="music_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="music-2">2. ¿Se encienden todos al mismo tiempo o uno por uno?</label>
+          <textarea class="worksheet-textarea" id="music-2" name="music_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="music-3">3. ¿Qué pasa cuando termina toda la melodía?</label>
+          <textarea class="worksheet-textarea" id="music-3" name="music_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="music-4">4. ¿La secuencia vuelve a comenzar? Explica.</label>
+          <textarea class="worksheet-textarea" id="music-4" name="music_4"></textarea>
+        </div>
+
+        <h3>Parte 4. Comprensión de instrucciones</h3>
+        <div class="worksheet-field">
+          <label for="inst-a">a) <code>pinMode(leds[i], OUTPUT);</code></label>
+          <textarea class="worksheet-textarea" id="inst-a" name="inst_a"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="inst-b">b) <code>tone(buzzer, melody[currentNote]);</code></label>
+          <textarea class="worksheet-textarea" id="inst-b" name="inst_b"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="inst-c">c) <code>noTone(buzzer);</code></label>
+          <textarea class="worksheet-textarea" id="inst-c" name="inst_c"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="inst-d">d) <code>digitalWrite(leds[i], i == ledIndex ? HIGH : LOW);</code></label>
+          <textarea class="worksheet-textarea" id="inst-d" name="inst_d"></textarea>
+        </div>
+
+        <h3>Parte 5. Modificaciones guiadas</h3>
+        <div class="worksheet-field">
+          <label for="mod-1a">Actividad 1. Escribe aquí qué valores cambiaste para que la melodía suene más rápida.</label>
+          <textarea class="worksheet-textarea" id="mod-1a" name="mod_1a"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="mod-1b">¿Qué pasó con la canción?</label>
+          <textarea class="worksheet-textarea" id="mod-1b" name="mod_1b"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="mod-2a">Actividad 2. Describe tu cambio en el patrón de LEDs.</label>
+          <textarea class="worksheet-textarea" id="mod-2a" name="mod_2a"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="mod-2b">Dibuja o explica cómo se vio la nueva secuencia.</label>
+          <textarea class="worksheet-textarea" id="mod-2b" name="mod_2b"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="mod-3a">Actividad 3. Anota aquí las nuevas frecuencias usadas.</label>
+          <textarea class="worksheet-textarea" id="mod-3a" name="mod_3a"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="mod-3b">¿Qué cambió en el sonido?</label>
+          <textarea class="worksheet-textarea" id="mod-3b" name="mod_3b"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Parte 6. Tabla de análisis</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Elemento</th>
+              <th>Función en la práctica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Arduino Uno</td><td><textarea class="worksheet-textarea" name="table_arduino"></textarea></td></tr>
+            <tr><td>LED</td><td><textarea class="worksheet-textarea" name="table_led"></textarea></td></tr>
+            <tr><td>Resistencia</td><td><textarea class="worksheet-textarea" name="table_resistencia"></textarea></td></tr>
+            <tr><td>Buzzer</td><td><textarea class="worksheet-textarea" name="table_buzzer"></textarea></td></tr>
+            <tr><td>Arreglo <code>melody[]</code></td><td><textarea class="worksheet-textarea" name="table_melody"></textarea></td></tr>
+            <tr><td>Arreglo <code>durations[]</code></td><td><textarea class="worksheet-textarea" name="table_durations"></textarea></td></tr>
+            <tr><td><code>millis()</code></td><td><textarea class="worksheet-textarea" name="table_millis"></textarea></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Parte 7. Reflexión final</h2>
+        <div class="worksheet-field">
+          <label for="reflection-1">1. ¿Qué fue lo que más te llamó la atención de esta práctica?</label>
+          <textarea class="worksheet-textarea" id="reflection-1" name="reflection_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-2">2. ¿Qué fue lo más difícil al armar o entender el circuito?</label>
+          <textarea class="worksheet-textarea" id="reflection-2" name="reflection_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-3">3. ¿Cómo se relacionan la programación y la electrónica en esta actividad?</label>
+          <textarea class="worksheet-textarea" id="reflection-3" name="reflection_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-4">4. ¿En qué otros proyectos podría usarse un buzzer con LEDs?</label>
+          <textarea class="worksheet-textarea" id="reflection-4" name="reflection_4"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Conclusión</h2>
+        <label for="conclusion">Escribe una conclusión personal sobre lo aprendido en esta práctica.</label>
+        <textarea class="worksheet-textarea" id="conclusion" name="conclusion"></textarea>
+      </section>
+
+      <section class="card">
+        <h2>Reto adicional</h2>
+        <ul>
+          <li>Agregar más notas para alargar la canción.</li>
+          <li>Hacer que los LEDs parpadeen al ritmo.</li>
+          <li>Encender todos los LEDs al final de la melodía.</li>
+          <li>Cambiar el programa para reproducir otra canción.</li>
+        </ul>
+        <label for="challenge">Describe tu mejora.</label>
+        <textarea class="worksheet-textarea" id="challenge" name="challenge"></textarea>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+        <p>Observaciones: ________________________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const worksheetStorageKey = "practica-4-himno-alegria";
+    const worksheetFields = Array.from(document.querySelectorAll(".worksheet-input, .worksheet-textarea"));
+    const printButton = document.getElementById("print-worksheet");
+    const resetButton = document.getElementById("reset-worksheet");
+
+    function saveWorksheet() {
+      const data = {};
+      worksheetFields.forEach((field) => {
+        data[field.name] = field.value;
+      });
+      localStorage.setItem(worksheetStorageKey, JSON.stringify(data));
+    }
+
+    function loadWorksheet() {
+      const raw = localStorage.getItem(worksheetStorageKey);
+      if (!raw) return;
+
+      try {
+        const data = JSON.parse(raw);
+        worksheetFields.forEach((field) => {
+          if (typeof data[field.name] === "string") {
+            field.value = data[field.name];
+          }
+        });
+      } catch (error) {
+        localStorage.removeItem(worksheetStorageKey);
+      }
+    }
+
+    worksheetFields.forEach((field) => {
+      field.addEventListener("input", saveWorksheet);
+    });
+
+    printButton.addEventListener("click", () => {
+      saveWorksheet();
+      window.print();
+    });
+
+    resetButton.addEventListener("click", () => {
+      worksheetFields.forEach((field) => {
+        field.value = "";
+      });
+      localStorage.removeItem(worksheetStorageKey);
+    });
+
+    loadWorksheet();
+  </script>
+</body>
+</html>

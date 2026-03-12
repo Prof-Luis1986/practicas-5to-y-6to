@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 6 - Simon Dice</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="practica-6-simon-dice">
+  <header class="hero">
+    <p class="tag">Fase II</p>
+    <h1>Práctica 6: Juego de Memoria con Luces y Sonidos</h1>
+    <p class="subtitle">Proyecto tipo Simon Dice para trabajar secuencias, entradas, salidas y lógica con Arduino.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Fase II</h2>
+        <h3>Guía de trabajo</h3>
+        <p><strong>Práctica:</strong> Práctica 6</p>
+        <p><strong>Proyecto:</strong> Juego de Memoria con Luces y Sonidos (Tipo SIMON DICE)</p>
+        <p><strong>Asignatura:</strong> Tecnologías / Pensamiento Computacional</p>
+        <p><strong>Forma de trabajo:</strong> Equipos de 2 o 3 alumnos</p>
+      </section>
+
+      <section class="card">
+        <h2>Practicario</h2>
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="sd-name">Nombre del alumno</label>
+            <input class="worksheet-input" id="sd-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="sd-group">Grupo</label>
+            <input class="worksheet-input" id="sd-group" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="sd-date">Fecha</label>
+            <input class="worksheet-input" id="sd-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+        <p class="worksheet-note">Primero completa tus respuestas en esta hoja. Cuando termines, usa el botón para abrir la versión de impresión y guardar un PDF con tus propias respuestas.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>¿Qué vamos a aprender?</h2>
+        <p>En este proyecto aprenderás a crear un juego de memoria usando una tarjeta Arduino, botones, luces y sonidos.</p>
+        <p>El reto será recordar una secuencia de colores que el sistema te mostrará y repetirla correctamente.</p>
+      </section>
+
+      <section class="card">
+        <h2>Aprendizajes esperados</h2>
+        <ul>
+          <li>Reconocer entradas (botones) y salidas (luces y sonido).</li>
+          <li>Seguir instrucciones paso a paso.</li>
+          <li>Comprender qué es una secuencia.</li>
+          <li>Relacionar acciones físicas con instrucciones digitales.</li>
+          <li>Trabajar en equipo y resolver problemas.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Materiales</h2>
+        <ul>
+          <li>1 Arduino UNO.</li>
+          <li>1 protoboard.</li>
+          <li>4 LEDs (rojo, verde, amarillo y azul).</li>
+          <li>4 resistencias para LEDs.</li>
+          <li>4 botones.</li>
+          <li>1 buzzer.</li>
+          <li>Cables Dupont.</li>
+          <li>Computadora con Arduino IDE.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Descripción del funcionamiento</h2>
+        <ul>
+          <li>El juego muestra una secuencia de luces y sonidos.</li>
+          <li>El jugador debe presionar los botones en el mismo orden.</li>
+          <li>Si acierta, el juego agrega un nuevo color.</li>
+          <li>Si falla, el juego termina y muestra el nivel alcanzado.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Reglas del juego</h2>
+        <ul>
+          <li>Solo se puede presionar un botón a la vez.</li>
+          <li>El juego empieza seleccionando un nivel.</li>
+          <li>Cada color tiene su propio sonido.</li>
+          <li>El juego termina cuando la secuencia es incorrecta.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Organización del equipo</h2>
+        <ul>
+          <li><strong>Programador:</strong> Carga y revisa el código.</li>
+          <li><strong>Constructor:</strong> Realiza las conexiones.</li>
+          <li><strong>Supervisor:</strong> Revisa que el juego funcione correctamente.</li>
+        </ul>
+      </section>
+
+      <section class="card challenge">
+        <h2>Reglas de seguridad</h2>
+        <ul>
+          <li>No conectar el Arduino sin revisar cables.</li>
+          <li>No tocar conexiones con el Arduino encendido.</li>
+          <li>Mantener orden en la mesa de trabajo.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Diagrama de referencia</h2>
+        <figure>
+          <img src="Simon Dice.png" alt="Diagrama del proyecto Simon Dice con Arduino" />
+          <figcaption>Referencia visual del montaje del juego de memoria Simon Dice.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Instrucción para ingresar a Tinkercad</h2>
+        <ol>
+          <li>Abre tu navegador de internet (Chrome, Edge o Firefox).</li>
+          <li>Ingresa a la siguiente dirección: <code>https://www.tinkercad.com</code>.</li>
+          <li>Haz clic en <strong>Iniciar sesión</strong> (Sign in).</li>
+          <li>Selecciona una de estas opciones para entrar: Cuenta de Google, Cuenta de Microsoft o Cuenta de Autodesk.</li>
+          <li>Una vez dentro de la plataforma, entra a la sección <strong>Circuits</strong> (Circuitos).</li>
+          <li>Presiona el botón <strong>Create new Circuit</strong> (Crear nuevo circuito).</li>
+          <li>Dentro del simulador podrás agregar un Arduino Uno, insertar LEDs, colocar resistencias, conectar buzzer y escribir el código del programa.</li>
+          <li>Finalmente presiona <strong>Start Simulation</strong> para ejecutar el circuito y verificar que funcione correctamente.</li>
+        </ol>
+        <p><strong>Indicaciones importantes:</strong></p>
+        <ul>
+          <li>Guarda tu proyecto con el nombre: <code>HimnoAlegria_Arduino_TuNombre</code>.</li>
+          <li>Verifica que los LEDs y los sonidos sigan la secuencia del juego.</li>
+          <li>Comprueba que el circuito no tenga errores de conexión.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Código explicado por partes</h2>
+
+        <h3>Bloque 1 - Pines y sonidos</h3>
+        <pre><code>const int leds[4] = {2, 3, 4, 5};
+const int botones[4] = {6, 7, 8, 9};
+const int tonos[4] = {262, 330, 392, 523};
+const int buzzer = 10;</code></pre>
+        <p>En este bloque se definen los 4 LEDs, los 4 botones, los sonidos de cada color y el pin donde se conecta el buzzer.</p>
+
+        <h3>Bloque 2 - Variables del juego</h3>
+        <pre><code>const int MAX_RONDAS = 20;
+int secuencia[MAX_RONDAS];
+int nivelActual = 1;</code></pre>
+        <p>Aquí se guarda la secuencia del juego y se define cuántas rondas máximas se podrán jugar.</p>
+
+        <h3>Bloque 3 - Configuración inicial</h3>
+        <pre><code>void setup() {
+  for (int i = 0; i &lt; 4; i++) {
+    pinMode(leds[i], OUTPUT);
+    pinMode(botones[i], INPUT_PULLUP);
+  }
+
+  pinMode(buzzer, OUTPUT);
+  randomSeed(analogRead(A0));
+}</code></pre>
+        <p>Arduino prepara los pines, configura los botones como entrada y genera una semilla aleatoria para que la secuencia cambie en cada partida.</p>
+
+        <h3>Bloque 4 - Mostrar la secuencia</h3>
+        <pre><code>void mostrarSecuencia(int nivel) {
+  for (int i = 0; i &lt; nivel; i++) {
+    int color = secuencia[i];
+    digitalWrite(leds[color], HIGH);
+    tone(buzzer, tonos[color], 350);
+    delay(450);
+    digitalWrite(leds[color], LOW);
+    delay(180);
+  }
+}</code></pre>
+        <p>Esta función prende cada LED en orden y activa su sonido para que el jugador observe la secuencia que deberá repetir.</p>
+
+        <h3>Bloque 5 - Lectura del jugador</h3>
+        <pre><code>int leerBoton() {
+  while (true) {
+    for (int i = 0; i &lt; 4; i++) {
+      if (digitalRead(botones[i]) == LOW) {
+        digitalWrite(leds[i], HIGH);
+        tone(buzzer, tonos[i], 200);
+        delay(250);
+        digitalWrite(leds[i], LOW);
+
+        while (digitalRead(botones[i]) == LOW) {
+        }
+
+        delay(120);
+        return i;
+      }
+    }
+  }
+}</code></pre>
+        <p>Arduino espera a que el jugador presione un botón. Cuando detecta uno, enciende su LED, reproduce su sonido y regresa el número del color seleccionado.</p>
+
+        <h3>Bloque 6 - Validación y avance de nivel</h3>
+        <pre><code>bool turnoJugador(int nivel) {
+  for (int i = 0; i &lt; nivel; i++) {
+    int respuesta = leerBoton();
+
+    if (respuesta != secuencia[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}</code></pre>
+        <p>En este bloque el programa compara cada botón presionado con la secuencia correcta. Si hay un error, el juego termina.</p>
+      </section>
+
+      <section class="card">
+        <h2>Código completo</h2>
+        <pre><code>const int leds[4] = {2, 3, 4, 5};
+const int botones[4] = {6, 7, 8, 9};
+const int tonos[4] = {262, 330, 392, 523};
+const int buzzer = 10;
+
+const int MAX_RONDAS = 20;
+int secuencia[MAX_RONDAS];
+int nivelActual = 1;
+
+void encenderTodos(int tiempo) {
+  for (int i = 0; i &lt; 4; i++) {
+    digitalWrite(leds[i], HIGH);
+  }
+
+  tone(buzzer, 700, tiempo);
+  delay(tiempo);
+
+  for (int i = 0; i &lt; 4; i++) {
+    digitalWrite(leds[i], LOW);
+  }
+}
+
+void mostrarSecuencia(int nivel) {
+  for (int i = 0; i &lt; nivel; i++) {
+    int color = secuencia[i];
+    digitalWrite(leds[color], HIGH);
+    tone(buzzer, tonos[color], 350);
+    delay(450);
+    digitalWrite(leds[color], LOW);
+    delay(180);
+  }
+}
+
+int leerBoton() {
+  while (true) {
+    for (int i = 0; i &lt; 4; i++) {
+      if (digitalRead(botones[i]) == LOW) {
+        digitalWrite(leds[i], HIGH);
+        tone(buzzer, tonos[i], 200);
+        delay(250);
+        digitalWrite(leds[i], LOW);
+
+        while (digitalRead(botones[i]) == LOW) {
+        }
+
+        delay(120);
+        return i;
+      }
+    }
+  }
+}
+
+bool turnoJugador(int nivel) {
+  for (int i = 0; i &lt; nivel; i++) {
+    int respuesta = leerBoton();
+
+    if (respuesta != secuencia[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+void juegoPerdido() {
+  for (int i = 0; i &lt; 3; i++) {
+    encenderTodos(180);
+    delay(120);
+  }
+}
+
+void iniciarJuego() {
+  for (int i = 0; i &lt; MAX_RONDAS; i++) {
+    secuencia[i] = random(0, 4);
+  }
+
+  nivelActual = 1;
+}
+
+void setup() {
+  for (int i = 0; i &lt; 4; i++) {
+    pinMode(leds[i], OUTPUT);
+    pinMode(botones[i], INPUT_PULLUP);
+  }
+
+  pinMode(buzzer, OUTPUT);
+  randomSeed(analogRead(A0));
+  iniciarJuego();
+}
+
+void loop() {
+  mostrarSecuencia(nivelActual);
+
+  if (turnoJugador(nivelActual)) {
+    tone(buzzer, 900, 250);
+    delay(350);
+    nivelActual++;
+
+    if (nivelActual &gt; MAX_RONDAS) {
+      nivelActual = MAX_RONDAS;
+      encenderTodos(800);
+      iniciarJuego();
+    }
+  } else {
+    juegoPerdido();
+    iniciarJuego();
+    delay(600);
+  }
+
+  delay(400);
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Explicación general del juego</h2>
+        <ul>
+          <li>Arduino genera una secuencia aleatoria de colores.</li>
+          <li>El sistema muestra la secuencia con LEDs y sonidos.</li>
+          <li>El jugador intenta repetirla con los botones.</li>
+          <li>Si responde bien, avanza al siguiente nivel.</li>
+          <li>Si se equivoca, el juego reinicia.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Respuestas del practicario</h2>
+        <div class="worksheet-field">
+          <label for="sd-r1">1. ¿Qué entradas y salidas tiene el juego?</label>
+          <textarea class="worksheet-textarea" id="sd-r1" name="answer_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sd-r2">2. ¿Para qué sirven los arreglos <code>leds[]</code>, <code>botones[]</code> y <code>tonos[]</code>?</label>
+          <textarea class="worksheet-textarea" id="sd-r2" name="answer_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sd-r3">3. Explica cómo se muestra la secuencia al jugador.</label>
+          <textarea class="worksheet-textarea" id="sd-r3" name="answer_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sd-r4">4. ¿Qué pasa cuando el jugador se equivoca?</label>
+          <textarea class="worksheet-textarea" id="sd-r4" name="answer_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sd-r5">5. Propón una mejora para el juego.</label>
+          <textarea class="worksheet-textarea" id="sd-r5" name="answer_5"></textarea>
+        </div>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

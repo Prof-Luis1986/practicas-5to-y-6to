@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 2 - Teclado musical</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="practica-2-teclado-musical">
+  <header class="hero">
+    <p class="tag">Fase I</p>
+    <h1>Práctica 2: Teclado Musical Básico con Arduino</h1>
+    <p class="subtitle">Proyecto para 5° y 6° de primaria con botones y buzzer, primero en Tinkercad y después en circuito físico.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Práctica:</strong> Práctica 2 - Teclado Musical Básico con Arduino</p>
+        <p><strong>Grado:</strong> 5° y 6° de Primaria</p>
+        <p><strong>Área:</strong> Tecnología / Pensamiento Computacional</p>
+        <p><strong>Proyecto:</strong> Teclado musical con botones y buzzer</p>
+        <p><strong>Profesor:</strong> Luis Alfonso Martínez Alfaro</p>
+      </section>
+
+      <section class="card">
+        <h2>Practicario</h2>
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="p2-name">Nombre del alumno</label>
+            <input class="worksheet-input" id="p2-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="p2-group">Grupo</label>
+            <input class="worksheet-input" id="p2-group" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="p2-date">Fecha</label>
+            <input class="worksheet-input" id="p2-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+        <p class="worksheet-note">Primero completa tus respuestas en esta hoja. Cuando termines, usa el botón para abrir la versión de impresión y guardar un PDF con tus propias respuestas.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>1. Introducción</h2>
+        <p>En esta actividad aprenderás a construir un teclado musical sencillo usando Arduino. Al presionar botones, el circuito producirá diferentes sonidos, como un pequeño piano.</p>
+        <p>El proyecto se realizará en dos partes:</p>
+        <ul>
+          <li>Primero de forma digital, usando Tinkercad.</li>
+          <li>Después de forma física, armando el circuito real.</li>
+        </ul>
+        <p>Esto te ayudará a entender mejor cómo funciona la tecnología antes de construirla.</p>
+      </section>
+
+      <section class="card">
+        <h2>2. ¿Qué es Arduino?</h2>
+        <p>Arduino es una tarjeta electrónica que funciona como un cerebro. Sirve para decirle a otros componentes qué hacer.</p>
+        <p>Con Arduino podemos:</p>
+        <ul>
+          <li>Leer botones.</li>
+          <li>Hacer sonidos.</li>
+          <li>Encender luces.</li>
+        </ul>
+        <p>En esta práctica usaremos Arduino Uno, ideal para aprender.</p>
+      </section>
+
+      <section class="card">
+        <h2>3. Materiales</h2>
+        <ul>
+          <li>1 Arduino Uno.</li>
+          <li>8 botones (pushbutton).</li>
+          <li>1 buzzer pasivo.</li>
+          <li>1 protoboard.</li>
+          <li>Cables de conexión.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>4. Componentes y su función</h2>
+        <p><strong>Arduino Uno</strong><br />Es el cerebro del proyecto. Detecta los botones y ordena al buzzer que suene.</p>
+        <p><strong>Botones</strong><br />Sirven para dar instrucciones. Cada botón representa un sonido.</p>
+        <p><strong>Buzzer</strong><br />Es el componente que produce el sonido.</p>
+        <p><strong>Protoboard y cables</strong><br />Permiten conectar todo de forma segura, sin soldar.</p>
+      </section>
+
+      <section class="card">
+        <h2>5. Diagrama del circuito</h2>
+        <p>El profesor te compartirá el diagrama del circuito.</p>
+        <p>Es muy importante observarlo con atención, ya que el mismo diagrama se usará tanto en la parte digital como en la parte física.</p>
+        <figure>
+          <img src="Piano.png" alt="Diagrama del teclado musical con Arduino y botones" />
+          <figcaption>Referencia visual del teclado musical básico con Arduino.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Instrucción para ingresar a Tinkercad</h2>
+        <ol>
+          <li>Abre tu navegador de internet (Chrome, Edge o Firefox).</li>
+          <li>Ingresa a la siguiente dirección: <code>https://www.tinkercad.com</code>.</li>
+          <li>Haz clic en <strong>Iniciar sesión</strong> (Sign in).</li>
+          <li>Selecciona una de estas opciones para entrar: Cuenta de Google, Cuenta de Microsoft o Cuenta de Autodesk.</li>
+          <li>Una vez dentro de la plataforma, entra a la sección <strong>Circuits</strong> (Circuitos).</li>
+          <li>Presiona el botón <strong>Create new Circuit</strong> (Crear nuevo circuito).</li>
+          <li>Dentro del simulador podrás agregar un Arduino Uno, insertar LEDs, colocar resistencias, conectar buzzer y escribir el código del programa.</li>
+          <li>Finalmente presiona <strong>Start Simulation</strong> para ejecutar el circuito y verificar que funcione correctamente.</li>
+        </ol>
+        <p><strong>Indicaciones importantes:</strong></p>
+        <ul>
+          <li>Guarda tu proyecto con el nombre: <code>HimnoAlegria_Arduino_TuNombre</code>.</li>
+          <li>Verifica que los LEDs enciendan según la interacción de los botones.</li>
+          <li>Comprueba que el buzzer reproduzca los sonidos esperados y que no haya errores de conexión.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>6. Desarrollo de la actividad</h2>
+
+        <h3>Parte 1. Trabajo digital (Tinkercad)</h3>
+        <ul>
+          <li>Observa el diagrama del circuito.</li>
+          <li>Arma el circuito en Tinkercad.</li>
+          <li>Revisa que los botones y el buzzer funcionen correctamente.</li>
+          <li>Comprende cómo se conectan los componentes.</li>
+        </ul>
+        <p><strong>Importante:</strong> No se pasa a la parte física hasta entender esta parte.</p>
+
+        <h3>Parte 2. Trabajo físico (circuito real)</h3>
+        <ul>
+          <li>Arma el circuito real usando Arduino, botones y buzzer.</li>
+          <li>Sigue el mismo diagrama usado en Tinkercad.</li>
+          <li>Revisa con cuidado los cables.</li>
+          <li>Prueba el teclado musical presionando los botones.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>7. ¿Para qué sirve este proyecto?</h2>
+        <p>Este tipo de proyectos se usa para:</p>
+        <ul>
+          <li>Juguetes electrónicos.</li>
+          <li>Teclados musicales.</li>
+          <li>Juegos interactivos.</li>
+          <li>Aprender tecnología de forma creativa.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>8. Evidencias del proyecto</h2>
+        <p>Todo deberá integrarse directamente en el practicario, incluyendo:</p>
+        <ul>
+          <li>Foto del circuito físico armado.</li>
+          <li>Video corto del teclado musical funcionando.</li>
+          <li>Practicario completo y contestado.</li>
+        </ul>
+        <p>La fotografía será tomada por el profesor cuando los alumnos terminen su circuito físico y lo soliciten al profesor.</p>
+        <p>El video será grabado por el profesor cuando los alumnos finalicen y lo soliciten al profesor.</p>
+        <p>El alumno deberá pedir apoyo al profesor para tomar la evidencia.</p>
+      </section>
+
+      <section class="card">
+        <h2>9. Cierre</h2>
+        <p>Este proyecto te ayudará a entender que la tecnología primero se piensa, luego se prueba y finalmente se construye.</p>
+      </section>
+
+      <section class="card">
+        <h2>Código del teclado musical</h2>
+        <pre><code>/**
+   Mini piano for Arduino.
+*/
+
+// Definiciones de notas
+#define NOTE_C4  262
+#define NOTE_D4  294
+#define NOTE_E4  330
+#define NOTE_F4  349
+#define NOTE_G4  392
+#define NOTE_A4  440
+#define NOTE_B4  494
+#define NOTE_C5  523
+
+#define SPEAKER_PIN 8
+
+const uint8_t buttonPins[] = { 12, 11, 10, 9, 7, 6, 5, 4 };
+const int buttonTones[] = {
+  NOTE_C4, NOTE_D4, NOTE_E4, NOTE_F4,
+  NOTE_G4, NOTE_A4, NOTE_B4, NOTE_C5
+};
+const int numTones = sizeof(buttonPins) / sizeof(buttonPins[0]);
+
+void setup() {
+  for (uint8_t i = 0; i < 8; i++) {
+    pinMode(buttonPins[i], INPUT_PULLUP);
+  }
+  pinMode(SPEAKER_PIN, OUTPUT);
+}
+
+void loop() {
+  int pitch = 0;
+  for (uint8_t i = 0; i < 8; i++) {
+    if (digitalRead(buttonPins[i]) == LOW) {
+      pitch = buttonTones[i];
+    }
+  }
+  if (pitch) {
+    tone(SPEAKER_PIN, pitch);
+  } else {
+    noTone(SPEAKER_PIN);
+  }
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Respuestas del practicario</h2>
+        <div class="worksheet-field">
+          <label for="p2-r1">1. ¿Qué hace Arduino en este proyecto?</label>
+          <textarea class="worksheet-textarea" id="p2-r1" name="answer_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p2-r2">2. Explica la diferencia entre la parte digital y la parte física.</label>
+          <textarea class="worksheet-textarea" id="p2-r2" name="answer_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p2-r3">3. ¿Qué función cumplen los botones y el buzzer?</label>
+          <textarea class="worksheet-textarea" id="p2-r3" name="answer_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p2-r4">4. ¿Qué aprendiste sobre el uso de arreglos o pines?</label>
+          <textarea class="worksheet-textarea" id="p2-r4" name="answer_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="p2-r5">5. Describe una mejora para el teclado musical.</label>
+          <textarea class="worksheet-textarea" id="p2-r5" name="answer_5"></textarea>
+        </div>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
