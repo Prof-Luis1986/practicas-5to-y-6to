@@ -23,7 +23,7 @@
         <h2>Guía de trabajo</h2>
         <p><strong>Proyecto:</strong> Portero con Arduino</p>
         <p><strong>Asignatura:</strong> Tecnología / Robótica</p>
-        <p><strong>Componentes principales:</strong> Arduino UNO, servo motor, 2 PushButton, resistencias, protoboard.</p>
+        <p><strong>Componentes principales:</strong> Arduino UNO, servo motor, 2 PushButton, 2 resistencias de 10kΩ y protoboard.</p>
 
         <div class="worksheet-meta">
           <div class="worksheet-field">
@@ -71,6 +71,7 @@
           <li>2 PushButton</li>
           <li>2 resistencias de 10kΩ</li>
           <li>1 Servo motor</li>
+          <li>Fuente de alimentación externa para el servo motor</li>
           <li>Cables jumper</li>
           <li>Cable USB</li>
         </ul>
@@ -79,10 +80,10 @@
       <section class="card">
         <h2>4. Funcionamiento del sistema</h2>
         <ol>
-          <li>El Arduino espera que se presione un botón.</li>
-          <li>Si se presiona el botón izquierdo, el servo gira hacia la izquierda simulando que el portero se lanza a detener el balón.</li>
-          <li>Si se presiona el botón derecho, el servo gira hacia la derecha.</li>
-          <li>Cuando ningún botón está presionado, el portero permanece en el centro.</li>
+          <li>El Arduino mantiene el servo en la posición central al iniciar.</li>
+          <li>Cuando se presiona el botón 1, el portero se mueve hacia la izquierda.</li>
+          <li>Cuando se presiona el botón 2, el portero se mueve hacia la derecha.</li>
+          <li>Después de 2 segundos, el portero regresa automáticamente al centro.</li>
         </ol>
       </section>
 
@@ -90,62 +91,82 @@
         <h2>5. Conexión del circuito</h2>
         <p><strong>Botón 1 (Izquierda)</strong></p>
         <ul>
-          <li>Una terminal del botón va a 5V</li>
-          <li>La otra terminal del botón va al pin digital 3</li>
-          <li>Del mismo punto del pin 3 se conecta una resistencia de 10kΩ a GND</li>
+          <li>Una terminal del botón va al pin digital 2</li>
+          <li>La otra terminal del botón va a GND</li>
+          <li>Se coloca una resistencia de 10kΩ como parte del montaje mostrado en la referencia visual</li>
         </ul>
 
         <p><strong>Botón 2 (Derecha)</strong></p>
         <ul>
-          <li>Una terminal del botón va a 5V</li>
-          <li>La otra terminal del botón va al pin digital 2</li>
-          <li>Del mismo punto del pin 2 se conecta una resistencia de 10kΩ a GND</li>
+          <li>Una terminal del botón va al pin digital 3</li>
+          <li>La otra terminal del botón va a GND</li>
+          <li>Se coloca una resistencia de 10kΩ como parte del montaje mostrado en la referencia visual</li>
         </ul>
 
         <p><strong>Servo motor</strong></p>
         <ul>
-          <li>Rojo → 5V</li>
-          <li>Negro → GND</li>
+          <li>Rojo → 5V de una fuente externa</li>
+          <li>Negro → GND de la fuente externa</li>
           <li>Amarillo/Naranja → Pin 9</li>
+          <li>El GND de la fuente externa debe unirse con el GND del Arduino</li>
         </ul>
 
         <figure>
           <img src="Portero.png" alt="Portero automático con Arduino y servo motor" />
-          <figcaption>Referencia visual del proyecto Portero con Arduino.</figcaption>
+          <figcaption>Referencia visual del proyecto Portero con Arduino. Verifica siempre que el cableado final coincida con el código que cargarás.</figcaption>
         </figure>
+      </section>
+
+      <section class="card">
+        <h2>Video de referencia</h2>
+        <video class="media-player" controls preload="metadata">
+          <source src="Porterovideo.MOV" type="video/quicktime" />
+        </video>
       </section>
 
       <section class="card">
         <h2>6. Código del proyecto</h2>
         <pre><code>#include &lt;Servo.h&gt;
 
-Servo portero;
+Servo servo;
 
-int botonIzq = 3;
-int botonDer = 2;
+const int boton1 = 2;
+const int boton2 = 3;
+
+int centro = 90;
+int izquierda = 30;
+int derecha = 150;
+
+int estadoAnterior1 = LOW;
+int estadoAnterior2 = LOW;
 
 void setup() {
-  portero.attach(9);
+  servo.attach(9);
 
-  pinMode(botonIzq, INPUT);
-  pinMode(botonDer, INPUT);
+  pinMode(boton1, INPUT);
+  pinMode(boton2, INPUT);
+
+  servo.write(centro);
 }
 
 void loop() {
-  int izq = digitalRead(botonIzq);
-  int der = digitalRead(botonDer);
+  int estado1 = digitalRead(boton1);
+  int estado2 = digitalRead(boton2);
 
-  if (izq == HIGH) {
-    portero.write(40);
+  if (estadoAnterior1 == LOW && estado1 == HIGH) {
+    servo.write(izquierda);
+    delay(2000);
+    servo.write(centro);
   }
 
-  if (der == HIGH) {
-    portero.write(140);
+  if (estadoAnterior2 == LOW && estado2 == HIGH) {
+    servo.write(derecha);
+    delay(2000);
+    servo.write(centro);
   }
 
-  if (izq == LOW && der == LOW) {
-    portero.write(90);
-  }
+  estadoAnterior1 = estado1;
+  estadoAnterior2 = estado2;
 }</code></pre>
       </section>
 
@@ -153,8 +174,11 @@ void loop() {
         <h2>7. Explicación del programa</h2>
         <ul>
           <li><code>Servo.h</code> permite controlar servomotores.</li>
-          <li><code>digitalRead()</code> detecta si un botón fue presionado.</li>
-          <li><code>portero.write()</code> mueve el servo a un ángulo específico.</li>
+          <li><code>digitalRead()</code> detecta el estado de cada botón.</li>
+          <li>Con las resistencias externas de 10kΩ, el botón normalmente está en <code>LOW</code> y al presionarlo cambia a <code>HIGH</code>.</li>
+          <li>El programa detecta el momento exacto en que se presiona el botón, es decir, cuando cambia de <code>LOW</code> a <code>HIGH</code>.</li>
+          <li><code>servo.write()</code> mueve el servo a un ángulo específico.</li>
+          <li><code>delay(2000)</code> mantiene al portero en la posición elegida durante 2 segundos antes de volver al centro.</li>
         </ul>
 
         <table>
@@ -166,7 +190,7 @@ void loop() {
           </thead>
           <tbody>
             <tr>
-              <td>40°</td>
+              <td>30°</td>
               <td>Izquierda</td>
             </tr>
             <tr>
@@ -174,7 +198,7 @@ void loop() {
               <td>Centro</td>
             </tr>
             <tr>
-              <td>140°</td>
+              <td>150°</td>
               <td>Derecha</td>
             </tr>
           </tbody>
@@ -195,7 +219,7 @@ void loop() {
         <h2>9. Reto extra (opcional)</h2>
         <ul>
           <li>Modificar el programa para agregar una tercera posición.</li>
-          <li>Hacer que el portero regrese automáticamente al centro después de 1 segundo.</li>
+          <li>Cambiar el tiempo de regreso automático para que vuelva al centro después de 1 segundo.</li>
         </ul>
       </section>
 
@@ -229,7 +253,7 @@ void loop() {
           <textarea class="worksheet-textarea" id="q5" name="answer_5"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="q6">6. ¿Por qué usamos resistencias con los botones?</label>
+          <label for="q6">6. ¿Para qué sirven las resistencias de 10kΩ en el montaje del proyecto?</label>
           <textarea class="worksheet-textarea" id="q6" name="answer_6"></textarea>
         </div>
 
@@ -257,7 +281,7 @@ void loop() {
           <textarea class="worksheet-textarea" id="q11" name="answer_11"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="q12">12. ¿Qué posición tiene el servo cuando no se presiona ningún botón?</label>
+          <label for="q12">12. ¿Qué posición tiene el servo al iniciar y después de cada movimiento?</label>
           <textarea class="worksheet-textarea" id="q12" name="answer_12"></textarea>
         </div>
 
@@ -278,7 +302,7 @@ void loop() {
 
       <section class="card">
         <h2>Observación docente</h2>
-        <p>Este proyecto fortalece el uso de entradas digitales, el control de actuadores y la comprensión de la relación entre programación y movimiento mecánico en robótica educativa.</p>
+        <p>Este proyecto fortalece el uso de entradas digitales, el control de actuadores y la comprensión de la relación entre programación y movimiento mecánico en robótica educativa. Para un funcionamiento más estable del servomotor, se recomienda alimentarlo con una fuente externa y compartir tierra con el Arduino.</p>
       </section>
 
       <section class="card print-only">
