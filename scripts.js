@@ -411,6 +411,10 @@ function createCloudPanel(container) {
   };
 }
 
+function showSaveAlert(message) {
+  window.alert(message);
+}
+
 function createWorksheetPersistence(options) {
   const {
     worksheetKey,
@@ -516,6 +520,7 @@ function createWorksheetPersistence(options) {
         currentUser.email || "Sesión activa",
         "connected"
       );
+      showSaveAlert("Tu progreso se guardo en linea correctamente.");
     } catch (error) {
       console.error("No se pudo guardar la practica en linea:", error);
       setCloudMessage(
