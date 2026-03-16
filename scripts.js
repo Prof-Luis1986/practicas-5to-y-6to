@@ -391,6 +391,7 @@ function createCloudPanel(container) {
       </div>
     </div>
     <p class="cloud-panel__hint" data-cloud-hint>Inicia sesión con cualquier cuenta de Google para continuar tu práctica desde otro dispositivo.</p>
+    <p class="cloud-panel__help">El botón <strong>Guardar practica en linea</strong> envía tus respuestas actuales a tu cuenta para que puedas continuar después en otro equipo.</p>
   `;
 
   const buttonRow = container.querySelector(".button-row");
@@ -511,14 +512,14 @@ function createWorksheetPersistence(options) {
       );
 
       setCloudMessage(
-        "Progreso sincronizado con tu cuenta de Google.",
+        "Practica guardada en linea con tu cuenta de Google.",
         currentUser.email || "Sesión activa",
         "connected"
       );
     } catch (error) {
-      console.error("No se pudo sincronizar el progreso:", error);
+      console.error("No se pudo guardar la practica en linea:", error);
       setCloudMessage(
-        "No se pudo sincronizar en este momento.",
+        "No se pudo guardar la practica en linea en este momento.",
         "Tus respuestas siguen guardadas en este dispositivo. Verifica que Firestore esté habilitado y con reglas de acceso.",
         "error"
       );
@@ -597,7 +598,7 @@ function createWorksheetPersistence(options) {
       updateButtons();
       setCloudMessage(
         "No fue posible leer tu progreso en la nube.",
-        "Tus respuestas locales siguen disponibles. Si Firestore no está configurado, la sincronización remota no funcionará.",
+        "Tus respuestas locales siguen disponibles. Si Firestore no está configurado, el guardado en linea no funcionará.",
         "error"
       );
     }

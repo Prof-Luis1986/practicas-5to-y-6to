@@ -376,6 +376,12 @@ th {
   color: var(--muted);
 }
 
+.cloud-panel__help {
+  margin: 0.6rem 0 0;
+  color: #1b4637;
+  font-size: 0.95rem;
+}
+
 .cloud-panel[data-mode="error"] .cloud-panel__status {
   color: #9a3412;
 }
