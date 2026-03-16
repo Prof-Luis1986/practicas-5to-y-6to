@@ -245,10 +245,11 @@
     </div>
   </main>
 
+  <script src="scripts.js"></script>
   <script>
-    const worksheetStorageKey = "practica-5-resistencias-ohm";
     const printButton = document.getElementById("print-worksheet");
     const resetButton = document.getElementById("reset-worksheet");
+    let worksheetPersistence;
 
     function getWorksheetFields() {
       return Array.from(document.querySelectorAll(".worksheet-input, .worksheet-textarea"));
@@ -263,31 +264,7 @@
       const nextPosition = start + symbol.length;
       field.focus();
       field.setSelectionRange(nextPosition, nextPosition);
-      saveWorksheet();
-    }
-
-    function saveWorksheet() {
-      const data = {};
-      getWorksheetFields().forEach((field) => {
-        data[field.name] = field.value;
-      });
-      localStorage.setItem(worksheetStorageKey, JSON.stringify(data));
-    }
-
-    function loadWorksheet() {
-      const raw = localStorage.getItem(worksheetStorageKey);
-      if (!raw) return;
-
-      try {
-        const data = JSON.parse(raw);
-        getWorksheetFields().forEach((field) => {
-          if (typeof data[field.name] === "string") {
-            field.value = data[field.name];
-          }
-        });
-      } catch (error) {
-        localStorage.removeItem(worksheetStorageKey);
-      }
+      worksheetPersistence?.saveNow();
     }
 
     function formatMathText(text) {
@@ -351,7 +328,7 @@
       steps.addEventListener("input", () => {
         const text = steps.value.trim();
         preview.textContent = text ? formatMathText(text) : "Vista previa de la operacion";
-        saveWorksheet();
+        worksheetPersistence?.saveNow();
       });
 
       work.appendChild(stepsLabel);
@@ -380,33 +357,29 @@
       addSymbolSelectToField(field);
     });
 
-    getWorksheetFields().forEach((field) => {
-      field.addEventListener("input", saveWorksheet);
-    });
-
-    printButton.addEventListener("click", () => {
-      saveWorksheet();
-      window.print();
-    });
-
-    resetButton.addEventListener("click", () => {
-      getWorksheetFields().forEach((field) => {
-        field.value = "";
-      });
-      localStorage.removeItem(worksheetStorageKey);
+    function refreshMathPreviews() {
       document.querySelectorAll(".math-preview").forEach((preview) => {
-        preview.textContent = "Vista previa de la operacion";
+        const field = preview.parentElement?.querySelector(".math-work__steps");
+        if (!field) {
+          preview.textContent = "Vista previa de la operacion";
+          return;
+        }
+
+        const text = field.value.trim();
+        preview.textContent = text ? formatMathText(text) : "Vista previa de la operacion";
       });
+    }
+
+    worksheetPersistence = window.createWorksheetPersistence({
+      worksheetKey: "practica-5-resistencias-ohm",
+      getFields: getWorksheetFields,
+      printButton,
+      resetButton,
+      onDataApplied: refreshMathPreviews,
+      onReset: refreshMathPreviews
     });
 
-    loadWorksheet();
-
-    document.querySelectorAll(".math-work__steps").forEach((field) => {
-      const preview = field.parentElement?.querySelector(".math-preview");
-      if (!preview) return;
-      const text = field.value.trim();
-      preview.textContent = text ? formatMathText(text) : "Vista previa de la operacion";
-    });
+    refreshMathPreviews();
   </script>
 </body>
 </html>

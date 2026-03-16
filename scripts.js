@@ -272,57 +272,485 @@ function setupContentProtection() {
   });
 }
 
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyA5u_v82cnpT_iKcFEachPBW1Fs5zmCZDY",
+  authDomain: "practicasarduino-1f46e.firebaseapp.com",
+  projectId: "practicasarduino-1f46e",
+  storageBucket: "practicasarduino-1f46e.firebasestorage.app",
+  messagingSenderId: "199136697239",
+  appId: "1:199136697239:web:72ac87697ef77343e602d2"
+};
+
+let firebaseServicesPromise;
+
+function getWorksheetFieldsDefault() {
+  return Array.from(document.querySelectorAll(".worksheet-input, .worksheet-textarea"));
+}
+
+function collectWorksheetData(fields) {
+  const data = {};
+
+  fields.forEach((field) => {
+    if (!field.name) return;
+    data[field.name] = field.value;
+  });
+
+  return data;
+}
+
+function applyWorksheetData(fields, data) {
+  fields.forEach((field) => {
+    if (!field.name) return;
+    if (typeof data[field.name] === "string") {
+      field.value = data[field.name];
+    }
+  });
+}
+
+function isMeaningfulWorksheetData(data) {
+  return Object.values(data || {}).some((value) => typeof value === "string" && value.trim() !== "");
+}
+
+function readLocalWorksheetState(storageKey) {
+  const raw = localStorage.getItem(storageKey);
+  if (!raw) return null;
+
+  try {
+    const parsed = JSON.parse(raw);
+
+    if (parsed && typeof parsed === "object" && parsed.values && typeof parsed.values === "object") {
+      return {
+        values: parsed.values,
+        updatedAt: Number(parsed.updatedAt) || 0
+      };
+    }
+
+    if (parsed && typeof parsed === "object") {
+      return {
+        values: parsed,
+        updatedAt: 0
+      };
+    }
+  } catch {
+    localStorage.removeItem(storageKey);
+  }
+
+  return null;
+}
+
+function writeLocalWorksheetState(storageKey, values, updatedAt = Date.now()) {
+  localStorage.setItem(
+    storageKey,
+    JSON.stringify({
+      values,
+      updatedAt
+    })
+  );
+}
+
+async function getFirebaseServices() {
+  if (!firebaseServicesPromise) {
+    firebaseServicesPromise = Promise.all([
+      import("https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js"),
+      import("https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js"),
+      import("https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js")
+    ]).then(async ([appModule, authModule, firestoreModule]) => {
+      const app = appModule.initializeApp(FIREBASE_CONFIG);
+      const auth = authModule.getAuth(app);
+      await authModule.setPersistence(auth, authModule.browserLocalPersistence);
+
+      const provider = new authModule.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" });
+
+      return {
+        auth,
+        db: firestoreModule.getFirestore(app),
+        authModule,
+        firestoreModule,
+        provider
+      };
+    });
+  }
+
+  return firebaseServicesPromise;
+}
+
+function createCloudPanel(container) {
+  const panel = document.createElement("section");
+  panel.className = "card cloud-panel";
+  panel.innerHTML = `
+    <div class="cloud-panel__header">
+      <div>
+        <h2>Progreso en la nube</h2>
+        <p class="cloud-panel__status" data-cloud-status>Guardando solo en este dispositivo.</p>
+      </div>
+      <div class="button-row cloud-panel__actions">
+        <button class="action-button" type="button" data-cloud-login>Entrar con Google</button>
+        <button class="action-button" type="button" data-cloud-sync hidden>Sincronizar ahora</button>
+        <button class="action-button action-button--secondary" type="button" data-cloud-logout hidden>Cerrar sesión</button>
+      </div>
+    </div>
+    <p class="cloud-panel__hint" data-cloud-hint>Inicia sesión con cualquier cuenta de Google para continuar tu práctica desde otro dispositivo.</p>
+  `;
+
+  const buttonRow = container.querySelector(".button-row");
+  if (buttonRow) {
+    buttonRow.insertAdjacentElement("afterend", panel);
+  } else {
+    container.appendChild(panel);
+  }
+
+  return {
+    panel,
+    status: panel.querySelector("[data-cloud-status]"),
+    hint: panel.querySelector("[data-cloud-hint]"),
+    loginButton: panel.querySelector("[data-cloud-login]"),
+    syncButton: panel.querySelector("[data-cloud-sync]"),
+    logoutButton: panel.querySelector("[data-cloud-logout]")
+  };
+}
+
+function createWorksheetPersistence(options) {
+  const {
+    worksheetKey,
+    getFields = getWorksheetFieldsDefault,
+    printButton = document.querySelector('[data-worksheet-action="print"]') || document.getElementById("print-worksheet"),
+    resetButton = document.querySelector('[data-worksheet-action="reset"]') || document.getElementById("reset-worksheet"),
+    cloudContainer = document.querySelector(".container .card"),
+    onDataApplied,
+    onReset
+  } = options;
+
+  if (!worksheetKey) return null;
+
+  const getFieldsSafe = () => getFields().filter((field) => field && field.name);
+  const fields = getFieldsSafe();
+  if (!fields.length) return null;
+
+  const cloudUi = cloudContainer ? createCloudPanel(cloudContainer) : null;
+  let currentUser = null;
+  let firebaseReady = false;
+  let remoteReady = false;
+  let remoteSaveTimer = null;
+  let syncing = false;
+
+  function setCloudMessage(status, hint, mode) {
+    if (!cloudUi) return;
+
+    cloudUi.status.textContent = status;
+    cloudUi.hint.textContent = hint;
+    cloudUi.panel.dataset.mode = mode || "";
+  }
+
+  function updateButtons() {
+    if (!cloudUi) return;
+
+    cloudUi.loginButton.hidden = Boolean(currentUser);
+    cloudUi.logoutButton.hidden = !currentUser;
+    cloudUi.syncButton.hidden = !currentUser;
+    cloudUi.syncButton.disabled = !currentUser || syncing || !remoteReady;
+  }
+
+  function saveLocal() {
+    const values = collectWorksheetData(getFieldsSafe());
+    writeLocalWorksheetState(worksheetKey, values, Date.now());
+    return values;
+  }
+
+  function applyState(values, updatedAt = Date.now()) {
+    applyWorksheetData(getFieldsSafe(), values);
+    writeLocalWorksheetState(worksheetKey, values, updatedAt);
+    onDataApplied?.(values);
+  }
+
+  async function deleteRemote() {
+    if (!currentUser || !firebaseReady) return;
+
+    try {
+      const { db, firestoreModule } = await getFirebaseServices();
+      const worksheetRef = firestoreModule.doc(db, "users", currentUser.uid, "worksheets", worksheetKey);
+      await firestoreModule.deleteDoc(worksheetRef);
+    } catch (error) {
+      console.error("No se pudo borrar el progreso remoto:", error);
+      setCloudMessage(
+        "No se pudo borrar el progreso en la nube.",
+        "Tu hoja local sí fue reiniciada. Revisa permisos de Firestore si el problema continúa.",
+        "error"
+      );
+    }
+  }
+
+  async function pushRemote(force = false) {
+    if (!currentUser || !firebaseReady || !remoteReady) return;
+
+    const localState = readLocalWorksheetState(worksheetKey);
+    if (!localState) return;
+
+    const values = localState.values || {};
+    if (!force && !isMeaningfulWorksheetData(values)) return;
+
+    syncing = true;
+    updateButtons();
+
+    try {
+      const { db, firestoreModule } = await getFirebaseServices();
+      const worksheetRef = firestoreModule.doc(db, "users", currentUser.uid, "worksheets", worksheetKey);
+
+      await firestoreModule.setDoc(
+        worksheetRef,
+        {
+          worksheetKey,
+          values,
+          updatedAt: localState.updatedAt || Date.now(),
+          studentName: values.student_name || "",
+          groupName: values.group_name || "",
+          userEmail: currentUser.email || "",
+          userName: currentUser.displayName || ""
+        },
+        { merge: true }
+      );
+
+      setCloudMessage(
+        "Progreso sincronizado con tu cuenta de Google.",
+        currentUser.email || "Sesión activa",
+        "connected"
+      );
+    } catch (error) {
+      console.error("No se pudo sincronizar el progreso:", error);
+      setCloudMessage(
+        "No se pudo sincronizar en este momento.",
+        "Tus respuestas siguen guardadas en este dispositivo. Verifica que Firestore esté habilitado y con reglas de acceso.",
+        "error"
+      );
+    } finally {
+      syncing = false;
+      updateButtons();
+    }
+  }
+
+  function scheduleRemoteSave() {
+    if (!currentUser || !firebaseReady || !remoteReady) return;
+
+    window.clearTimeout(remoteSaveTimer);
+    remoteSaveTimer = window.setTimeout(() => {
+      pushRemote(false);
+    }, 900);
+  }
+
+  function handleInput() {
+    saveLocal();
+    scheduleRemoteSave();
+  }
+
+  function bindFieldListeners() {
+    getFieldsSafe().forEach((field) => {
+      field.removeEventListener("input", handleInput);
+      field.addEventListener("input", handleInput);
+    });
+  }
+
+  async function mergeRemoteWithLocal() {
+    if (!currentUser || !firebaseReady) return;
+
+    try {
+      const { db, firestoreModule } = await getFirebaseServices();
+      const worksheetRef = firestoreModule.doc(db, "users", currentUser.uid, "worksheets", worksheetKey);
+      const remoteSnapshot = await firestoreModule.getDoc(worksheetRef);
+      const localState = readLocalWorksheetState(worksheetKey);
+      const localValues = localState?.values || {};
+
+      remoteReady = true;
+      updateButtons();
+
+      if (!remoteSnapshot.exists()) {
+        if (isMeaningfulWorksheetData(localValues)) {
+          await pushRemote(true);
+        } else {
+          setCloudMessage(
+            "Sesión iniciada. Aún no hay progreso guardado en la nube.",
+            currentUser.email || "Cuenta de Google conectada",
+            "connected"
+          );
+        }
+        return;
+      }
+
+      const remoteData = remoteSnapshot.data() || {};
+      const remoteValues = remoteData.values || {};
+      const remoteUpdatedAt = Number(remoteData.updatedAt) || 0;
+      const localUpdatedAt = Number(localState?.updatedAt) || 0;
+
+      if (remoteUpdatedAt > localUpdatedAt || (!isMeaningfulWorksheetData(localValues) && isMeaningfulWorksheetData(remoteValues))) {
+        applyState(remoteValues, remoteUpdatedAt);
+      } else if (localUpdatedAt > remoteUpdatedAt && isMeaningfulWorksheetData(localValues)) {
+        await pushRemote(true);
+      }
+
+      setCloudMessage(
+        "Progreso conectado a tu cuenta de Google.",
+        currentUser.email || "Sesión activa",
+        "connected"
+      );
+    } catch (error) {
+      console.error("No se pudo cargar el progreso remoto:", error);
+      remoteReady = false;
+      updateButtons();
+      setCloudMessage(
+        "No fue posible leer tu progreso en la nube.",
+        "Tus respuestas locales siguen disponibles. Si Firestore no está configurado, la sincronización remota no funcionará.",
+        "error"
+      );
+    }
+  }
+
+  async function startAuth() {
+    try {
+      const { auth, authModule, provider } = await getFirebaseServices();
+
+      try {
+        await authModule.signInWithPopup(auth, provider);
+      } catch (error) {
+        const popupFallbackCodes = [
+          "auth/popup-blocked",
+          "auth/popup-closed-by-user",
+          "auth/cancelled-popup-request"
+        ];
+
+        if (popupFallbackCodes.includes(error.code)) {
+          await authModule.signInWithRedirect(auth, provider);
+          return;
+        }
+
+        throw error;
+      }
+    } catch (error) {
+      console.error("No se pudo iniciar sesión con Google:", error);
+      setCloudMessage(
+        "No se pudo iniciar sesión con Google.",
+        "Revisa que el dominio actual esté autorizado en Firebase Authentication.",
+        "error"
+      );
+    }
+  }
+
+  async function signOutRemote() {
+    try {
+      const { auth, authModule } = await getFirebaseServices();
+      await authModule.signOut(auth);
+    } catch (error) {
+      console.error("No se pudo cerrar la sesión:", error);
+      setCloudMessage(
+        "No se pudo cerrar la sesión.",
+        "Intenta nuevamente.",
+        "error"
+      );
+    }
+  }
+
+  function loadLocalOnStart() {
+    const localState = readLocalWorksheetState(worksheetKey);
+    if (!localState) return;
+    applyWorksheetData(getFieldsSafe(), localState.values || {});
+    onDataApplied?.(localState.values || {});
+  }
+
+  async function initCloudSync() {
+    if (!cloudUi) return;
+
+    setCloudMessage(
+      "Guardado local activo.",
+      "Inicia sesión con Google para recuperar tu práctica en cualquier dispositivo.",
+      "local"
+    );
+    updateButtons();
+
+    cloudUi.loginButton.addEventListener("click", startAuth);
+    cloudUi.logoutButton.addEventListener("click", signOutRemote);
+    cloudUi.syncButton.addEventListener("click", () => pushRemote(true));
+
+    try {
+      const { auth, authModule } = await getFirebaseServices();
+      firebaseReady = true;
+
+      authModule.onAuthStateChanged(auth, async (user) => {
+        currentUser = user;
+        remoteReady = false;
+        updateButtons();
+
+        if (!user) {
+          setCloudMessage(
+            "Guardando solo en este dispositivo.",
+            "Inicia sesión con Google para continuar tu práctica desde cualquier cuenta autorizada.",
+            "local"
+          );
+          return;
+        }
+
+        setCloudMessage(
+          "Cargando progreso de tu cuenta...",
+          user.email || "Cuenta de Google conectada",
+          "loading"
+        );
+        await mergeRemoteWithLocal();
+      });
+    } catch (error) {
+      console.error("No se pudo preparar Firebase:", error);
+      setCloudMessage(
+        "Firebase no pudo inicializarse.",
+        "Tu progreso seguirá guardándose localmente. Verifica conexión, Authentication y Firestore.",
+        "error"
+      );
+    }
+  }
+
+  bindFieldListeners();
+  loadLocalOnStart();
+
+  printButton?.addEventListener("click", () => {
+    saveLocal();
+    window.print();
+  });
+
+  resetButton?.addEventListener("click", async () => {
+    getFieldsSafe().forEach((field) => {
+      field.value = "";
+    });
+    localStorage.removeItem(worksheetKey);
+    onReset?.();
+    await deleteRemote();
+    setCloudMessage(
+      currentUser
+        ? "Hoja reiniciada. El progreso remoto también se eliminó."
+        : "Hoja reiniciada en este dispositivo.",
+      currentUser
+        ? currentUser.email || "Cuenta de Google conectada"
+        : "Puedes volver a empezar cuando quieras.",
+      currentUser ? "connected" : "local"
+    );
+  });
+
+  initCloudSync();
+
+  return {
+    saveNow: () => {
+      saveLocal();
+      scheduleRemoteSave();
+    },
+    resetLocal: () => {
+      localStorage.removeItem(worksheetKey);
+    }
+  };
+}
+
+window.createWorksheetPersistence = createWorksheetPersistence;
+
 function setupWorksheetStorage() {
   const worksheetKey = document.body.dataset.worksheetKey;
   if (!worksheetKey) return;
 
-  const worksheetFields = Array.from(document.querySelectorAll(".worksheet-input, .worksheet-textarea"));
-  const printButton = document.querySelector('[data-worksheet-action="print"]');
-  const resetButton = document.querySelector('[data-worksheet-action="reset"]');
-
-  if (!worksheetFields.length) return;
-
-  function saveWorksheet() {
-    const data = {};
-    worksheetFields.forEach((field) => {
-      data[field.name] = field.value;
-    });
-    localStorage.setItem(worksheetKey, JSON.stringify(data));
-  }
-
-  function loadWorksheet() {
-    const raw = localStorage.getItem(worksheetKey);
-    if (!raw) return;
-
-    try {
-      const data = JSON.parse(raw);
-      worksheetFields.forEach((field) => {
-        if (typeof data[field.name] === "string") {
-          field.value = data[field.name];
-        }
-      });
-    } catch {
-      localStorage.removeItem(worksheetKey);
-    }
-  }
-
-  worksheetFields.forEach((field) => {
-    field.addEventListener("input", saveWorksheet);
+  createWorksheetPersistence({
+    worksheetKey
   });
-
-  printButton?.addEventListener("click", () => {
-    saveWorksheet();
-    window.print();
-  });
-
-  resetButton?.addEventListener("click", () => {
-    worksheetFields.forEach((field) => {
-      field.value = "";
-    });
-    localStorage.removeItem(worksheetKey);
-  });
-
-  loadWorksheet();
 }
 
 document.addEventListener("DOMContentLoaded", () => {

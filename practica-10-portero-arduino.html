@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 10 - Portero con Arduino</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="practica-10-portero-arduino">
+  <header class="hero">
+    <p class="tag">Fase III</p>
+    <h1>Práctica 10: Portero con Arduino</h1>
+    <p class="subtitle">Proyecto de robótica escolar para controlar un portero automático con un servo motor y dos botones de dirección.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#fase-iii">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Proyecto:</strong> Portero con Arduino</p>
+        <p><strong>Asignatura:</strong> Tecnología / Robótica</p>
+        <p><strong>Componentes principales:</strong> Arduino UNO, servo motor, 2 PushButton, resistencias, protoboard.</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre del alumno</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <p class="worksheet-note">Completa primero la hoja en pantalla. Después puedes usar el botón para imprimir o guardar tu práctica en PDF con tus respuestas.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>1. Introducción</h2>
+        <p>En este proyecto construiremos un portero electrónico utilizando Arduino y un servo motor.</p>
+        <p>El portero reaccionará cuando se presionen dos botones:</p>
+        <ul>
+          <li>Botón izquierdo: el portero se mueve a la izquierda.</li>
+          <li>Botón derecho: el portero se mueve a la derecha.</li>
+        </ul>
+        <p>Este tipo de sistemas se utilizan en robótica para interpretar señales de entrada y controlar movimientos mecánicos.</p>
+      </section>
+
+      <section class="card">
+        <h2>2. Objetivo</h2>
+        <p>Comprender cómo funcionan las entradas digitales utilizando botones y cómo controlar un servo motor mediante programación con Arduino.</p>
+      </section>
+
+      <section class="card">
+        <h2>3. Materiales</h2>
+        <ul>
+          <li>Arduino UNO</li>
+          <li>Protoboard</li>
+          <li>2 PushButton</li>
+          <li>2 resistencias de 10kΩ</li>
+          <li>1 Servo motor</li>
+          <li>Cables jumper</li>
+          <li>Cable USB</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>4. Funcionamiento del sistema</h2>
+        <ol>
+          <li>El Arduino espera que se presione un botón.</li>
+          <li>Si se presiona el botón izquierdo, el servo gira hacia la izquierda simulando que el portero se lanza a detener el balón.</li>
+          <li>Si se presiona el botón derecho, el servo gira hacia la derecha.</li>
+          <li>Cuando ningún botón está presionado, el portero permanece en el centro.</li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>5. Conexión del circuito</h2>
+        <p><strong>Botón 1 (Izquierda)</strong></p>
+        <ul>
+          <li>Conectado al pin digital 4</li>
+          <li>Resistencia de 10kΩ</li>
+          <li>Conectado a GND</li>
+        </ul>
+
+        <p><strong>Botón 2 (Derecha)</strong></p>
+        <ul>
+          <li>Conectado al pin digital 2</li>
+          <li>Resistencia de 10kΩ</li>
+          <li>Conectado a GND</li>
+        </ul>
+
+        <p><strong>Servo motor</strong></p>
+        <ul>
+          <li>Rojo → 5V</li>
+          <li>Negro → GND</li>
+          <li>Amarillo/Naranja → Pin 9</li>
+        </ul>
+
+        <figure>
+          <img src="Portero.png" alt="Portero automático con Arduino y servo motor" />
+          <figcaption>Referencia visual del proyecto Portero con Arduino.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>6. Código del proyecto</h2>
+        <pre><code>#include &lt;Servo.h&gt;
+
+Servo portero;
+
+int botonIzq = 4;
+int botonDer = 2;
+
+void setup() {
+  portero.attach(9);
+
+  pinMode(botonIzq, INPUT);
+  pinMode(botonDer, INPUT);
+}
+
+void loop() {
+  int izq = digitalRead(botonIzq);
+  int der = digitalRead(botonDer);
+
+  if (izq == HIGH) {
+    portero.write(40);
+  }
+
+  if (der == HIGH) {
+    portero.write(140);
+  }
+
+  if (izq == LOW && der == LOW) {
+    portero.write(90);
+  }
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>7. Explicación del programa</h2>
+        <ul>
+          <li><code>Servo.h</code> permite controlar servomotores.</li>
+          <li><code>digitalRead()</code> detecta si un botón fue presionado.</li>
+          <li><code>portero.write()</code> mueve el servo a un ángulo específico.</li>
+        </ul>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Ángulo</th>
+              <th>Movimiento</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>40°</td>
+              <td>Izquierda</td>
+            </tr>
+            <tr>
+              <td>90°</td>
+              <td>Centro</td>
+            </tr>
+            <tr>
+              <td>140°</td>
+              <td>Derecha</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>8. Actividad práctica</h2>
+        <ol>
+          <li>Armar el circuito en protoboard.</li>
+          <li>Verificar conexiones.</li>
+          <li>Cargar el código en Arduino.</li>
+          <li>Probar el funcionamiento del portero.</li>
+        </ol>
+      </section>
+
+      <section class="card challenge">
+        <h2>9. Reto extra (opcional)</h2>
+        <ul>
+          <li>Modificar el programa para agregar una tercera posición.</li>
+          <li>Hacer que el portero regrese automáticamente al centro después de 1 segundo.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>PRACTICARIO</h2>
+
+        <h3>Datos del alumno</h3>
+        <p><strong>Proyecto:</strong> Portero Arduino</p>
+
+        <h3>Parte 1 - Componentes</h3>
+        <div class="worksheet-field">
+          <label for="q1">1. ¿Qué es un servo motor?</label>
+          <textarea class="worksheet-textarea" id="q1" name="answer_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q2">2. ¿Para qué sirve un PushButton?</label>
+          <textarea class="worksheet-textarea" id="q2" name="answer_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q3">3. Escribe tres componentes utilizados en este proyecto.</label>
+          <textarea class="worksheet-textarea" id="q3" name="answer_3"></textarea>
+        </div>
+
+        <h3>Parte 2 - Conexiones</h3>
+        <div class="worksheet-field">
+          <label for="q4">4. ¿A qué pin está conectado el servo?</label>
+          <textarea class="worksheet-textarea" id="q4" name="answer_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q5">5. ¿Cuántos botones utiliza el proyecto?</label>
+          <textarea class="worksheet-textarea" id="q5" name="answer_5"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q6">6. ¿Por qué usamos resistencias con los botones?</label>
+          <textarea class="worksheet-textarea" id="q6" name="answer_6"></textarea>
+        </div>
+
+        <h3>Parte 3 - Programación</h3>
+        <div class="worksheet-field">
+          <label for="q7">7. ¿Qué librería se utiliza para controlar el servo?</label>
+          <textarea class="worksheet-textarea" id="q7" name="answer_7"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q8">8. ¿Qué función se utiliza para leer un botón?</label>
+          <textarea class="worksheet-textarea" id="q8" name="answer_8"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q9">9. ¿Qué función mueve el servo?</label>
+          <textarea class="worksheet-textarea" id="q9" name="answer_9"></textarea>
+        </div>
+
+        <h3>Parte 4 - Análisis</h3>
+        <div class="worksheet-field">
+          <label for="q10">10. ¿Qué sucede cuando se presiona el botón izquierdo?</label>
+          <textarea class="worksheet-textarea" id="q10" name="answer_10"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q11">11. ¿Qué sucede cuando se presiona el botón derecho?</label>
+          <textarea class="worksheet-textarea" id="q11" name="answer_11"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q12">12. ¿Qué posición tiene el servo cuando no se presiona ningún botón?</label>
+          <textarea class="worksheet-textarea" id="q12" name="answer_12"></textarea>
+        </div>
+
+        <h3>Parte 5 - Reflexión</h3>
+        <div class="worksheet-field">
+          <label for="q13">13. Explica con tus palabras cómo funciona el portero automático.</label>
+          <textarea class="worksheet-textarea" id="q13" name="answer_13"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q14">14. ¿En qué otros proyectos podría utilizarse un servo motor?</label>
+          <textarea class="worksheet-textarea" id="q14" name="answer_14"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q15">15. Dibuja tu circuito del proyecto.</label>
+          <textarea class="worksheet-textarea" id="q15" name="answer_15" placeholder="Describe tu dibujo o usa este espacio como apoyo para la actividad en tu cuaderno."></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Observación docente</h2>
+        <p>Este proyecto fortalece el uso de entradas digitales, el control de actuadores y la comprensión de la relación entre programación y movimiento mecánico en robótica educativa.</p>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

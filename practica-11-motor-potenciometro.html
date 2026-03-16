@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 11 - Control de velocidad de motor con potenciómetro</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="practica-11-motor-potenciometro">
+  <header class="hero">
+    <p class="tag">Fase III</p>
+    <h1>Práctica 11: Control de velocidad de motor con potenciómetro</h1>
+    <p class="subtitle">Proyecto para trabajar señales analógicas y PWM controlando la velocidad de un motor DC con Arduino UNO.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#fase-iii">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Asignatura:</strong> Tecnología / Robótica</p>
+        <p><strong>Tema:</strong> Señales analógicas y PWM</p>
+        <p><strong>Proyecto:</strong> Control de velocidad de un motor DC</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre del alumno</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <p class="worksheet-note">Completa tu práctica en pantalla y, si no terminas, puedes guardar tu progreso para continuar después. Al finalizar también puedes generar tu PDF.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>1. Introducción</h2>
+        <p>En esta práctica aprenderemos a controlar la velocidad de un motor DC utilizando un potenciómetro y un Arduino UNO.</p>
+        <p>El potenciómetro funciona como una perilla de control, similar a la que se usa para ajustar el volumen de un aparato. Al girarlo, cambia el valor de voltaje que recibe el Arduino.</p>
+        <p>El Arduino interpreta ese valor y lo transforma en una señal PWM (Pulse Width Modulation) que controla la velocidad del motor.</p>
+        <p>Este principio es utilizado en:</p>
+        <ul>
+          <li>ventiladores electrónicos</li>
+          <li>reguladores de velocidad</li>
+          <li>robots móviles</li>
+          <li>control de iluminación</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>2. Objetivo</h2>
+        <p>Comprender cómo funcionan las entradas analógicas y cómo se utilizan para controlar dispositivos mediante PWM.</p>
+      </section>
+
+      <section class="card">
+        <h2>3. Materiales</h2>
+        <ul>
+          <li>Arduino UNO</li>
+          <li>Protoboard</li>
+          <li>Potenciómetro</li>
+          <li>Motor DC</li>
+          <li>Transistor NPN</li>
+          <li>Resistencia</li>
+          <li>Cables jumper</li>
+          <li>Cable USB</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>4. Funcionamiento del circuito</h2>
+        <ol>
+          <li>El potenciómetro envía un valor analógico al Arduino.</li>
+          <li>El Arduino lee ese valor utilizando la función <code>analogRead()</code>.</li>
+          <li>Ese valor se transforma usando la función <code>map()</code>.</li>
+          <li>Finalmente el Arduino envía una señal PWM al motor utilizando <code>analogWrite()</code>.</li>
+        </ol>
+        <p>Esto permite controlar la velocidad del motor dependiendo de la posición del potenciómetro.</p>
+      </section>
+
+      <section class="card">
+        <h2>5. Conexión del circuito</h2>
+        <p><strong>Potenciómetro</strong></p>
+        <ul>
+          <li>Pin izquierdo → 5V</li>
+          <li>Pin central → A0</li>
+          <li>Pin derecho → GND</li>
+        </ul>
+
+        <p><strong>Motor</strong></p>
+        <ul>
+          <li>Motor conectado al transistor</li>
+          <li>El transistor funciona como interruptor electrónico para controlar el motor</li>
+          <li>Pin de control → Pin digital 3 (PWM)</li>
+        </ul>
+
+        <p><strong>Alimentación</strong></p>
+        <ul>
+          <li>5V y GND del Arduino conectados a la protoboard</li>
+        </ul>
+
+        <figure>
+          <img src="motorDC.png" alt="Control de motor DC con potenciómetro y Arduino" />
+          <figcaption>Referencia visual del control de velocidad de un motor DC con potenciómetro.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>6. Código del programa</h2>
+        <pre><code>const int motor = 3;
+const int potenciometro = A0;
+
+int valorPot;
+int velocidad;
+
+void setup() {
+  pinMode(motor, OUTPUT);
+  pinMode(potenciometro, INPUT);
+}
+
+void loop() {
+  valorPot = analogRead(potenciometro);
+
+  velocidad = map(valorPot, 0, 1023, 0, 255);
+
+  analogWrite(motor, velocidad);
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>7. Explicación del código</h2>
+        <h3>Definición de pines</h3>
+        <pre><code>const int motor = 3;
+const int potenciometro = A0;</code></pre>
+        <p>Aquí definimos dónde están conectados los componentes.</p>
+
+        <h3>Lectura del potenciómetro</h3>
+        <pre><code>valorPot = analogRead(potenciometro);</code></pre>
+        <p>El Arduino lee un valor entre 0 y 1023.</p>
+
+        <h3>Conversión del valor</h3>
+        <pre><code>velocidad = map(valorPot, 0, 1023, 0, 255);</code></pre>
+        <p>Se transforma el valor para que funcione con PWM.</p>
+
+        <h3>Control del motor</h3>
+        <pre><code>analogWrite(motor, velocidad);</code></pre>
+        <p>Esto controla la velocidad del motor.</p>
+      </section>
+
+      <section class="card">
+        <h2>8. Resultados esperados</h2>
+        <ul>
+          <li>Si el potenciómetro está en mínimo, el motor gira lento.</li>
+          <li>Si el potenciómetro está en máximo, el motor gira rápido.</li>
+          <li>Al girar la perilla, la velocidad cambia gradualmente.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>9. Aplicaciones reales</h2>
+        <ul>
+          <li>robots móviles</li>
+          <li>ventiladores regulables</li>
+          <li>control de velocidad industrial</li>
+          <li>vehículos eléctricos</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>PRACTICARIO</h2>
+        <p><strong>Práctica 11:</strong> Control de motor con potenciómetro</p>
+
+        <h3>Parte 1 - Conceptos básicos</h3>
+        <div class="worksheet-field">
+          <label for="q1">1. ¿Qué es un potenciómetro?</label>
+          <textarea class="worksheet-textarea" id="q1" name="answer_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q2">2. ¿Qué tipo de señal entrega el potenciómetro?</label>
+          <textarea class="worksheet-textarea" id="q2" name="answer_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q3">3. ¿Qué tipo de motor se utiliza en esta práctica?</label>
+          <textarea class="worksheet-textarea" id="q3" name="answer_3"></textarea>
+        </div>
+
+        <h3>Parte 2 - Arduino</h3>
+        <div class="worksheet-field">
+          <label for="q4">4. ¿Qué función se usa para leer valores analógicos?</label>
+          <textarea class="worksheet-textarea" id="q4" name="answer_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q5">5. ¿Entre qué valores trabaja <code>analogRead()</code>?</label>
+          <textarea class="worksheet-textarea" id="q5" name="answer_5"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q6">6. ¿Qué función se usa para controlar la velocidad del motor?</label>
+          <textarea class="worksheet-textarea" id="q6" name="answer_6"></textarea>
+        </div>
+
+        <h3>Parte 3 - Programación</h3>
+        <div class="worksheet-field">
+          <label for="q7">7. ¿Para qué sirve la función <code>map()</code>?</label>
+          <textarea class="worksheet-textarea" id="q7" name="answer_7"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q8">8. ¿Por qué el valor debe convertirse de 1023 a 255?</label>
+          <textarea class="worksheet-textarea" id="q8" name="answer_8"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q9">9. ¿Qué sucedería si conectamos el motor directamente al Arduino sin transistor?</label>
+          <textarea class="worksheet-textarea" id="q9" name="answer_9"></textarea>
+        </div>
+
+        <h3>Parte 4 - Observación</h3>
+        <div class="worksheet-field">
+          <label for="q10">10. Describe qué ocurre con el motor cuando giras el potenciómetro.</label>
+          <textarea class="worksheet-textarea" id="q10" name="answer_10"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q11">11. ¿El cambio de velocidad es gradual o inmediato?</label>
+          <textarea class="worksheet-textarea" id="q11" name="answer_11"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q12">12. ¿Qué ocurre cuando el potenciómetro está en el valor mínimo?</label>
+          <textarea class="worksheet-textarea" id="q12" name="answer_12"></textarea>
+        </div>
+
+        <h3>Parte 5 - Análisis</h3>
+        <div class="worksheet-field">
+          <label for="q13">13. Explica con tus palabras cómo el Arduino controla la velocidad del motor.</label>
+          <textarea class="worksheet-textarea" id="q13" name="answer_13"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q14">14. Escribe un ejemplo de un dispositivo cotidiano que utilice control de velocidad.</label>
+          <textarea class="worksheet-textarea" id="q14" name="answer_14"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q15">15. Dibuja el circuito de la práctica.</label>
+          <textarea class="worksheet-textarea" id="q15" name="answer_15" placeholder="Puedes describir tu dibujo aquí o usar este espacio como apoyo para tu cuaderno."></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Observación docente</h2>
+        <p>Esta práctica refuerza la lectura de señales analógicas, el uso de PWM y la relación entre hardware de potencia básica y programación en Arduino.</p>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
