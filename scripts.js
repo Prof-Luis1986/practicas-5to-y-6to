@@ -381,7 +381,7 @@ function createCloudPanel(container) {
   panel.innerHTML = `
     <div class="cloud-panel__header">
       <div>
-        <h2>Progreso en la nube</h2>
+        <h2>Guardar y continuar después</h2>
         <p class="cloud-panel__status" data-cloud-status>Guardando solo en este dispositivo.</p>
       </div>
       <div class="button-row cloud-panel__actions">
