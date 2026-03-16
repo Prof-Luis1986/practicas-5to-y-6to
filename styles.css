@@ -616,6 +616,12 @@ figcaption {
   background: #eaf6f0;
 }
 
+.media-player--compact {
+  display: block;
+  width: min(100%, 420px);
+  margin: 0 auto;
+}
+
 @media (max-width: 640px) {
   .exercise-item {
     grid-template-columns: 1fr;
