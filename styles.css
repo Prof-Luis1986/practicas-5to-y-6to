@@ -166,6 +166,14 @@ h1 {
   margin: 0 auto 2rem;
 }
 
+.site-footer {
+  margin-top: 2rem;
+  padding: 1rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
 .page-shell .container {
   max-width: none;
   margin-top: 1rem;
@@ -659,6 +667,10 @@ figcaption {
 
   .card {
     padding: 0.9rem;
+  }
+
+  .site-footer {
+    padding: 1rem 0.75rem 1.5rem;
   }
 
   .image-lightbox {
