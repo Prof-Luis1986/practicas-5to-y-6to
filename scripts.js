@@ -284,7 +284,7 @@ const FIREBASE_CONFIG = {
 let firebaseServicesPromise;
 
 function getWorksheetFieldsDefault() {
-  return Array.from(document.querySelectorAll(".worksheet-input, .worksheet-textarea"));
+  return Array.from(document.querySelectorAll(".worksheet-input, .worksheet-textarea, input[type=\"checkbox\"]"));
 }
 
 function collectWorksheetData(fields) {
@@ -292,7 +292,7 @@ function collectWorksheetData(fields) {
 
   fields.forEach((field) => {
     if (!field.name) return;
-    data[field.name] = field.value;
+    data[field.name] = field.type === "checkbox" ? field.checked : field.value;
   });
 
   return data;
@@ -301,14 +301,20 @@ function collectWorksheetData(fields) {
 function applyWorksheetData(fields, data) {
   fields.forEach((field) => {
     if (!field.name) return;
-    if (typeof data[field.name] === "string") {
+    if (field.type === "checkbox" && typeof data[field.name] === "boolean") {
+      field.checked = data[field.name];
+    } else if (typeof data[field.name] === "string") {
       field.value = data[field.name];
     }
   });
 }
 
 function isMeaningfulWorksheetData(data) {
-  return Object.values(data || {}).some((value) => typeof value === "string" && value.trim() !== "");
+  return Object.values(data || {}).some((value) => {
+    if (typeof value === "string") return value.trim() !== "";
+    if (typeof value === "boolean") return value;
+    return false;
+  });
 }
 
 function readLocalWorksheetState(storageKey) {

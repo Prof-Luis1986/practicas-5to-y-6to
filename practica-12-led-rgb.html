@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 12 - Control de LED RGB con Arduino</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="practica-12-led-rgb">
+  <header class="hero">
+    <p class="tag">Fase III</p>
+    <h1>Práctica 12: Control de LED RGB con Arduino</h1>
+    <p class="subtitle">Actividad para combinar colores controlando un LED RGB con Arduino mediante PWM.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#fase-iii">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo completa</h2>
+        <p><strong>Práctica:</strong> Control de LED RGB con Arduino</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <p class="worksheet-note">Completa la práctica en pantalla, guarda tu avance si no terminas y al final genera tu PDF con respuestas.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Propósito de la práctica</h2>
+        <p>En esta actividad vas a aprender a controlar un LED RGB, el cual es capaz de generar muchos colores a partir de la combinación de tres colores básicos:</p>
+        <ul>
+          <li>Rojo</li>
+          <li>Verde</li>
+          <li>Azul</li>
+        </ul>
+        <p>Además, entenderás cómo Arduino puede controlar la intensidad de cada color mediante programación.</p>
+      </section>
+
+      <section class="card">
+        <h2>Activación de conocimientos</h2>
+        <p>Responde con tus ideas antes de empezar:</p>
+        <div class="worksheet-field">
+          <label for="q1">1. ¿Qué es un LED?</label>
+          <textarea class="worksheet-textarea" id="q1" name="answer_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q2">2. ¿Has visto luces que cambian de color? ¿Dónde?</label>
+          <textarea class="worksheet-textarea" id="q2" name="answer_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q3">3. ¿Crees que con solo 3 colores se pueden crear muchos más? ¿Por qué?</label>
+          <textarea class="worksheet-textarea" id="q3" name="answer_3"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Concepto clave</h2>
+        <p>Un LED RGB contiene 3 LEDs en uno solo:</p>
+        <ul>
+          <li>Uno rojo</li>
+          <li>Uno verde</li>
+          <li>Uno azul</li>
+        </ul>
+        <p>Arduino controla la intensidad de cada uno con valores del 0 al 255.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Valor</th>
+              <th>Significado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0</td>
+              <td>Apagado</td>
+            </tr>
+            <tr>
+              <td>255</td>
+              <td>Máxima intensidad</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Combinando estos valores puedes crear casi cualquier color.</p>
+      </section>
+
+      <section class="card">
+        <h2>Materiales</h2>
+        <ul>
+          <li>1 Arduino UNO</li>
+          <li>1 Protoboard</li>
+          <li>1 LED RGB</li>
+          <li>3 resistencias de 330 ohms</li>
+          <li>Cables</li>
+          <li>1 computadora</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Observa tu LED RGB</h2>
+        <p>Identifica:</p>
+        <ul>
+          <li>Tiene 4 patas</li>
+          <li>Una es más larga, esa es la terminal común</li>
+        </ul>
+        <div class="worksheet-field">
+          <label for="q4">¿Qué diferencia notas en las patas?</label>
+          <textarea class="worksheet-textarea" id="q4" name="answer_4"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Importante: Uso de resistencias</h2>
+        <p>Cada color del LED necesita una resistencia para evitar que se queme.</p>
+        <p>En esta práctica usarás 3 resistencias de 330 ohms.</p>
+        <div class="worksheet-field">
+          <label for="q5">¿Por qué crees que usamos resistencias?</label>
+          <textarea class="worksheet-textarea" id="q5" name="answer_5"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Conexión del circuito</h2>
+        <ol>
+          <li>Coloca el LED RGB en el protoboard.</li>
+          <li>Identifica la pata común.</li>
+          <li>Conecta el color rojo con una resistencia al pin 11.</li>
+          <li>Conecta el color verde con una resistencia al pin 10.</li>
+          <li>Conecta el color azul con una resistencia al pin 9.</li>
+          <li>Conecta la pata común a GND si es cátodo común.</li>
+        </ol>
+        <figure>
+          <img src="RGB.png" alt="Diagrama de conexión de LED RGB con Arduino" />
+          <figcaption>Referencia visual del LED RGB conectado a Arduino con tres resistencias.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Código de la práctica</h2>
+        <pre><code>int red_light = 11;
+int green_light = 10;
+int blue_light = 9;
+
+void setup(){
+  pinMode(red_light, OUTPUT);
+  pinMode(green_light, OUTPUT);
+  pinMode(blue_light, OUTPUT);
+}
+
+void loop(){
+  RGB_color(255,0,0);
+  delay(1000);
+
+  RGB_color(0,255,0);
+  delay(1000);
+
+  RGB_color(0,0,255);
+  delay(1000);
+
+  RGB_color(255,255,125);
+  delay(1000);
+
+  RGB_color(0,255,255);
+  delay(1000);
+
+  RGB_color(255,0,255);
+  delay(1000);
+
+  RGB_color(255,255,0);
+  delay(1000);
+
+  RGB_color(255,255,255);
+  delay(1000);  
+}
+
+void RGB_color(int red_light_value, int green_light_value, int blue_light_value){
+  analogWrite(red_light, red_light_value);
+  analogWrite(green_light, green_light_value);
+  analogWrite(blue_light, blue_light_value);  
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Comprendiendo el código</h2>
+        <p><code>analogWrite(pin, valor);</code></p>
+        <p>Permite controlar la intensidad de luz.</p>
+        <div class="worksheet-field">
+          <label for="q6">¿Qué hace <code>setup()</code>?</label>
+          <textarea class="worksheet-textarea" id="q6" name="answer_6"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q7">¿Qué hace <code>loop()</code>?</label>
+          <textarea class="worksheet-textarea" id="q7" name="answer_7"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q8">¿Para qué sirve <code>RGB_color()</code>?</label>
+          <textarea class="worksheet-textarea" id="q8" name="answer_8"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Ejecuta</h2>
+        <ol>
+          <li>Conecta tu Arduino.</li>
+          <li>Sube el programa.</li>
+          <li>Observa lo que sucede.</li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>Observación</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Valores</th>
+              <th>Color observado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>(255,0,0)</td><td><input class="worksheet-input" name="obs_1" type="text" /></td></tr>
+            <tr><td>(0,255,0)</td><td><input class="worksheet-input" name="obs_2" type="text" /></td></tr>
+            <tr><td>(0,0,255)</td><td><input class="worksheet-input" name="obs_3" type="text" /></td></tr>
+            <tr><td>(255,255,0)</td><td><input class="worksheet-input" name="obs_4" type="text" /></td></tr>
+            <tr><td>(255,255,255)</td><td><input class="worksheet-input" name="obs_5" type="text" /></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Experimentación</h2>
+        <p>Prueba nuevos colores:</p>
+        <p><code>RGB_color(____, ____, ____);</code></p>
+        <table>
+          <thead>
+            <tr>
+              <th>Prueba</th>
+              <th>Valores</th>
+              <th>Color</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td><input class="worksheet-input" name="exp_values_1" type="text" /></td><td><input class="worksheet-input" name="exp_color_1" type="text" /></td></tr>
+            <tr><td>2</td><td><input class="worksheet-input" name="exp_values_2" type="text" /></td><td><input class="worksheet-input" name="exp_color_2" type="text" /></td></tr>
+            <tr><td>3</td><td><input class="worksheet-input" name="exp_values_3" type="text" /></td><td><input class="worksheet-input" name="exp_color_3" type="text" /></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card challenge">
+        <h2>Reto</h2>
+        <p>Logra estos colores:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Color</th>
+              <th>R</th>
+              <th>G</th>
+              <th>B</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Amarillo</td><td><input class="worksheet-input" name="reto_r_1" type="text" /></td><td><input class="worksheet-input" name="reto_g_1" type="text" /></td><td><input class="worksheet-input" name="reto_b_1" type="text" /></td></tr>
+            <tr><td>Morado</td><td><input class="worksheet-input" name="reto_r_2" type="text" /></td><td><input class="worksheet-input" name="reto_g_2" type="text" /></td><td><input class="worksheet-input" name="reto_b_2" type="text" /></td></tr>
+            <tr><td>Celeste</td><td><input class="worksheet-input" name="reto_r_3" type="text" /></td><td><input class="worksheet-input" name="reto_g_3" type="text" /></td><td><input class="worksheet-input" name="reto_b_3" type="text" /></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Si algo no funciona</h2>
+        <ul>
+          <li>¿Las resistencias están conectadas?</li>
+          <li>¿El LED no está invertido?</li>
+          <li>¿La pata común está bien?</li>
+          <li>¿Los cables están firmes?</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Reflexión final</h2>
+        <div class="worksheet-field">
+          <label for="q9">¿Cómo se crean los colores en un LED RGB?</label>
+          <textarea class="worksheet-textarea" id="q9" name="answer_9"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q10">¿Qué fue lo más interesante de la práctica?</label>
+          <textarea class="worksheet-textarea" id="q10" name="answer_10"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q11">¿Dónde podrías usar esto en la vida real?</label>
+          <textarea class="worksheet-textarea" id="q11" name="answer_11"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Lista de logro</h2>
+        <div class="worksheet-field">
+          <label><input name="logro_1" type="checkbox" /> Arme el circuito correctamente</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="logro_2" type="checkbox" /> El LED cambio de colores</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="logro_3" type="checkbox" /> Comprendi el uso de PWM</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="logro_4" type="checkbox" /> Modifique el codigo</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="logro_5" type="checkbox" /> Cree nuevos colores</label>
+        </div>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
