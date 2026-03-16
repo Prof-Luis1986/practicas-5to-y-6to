@@ -606,23 +606,7 @@ function createWorksheetPersistence(options) {
   async function startAuth() {
     try {
       const { auth, authModule, provider } = await getFirebaseServices();
-
-      try {
-        await authModule.signInWithPopup(auth, provider);
-      } catch (error) {
-        const popupFallbackCodes = [
-          "auth/popup-blocked",
-          "auth/popup-closed-by-user",
-          "auth/cancelled-popup-request"
-        ];
-
-        if (popupFallbackCodes.includes(error.code)) {
-          await authModule.signInWithRedirect(auth, provider);
-          return;
-        }
-
-        throw error;
-      }
+      await authModule.signInWithRedirect(auth, provider);
     } catch (error) {
       console.error("No se pudo iniciar sesión con Google:", error);
       setCloudMessage(
