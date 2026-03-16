@@ -90,16 +90,16 @@
         <h2>5. Conexión del circuito</h2>
         <p><strong>Botón 1 (Izquierda)</strong></p>
         <ul>
-          <li>Conectado al pin digital 4</li>
-          <li>Resistencia de 10kΩ</li>
-          <li>Conectado a GND</li>
+          <li>Una terminal del botón va a 5V</li>
+          <li>La otra terminal del botón va al pin digital 3</li>
+          <li>Del mismo punto del pin 3 se conecta una resistencia de 10kΩ a GND</li>
         </ul>
 
         <p><strong>Botón 2 (Derecha)</strong></p>
         <ul>
-          <li>Conectado al pin digital 2</li>
-          <li>Resistencia de 10kΩ</li>
-          <li>Conectado a GND</li>
+          <li>Una terminal del botón va a 5V</li>
+          <li>La otra terminal del botón va al pin digital 2</li>
+          <li>Del mismo punto del pin 2 se conecta una resistencia de 10kΩ a GND</li>
         </ul>
 
         <p><strong>Servo motor</strong></p>
@@ -121,7 +121,7 @@
 
 Servo portero;
 
-int botonIzq = 4;
+int botonIzq = 3;
 int botonDer = 2;
 
 void setup() {
