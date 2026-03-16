@@ -386,7 +386,7 @@ function createCloudPanel(container) {
       </div>
       <div class="button-row cloud-panel__actions">
         <button class="action-button" type="button" data-cloud-login>Entrar con Google</button>
-        <button class="action-button" type="button" data-cloud-sync hidden>Sincronizar ahora</button>
+        <button class="action-button" type="button" data-cloud-sync hidden>Guardar practica en linea</button>
         <button class="action-button action-button--secondary" type="button" data-cloud-logout hidden>Cerrar sesión</button>
       </div>
     </div>
