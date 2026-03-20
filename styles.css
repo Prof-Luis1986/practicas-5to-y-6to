@@ -295,6 +295,23 @@ th {
   resize: vertical;
 }
 
+.submission-links {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #cfe1d8;
+  border-radius: 12px;
+  background: #f5fbf8;
+}
+
+.submission-links h3 {
+  margin-top: 0;
+  color: var(--accent);
+}
+
+.submission-links__note {
+  margin-bottom: 0.85rem;
+}
+
 .exercise-list {
   display: grid;
   gap: 0.7rem;

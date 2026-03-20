@@ -46,6 +46,51 @@ function setupCodeHighlighting() {
   });
 }
 
+function setupProjectSubmissionFields() {
+  const worksheetKey = document.body.dataset.worksheetKey;
+
+  if (!worksheetKey) return;
+
+  const worksheetMeta = document.querySelector(".worksheet-meta");
+  if (!worksheetMeta || document.getElementById("project-link")) return;
+
+  const targetCard = worksheetMeta.closest(".card");
+  if (!targetCard) return;
+
+  const fieldsBlock = document.createElement("div");
+  fieldsBlock.className = "submission-links";
+  fieldsBlock.innerHTML = `
+    <h3>Entrega digital del proyecto</h3>
+    <p class="worksheet-note submission-links__note">Pega aqui el enlace de tu simulacion o proyecto y, si lo tienes, un enlace externo con evidencias como capturas o video.</p>
+    <div class="worksheet-field">
+      <label for="project-link">Enlace del proyecto en Tinkercad</label>
+      <input class="worksheet-input" id="project-link" name="project_link" type="url" inputmode="url" placeholder="https://www.tinkercad.com/..." />
+    </div>
+    <div class="worksheet-field">
+      <label for="evidence-link">Enlace de evidencias (opcional)</label>
+      <input class="worksheet-input" id="evidence-link" name="evidence_link" type="url" inputmode="url" placeholder="https://drive.google.com/... o enlace similar" />
+    </div>
+    <div class="worksheet-field">
+      <label for="project-notes">Descripcion breve del proyecto o de la evidencia</label>
+      <textarea class="worksheet-textarea" id="project-notes" name="project_notes" placeholder="Explica que hiciste, que modificaste o que incluye tu evidencia."></textarea>
+    </div>
+  `;
+
+  const note = targetCard.querySelector(".worksheet-note");
+  if (note) {
+    note.insertAdjacentElement("beforebegin", fieldsBlock);
+    return;
+  }
+
+  const buttonRow = targetCard.querySelector(".button-row");
+  if (buttonRow) {
+    buttonRow.insertAdjacentElement("beforebegin", fieldsBlock);
+    return;
+  }
+
+  targetCard.appendChild(fieldsBlock);
+}
+
 function setupImageLightbox() {
   const lightbox = document.getElementById("image-lightbox");
   const lightboxImage = document.getElementById("image-lightbox-image");
@@ -751,6 +796,7 @@ function setupWorksheetStorage() {
 
 document.addEventListener("DOMContentLoaded", () => {
   setupCodeHighlighting();
+  setupProjectSubmissionFields();
   setupImageLightbox();
   setupContentProtection();
   setupWorksheetStorage();
