@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 13 - Theremín con LDR y Buzzer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="practica-13-theremin-ldr">
+  <header class="hero">
+    <p class="tag">Fase III</p>
+    <h1>Práctica 13: Theremín con LDR y Buzzer</h1>
+    <p class="subtitle">Proyecto interactivo para transformar la luz en sonido, comprendiendo sensores, lectura analógica y frecuencia.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#fase-iii">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo + practicario</h2>
+        <p><strong>Práctica:</strong> Theremín con LDR y buzzer</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <p class="worksheet-note">Completa la práctica en pantalla, registra tus observaciones y al final genera tu PDF con respuestas y evidencia.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Propósito</h2>
+        <p>Comprender cómo un sistema electrónico transforma una variable física, en este caso la luz, en una señal sonora, integrando conceptos de sensores, programación y aplicaciones reales.</p>
+      </section>
+
+      <section class="card">
+        <h2>Antecedentes</h2>
+        <p>El theremín es uno de los primeros instrumentos electrónicos de la historia, creado en 1919 por Lev Termen.</p>
+        <p>Su principal característica es que se toca sin contacto físico, utilizando campos electromagnéticos para generar sonido y controlar variables musicales.</p>
+        <p>En esta práctica simularemos ese principio con una LDR y un buzzer: la luz sustituye el movimiento de las manos y permite modificar el sonido.</p>
+      </section>
+
+      <section class="card">
+        <h2>Preguntas sobre antecedentes</h2>
+        <div class="worksheet-field">
+          <label for="history-1">1. ¿Qué hace diferente al theremín de otros instrumentos musicales?</label>
+          <textarea class="worksheet-textarea" id="history-1" name="history_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="history-2">2. ¿Por qué se considera un instrumento electrónico?</label>
+          <textarea class="worksheet-textarea" id="history-2" name="history_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="history-3">3. ¿Qué variables controla el theremín original?</label>
+          <textarea class="worksheet-textarea" id="history-3" name="history_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="history-4">4. ¿Qué elemento sustituye las manos en esta práctica?</label>
+          <textarea class="worksheet-textarea" id="history-4" name="history_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="history-5">5. ¿Por qué crees que este proyecto se relaciona con la música electrónica?</label>
+          <textarea class="worksheet-textarea" id="history-5" name="history_5"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>¿Para qué sirve esta práctica?</h2>
+        <p>Este sistema representa el modelo <strong>Entrada -&gt; Proceso -&gt; Salida</strong>:</p>
+        <ul>
+          <li>Entrada: luz</li>
+          <li>Proceso: Arduino</li>
+          <li>Salida: sonido</li>
+        </ul>
+        <p>También se relaciona con aplicaciones reales como sensores automáticos, alarmas, dispositivos interactivos e interfaces sin contacto.</p>
+      </section>
+
+      <section class="card">
+        <h2>Materiales</h2>
+        <ul>
+          <li>Arduino UNO</li>
+          <li>Protoboard</li>
+          <li>LDR</li>
+          <li>Resistencia de 10kΩ</li>
+          <li>Buzzer</li>
+          <li>Cables</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Conexión</h2>
+        <ul>
+          <li>LDR al pin analógico A0</li>
+          <li>Buzzer al pin 9</li>
+          <li>Alimentación a 5V y GND</li>
+        </ul>
+        <figure>
+          <img src="Theremín.png" alt="Diagrama de conexión del theremín con LDR y buzzer en Arduino" />
+          <figcaption>Conexión sugerida del theremín con LDR y buzzer sobre protoboard.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Código base</h2>
+        <pre><code>#define BUZZER 9
+#define LDR 0
+
+void setup()
+{
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int valor = analogRead(LDR);
+  int frecuencia = 400 + (valor / 2);
+  tone(BUZZER, frecuencia);
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Desarrollo</h2>
+        <h3>1. Exploración</h3>
+        <ul>
+          <li>Ejecuta el sistema.</li>
+          <li>Modifica la luz sobre la LDR.</li>
+        </ul>
+
+        <h3>2. Observación</h3>
+        <div class="worksheet-field">
+          <label for="obs-1">¿Qué pasa con el sonido al aumentar la luz?</label>
+          <textarea class="worksheet-textarea" id="obs-1" name="obs_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="obs-2">¿Qué ocurre en oscuridad?</label>
+          <textarea class="worksheet-textarea" id="obs-2" name="obs_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="obs-3">¿El cambio es continuo o brusco?</label>
+          <textarea class="worksheet-textarea" id="obs-3" name="obs_3"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Practicario: comprensión</h2>
+        <div class="worksheet-field">
+          <label for="understanding-1">1. ¿Qué es una LDR y cómo funciona?</label>
+          <textarea class="worksheet-textarea" id="understanding-1" name="understanding_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="understanding-2">2. ¿Qué tipo de señal genera?</label>
+          <textarea class="worksheet-textarea" id="understanding-2" name="understanding_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="understanding-3">3. ¿Qué hace el buzzer?</label>
+          <textarea class="worksheet-textarea" id="understanding-3" name="understanding_3"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Relación del sistema</h2>
+        <div class="worksheet-field">
+          <label for="system-1">1. ¿Cómo se transforma la luz en sonido?</label>
+          <textarea class="worksheet-textarea" id="system-1" name="system_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="system-2">2. ¿Qué relación hay entre luz y frecuencia?</label>
+          <textarea class="worksheet-textarea" id="system-2" name="system_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="system-3">3. ¿Qué pasaría si no hubiera sensor?</label>
+          <textarea class="worksheet-textarea" id="system-3" name="system_3"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Análisis del código</h2>
+        <p>Explica esta línea:</p>
+        <pre><code>int frecuencia = 400 + (valor / 2);</code></pre>
+        <div class="worksheet-field">
+          <label for="code-1">1. ¿Qué representa el valor 400?</label>
+          <textarea class="worksheet-textarea" id="code-1" name="code_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="code-2">2. ¿Qué representa la variable <code>valor</code>?</label>
+          <textarea class="worksheet-textarea" id="code-2" name="code_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="code-3">3. ¿Qué pasaría si cambias la fórmula?</label>
+          <textarea class="worksheet-textarea" id="code-3" name="code_3"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Análisis del sistema</h2>
+        <div class="worksheet-field">
+          <label for="analysis-1">1. ¿El sistema mide la luz con precisión?</label>
+          <textarea class="worksheet-textarea" id="analysis-1" name="analysis_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="analysis-2">2. ¿Qué factores afectan el resultado?</label>
+          <textarea class="worksheet-textarea" id="analysis-2" name="analysis_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="analysis-3">3. ¿Qué limitaciones tiene este sistema?</label>
+          <textarea class="worksheet-textarea" id="analysis-3" name="analysis_3"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Aplicación</h2>
+        <div class="worksheet-field">
+          <label for="application-1">1. ¿Dónde usarías este sistema en la vida real?</label>
+          <textarea class="worksheet-textarea" id="application-1" name="application_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="application-2">2. ¿Cómo lo convertirías en una alarma?</label>
+          <textarea class="worksheet-textarea" id="application-2" name="application_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="application-3">3. ¿Cómo mejorarías este proyecto?</label>
+          <textarea class="worksheet-textarea" id="application-3" name="application_3"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Transferencia</h2>
+        <div class="worksheet-field">
+          <label for="transfer-1">1. ¿Cómo harías que controle volumen en lugar de tono?</label>
+          <textarea class="worksheet-textarea" id="transfer-1" name="transfer_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="transfer-2">2. ¿Cómo lo integrarías con una app o una base de datos?</label>
+          <textarea class="worksheet-textarea" id="transfer-2" name="transfer_2"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Experimentación</h2>
+        <p>Prueba esta variación y registra tus observaciones:</p>
+        <pre><code>int frecuencia = 200 + (valor / 4);</code></pre>
+        <div class="worksheet-field">
+          <label for="experiment-1">¿Qué diferencias observas respecto al código original?</label>
+          <textarea class="worksheet-textarea" id="experiment-1" name="experiment_1"></textarea>
+        </div>
+      </section>
+
+      <section class="card challenge">
+        <h2>Desarrollo final</h2>
+        <p>Modifica el programa para lograr lo siguiente:</p>
+        <ul>
+          <li>Oscuridad: sin sonido</li>
+          <li>Poca luz: sonido grave</li>
+          <li>Mucha luz: sonido agudo</li>
+        </ul>
+        <div class="worksheet-field">
+          <label for="final-code">Escribe o explica tu modificación final.</label>
+          <textarea class="worksheet-textarea" id="final-code" name="final_code"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Pregunta final</h2>
+        <div class="worksheet-field">
+          <label for="final-answer">Explica cómo la luz se convierte en sonido en este sistema.</label>
+          <textarea class="worksheet-textarea" id="final-answer" name="final_answer"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Evidencia</h2>
+        <ul>
+          <li>Foto del circuito</li>
+          <li>Código modificado</li>
+          <li>Respuestas del practicario</li>
+          <li>Video del funcionamiento</li>
+        </ul>
+        <div class="worksheet-field">
+          <label><input name="evidence_1" type="checkbox" /> Agregué foto del circuito</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_2" type="checkbox" /> Guardé el código modificado</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_3" type="checkbox" /> Contesté el practicario</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_4" type="checkbox" /> Grabé el video</label>
+        </div>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
