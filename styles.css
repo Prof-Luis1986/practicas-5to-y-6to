@@ -647,6 +647,10 @@ figcaption {
   margin: 0 auto;
 }
 
+.media-player--vertical {
+  width: min(100%, 320px);
+}
+
 @media (max-width: 640px) {
   .exercise-item {
     grid-template-columns: 1fr;
