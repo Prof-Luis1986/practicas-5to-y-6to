@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 14 - Robot Sumo Autónomo 2WD con Arduino</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="practica-14-robot-sumo">
+  <header class="hero">
+    <p class="tag">Fase IV</p>
+    <h1>Práctica 14: Robot Sumo Autónomo 2WD con Arduino</h1>
+    <p class="subtitle">Proyecto integrador para construir un robot capaz de detectar el borde del dojo, encontrar un oponente y reaccionar de forma autónoma.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#fase-iv">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo y practicario</h2>
+        <p><strong>Proyecto:</strong> Robot Sumo Autónomo 2WD con Arduino</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <p class="worksheet-note">Completa la guía en pantalla, registra tus observaciones del robot y al finalizar guarda tu PDF con respuestas y evidencias.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Propósito</h2>
+        <p>Construir y programar un robot sumo autónomo de 2 ruedas capaz de detectar el borde del área de combate, identificar un oponente, atacar cuando lo detecte y evitar salir del dojo.</p>
+        <p>Durante esta práctica se desarrollan habilidades de pensamiento computacional, análisis de sistemas, resolución de problemas y mejora continua.</p>
+      </section>
+
+      <section class="card">
+        <h2>Materiales</h2>
+        <p>Se recomienda el siguiente kit educativo porque incluye la mayoría de los componentes necesarios: chasis, motores, ruedas y cableado.</p>
+        <p><a href="https://www.amazon.com.mx/dp/B08BR798NS" target="_blank" rel="noopener noreferrer">Kit sugerido en Amazon México</a></p>
+        <ul>
+          <li>Arduino UNO</li>
+          <li>Sensor Shield v5.0</li>
+          <li>Driver L298N</li>
+          <li>2 motores DC</li>
+          <li>2 sensores IR</li>
+          <li>1 sensor ultrasónico</li>
+          <li>Batería</li>
+          <li>Cables Dupont</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Conexiones</h2>
+        <p><strong>L298N hacia Arduino con Shield</strong></p>
+        <ul>
+          <li>IN1 -&gt; D7</li>
+          <li>IN2 -&gt; D4</li>
+          <li>IN3 -&gt; D3</li>
+          <li>IN4 -&gt; D2</li>
+          <li>ENA -&gt; D5</li>
+          <li>ENB -&gt; D6</li>
+        </ul>
+
+        <p><strong>Sensores</strong></p>
+        <ul>
+          <li>IR izquierdo -&gt; A0</li>
+          <li>IR derecho -&gt; A1</li>
+          <li>TRIG -&gt; A2</li>
+          <li>ECHO -&gt; A3</li>
+        </ul>
+
+        <p><strong>Importante:</strong> conectar GND del Arduino con GND del L298N.</p>
+
+        <figure>
+          <img src="sumo.png" alt="Robot sumo autónomo con Arduino como referencia visual" />
+          <figcaption>Imagen de referencia del proyecto robot sumo autónomo. Úsala solo como apoyo visual.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Video de referencia</h2>
+        <video class="media-player media-player--compact media-player--vertical" controls preload="metadata">
+          <source src="Sumo.mp4" type="video/mp4" />
+          <source src="Sumo.mov" type="video/quicktime" />
+        </video>
+      </section>
+
+      <section class="card">
+        <h2>Antecedentes</h2>
+        <p>Antes de iniciar, responde las siguientes preguntas:</p>
+        <div class="worksheet-field">
+          <label for="background-1">1. ¿Qué es un robot autónomo?</label>
+          <textarea class="worksheet-textarea" id="background-1" name="background_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="background-2">2. ¿Por qué un robot necesita sensores?</label>
+          <textarea class="worksheet-textarea" id="background-2" name="background_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="background-3">3. ¿Qué pasaría si el robot no detecta el borde?</label>
+          <textarea class="worksheet-textarea" id="background-3" name="background_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="background-4">4. ¿Cuál es la diferencia entre detectar y reaccionar?</label>
+          <textarea class="worksheet-textarea" id="background-4" name="background_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="background-5">5. ¿Dónde se utilizan robots similares en la vida real?</label>
+          <textarea class="worksheet-textarea" id="background-5" name="background_5"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Lógica del robot</h2>
+        <p>El comportamiento general del robot se resume así:</p>
+        <ul>
+          <li>Detecta borde -&gt; retrocede y gira</li>
+          <li>Detecta enemigo -&gt; avanza y ataca</li>
+          <li>No detecta nada -&gt; gira para buscar</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Código completo</h2>
+        <pre><code>// ROBOT SUMO AUTÓNOMO 2 RUEDAS
+
+const int IN1 = 7;
+const int IN2 = 4;
+const int IN3 = 3;
+const int IN4 = 2;
+const int ENA = 5;
+const int ENB = 6;
+
+const int IR_LEFT  = A0;
+const int IR_RIGHT = A1;
+
+const int US_TRIG = A2;
+const int US_ECHO = A3;
+
+bool DRIVE_INVERTED = true;
+
+int IR_THRESHOLD = 450;
+int ENEMY_DISTANCE_CM = 45;
+
+int SPEED_ATTACK = 255;
+int SPEED_SEARCH = 190;
+int SPEED_ESCAPE = 210;
+
+void motorStop() {
+  digitalWrite(IN1, LOW); digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW); digitalWrite(IN4, LOW);
+  analogWrite(ENA, 0); analogWrite(ENB, 0);
+}
+
+void motorForward(int spd) {
+  if (!DRIVE_INVERTED) {
+    digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);
+    digitalWrite(IN3, HIGH); digitalWrite(IN4, LOW);
+  } else {
+    digitalWrite(IN1, LOW); digitalWrite(IN2, HIGH);
+    digitalWrite(IN3, LOW); digitalWrite(IN4, HIGH);
+  }
+  analogWrite(ENA, spd); analogWrite(ENB, spd);
+}
+
+void motorBackward(int spd) {
+  if (!DRIVE_INVERTED) {
+    digitalWrite(IN1, LOW); digitalWrite(IN2, HIGH);
+    digitalWrite(IN3, LOW); digitalWrite(IN4, HIGH);
+  } else {
+    digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);
+    digitalWrite(IN3, HIGH); digitalWrite(IN4, LOW);
+  }
+  analogWrite(ENA, spd); analogWrite(ENB, spd);
+}
+
+void turnLeft(int spd) {
+  if (!DRIVE_INVERTED) {
+    digitalWrite(IN1, LOW); digitalWrite(IN2, HIGH);
+    digitalWrite(IN3, HIGH); digitalWrite(IN4, LOW);
+  } else {
+    digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);
+    digitalWrite(IN3, LOW); digitalWrite(IN4, HIGH);
+  }
+  analogWrite(ENA, spd); analogWrite(ENB, spd);
+}
+
+void turnRight(int spd) {
+  if (!DRIVE_INVERTED) {
+    digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);
+    digitalWrite(IN3, LOW); digitalWrite(IN4, HIGH);
+  } else {
+    digitalWrite(IN1, LOW); digitalWrite(IN2, HIGH);
+    digitalWrite(IN3, HIGH); digitalWrite(IN4, LOW);
+  }
+  analogWrite(ENA, spd); analogWrite(ENB, spd);
+}
+
+bool edgeLeft() {
+  return analogRead(IR_LEFT) &lt; IR_THRESHOLD;
+}
+
+bool edgeRight() {
+  return analogRead(IR_RIGHT) &lt; IR_THRESHOLD;
+}
+
+long readDistanceCM() {
+  digitalWrite(US_TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(US_TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(US_TRIG, LOW);
+
+  long duration = pulseIn(US_ECHO, HIGH, 25000UL);
+  if (duration == 0) return 999;
+  return duration / 58;
+}
+
+void setup() {
+  pinMode(IN1, OUTPUT); pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT); pinMode(IN4, OUTPUT);
+  pinMode(ENA, OUTPUT); pinMode(ENB, OUTPUT);
+
+  pinMode(US_TRIG, OUTPUT);
+  pinMode(US_ECHO, INPUT);
+
+  Serial.begin(9600);
+  motorStop();
+  delay(500);
+}
+
+void loop() {
+  bool L = edgeLeft();
+  bool R = edgeRight();
+  long d = readDistanceCM();
+
+  if (L && R) {
+    motorBackward(SPEED_ESCAPE);
+    delay(250);
+    turnRight(SPEED_ESCAPE);
+    delay(220);
+    return;
+  }
+
+  if (L) {
+    motorBackward(SPEED_ESCAPE);
+    delay(220);
+    turnRight(SPEED_ESCAPE);
+    delay(200);
+    return;
+  }
+
+  if (R) {
+    motorBackward(SPEED_ESCAPE);
+    delay(220);
+    turnLeft(SPEED_ESCAPE);
+    delay(200);
+    return;
+  }
+
+  if (d &lt;= ENEMY_DISTANCE_CM) {
+    motorForward(SPEED_ATTACK);
+  } else {
+    turnLeft(SPEED_SEARCH);
+    delay(160);
+    motorForward(SPEED_SEARCH);
+    delay(120);
+  }
+
+  delay(15);
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Desarrollo de la práctica</h2>
+        <ol>
+          <li>Identifica los componentes.</li>
+          <li>Realiza el cableado.</li>
+          <li>Carga el código.</li>
+          <li>Realiza pruebas.</li>
+          <li>Ajusta parámetros.</li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>Pensamiento computacional</h2>
+        <div class="worksheet-field">
+          <label for="pc-1">1. ¿Qué partes componen el robot?</label>
+          <textarea class="worksheet-textarea" id="pc-1" name="pc_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="pc-2">2. ¿Qué patrón sigue al detectar borde?</label>
+          <textarea class="worksheet-textarea" id="pc-2" name="pc_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="pc-3">3. Explica la lógica sin código.</label>
+          <textarea class="worksheet-textarea" id="pc-3" name="pc_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="pc-4">4. Describe el algoritmo paso a paso.</label>
+          <textarea class="worksheet-textarea" id="pc-4" name="pc_4"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Análisis</h2>
+        <div class="worksheet-field">
+          <label for="analysis-1">1. ¿Funcionó correctamente?</label>
+          <textarea class="worksheet-textarea" id="analysis-1" name="analysis_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="analysis-2">2. ¿Qué errores observaste?</label>
+          <textarea class="worksheet-textarea" id="analysis-2" name="analysis_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="analysis-3">3. ¿Cómo reacciona al borde?</label>
+          <textarea class="worksheet-textarea" id="analysis-3" name="analysis_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="analysis-4">4. ¿Cómo reacciona al enemigo?</label>
+          <textarea class="worksheet-textarea" id="analysis-4" name="analysis_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="analysis-5">5. ¿Qué mejorarías?</label>
+          <textarea class="worksheet-textarea" id="analysis-5" name="analysis_5"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Experimentación y ajuste del robot</h2>
+        <p><strong>Propósito:</strong> analizar el comportamiento del robot modificando variables del programa para mejorar su desempeño en detección de borde, detección de oponente, velocidad y estabilidad.</p>
+
+        <h3>¿Cómo realizar los cambios?</h3>
+        <ol>
+          <li>Abre el código en Arduino IDE.</li>
+          <li>Ubica las variables al inicio del programa.</li>
+          <li>Cambia solo una variable a la vez.</li>
+          <li>Guarda el cambio.</li>
+          <li>Presiona Upload o Subir.</li>
+          <li>Espera a que el programa se cargue.</li>
+        </ol>
+
+        <pre><code>int IR_THRESHOLD = 450;
+int ENEMY_DISTANCE_CM = 45;
+int SPEED_ATTACK = 255;
+int SPEED_SEARCH = 190;
+bool DRIVE_INVERTED = true;</code></pre>
+
+        <h3>¿Cómo realizar las pruebas?</h3>
+        <p><strong>Prueba 1: Detección de enemigo</strong></p>
+        <ul>
+          <li>Acerca tu mano u objeto al sensor ultrasónico.</li>
+          <li>Observa si ataca rápido.</li>
+          <li>Observa si tarda en reaccionar.</li>
+          <li>Observa si no detecta.</li>
+        </ul>
+
+        <p><strong>Prueba 2: Detección de borde</strong></p>
+        <ul>
+          <li>Coloca el robot cerca del borde del dojo.</li>
+          <li>Observa si retrocede correctamente.</li>
+          <li>Observa si se queda quieto.</li>
+          <li>Observa si se sale.</li>
+        </ul>
+
+        <p><strong>Prueba 3: Búsqueda</strong></p>
+        <ul>
+          <li>Coloca el robot sin obstáculos.</li>
+          <li>Observa si gira para buscar.</li>
+          <li>Observa si se mueve de forma estable.</li>
+        </ul>
+
+        <h3>Registro de resultados</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Experimento</th>
+              <th>Cambio realizado</th>
+              <th>Cómo se probó</th>
+              <th>Resultado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>IR_THRESHOLD</td>
+              <td><textarea class="worksheet-textarea" name="experiment_change_1"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="experiment_test_1" placeholder="borde"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="experiment_result_1"></textarea></td>
+            </tr>
+            <tr>
+              <td>ENEMY_DISTANCE_CM</td>
+              <td><textarea class="worksheet-textarea" name="experiment_change_2"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="experiment_test_2" placeholder="objeto"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="experiment_result_2"></textarea></td>
+            </tr>
+            <tr>
+              <td>SPEED_ATTACK</td>
+              <td><textarea class="worksheet-textarea" name="experiment_change_3"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="experiment_test_3" placeholder="combate"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="experiment_result_3"></textarea></td>
+            </tr>
+            <tr>
+              <td>SPEED_SEARCH</td>
+              <td><textarea class="worksheet-textarea" name="experiment_change_4"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="experiment_test_4" placeholder="libre"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="experiment_result_4"></textarea></td>
+            </tr>
+            <tr>
+              <td>DRIVE_INVERTED</td>
+              <td><textarea class="worksheet-textarea" name="experiment_change_5"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="experiment_test_5" placeholder="dirección"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="experiment_result_5"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Experimentos sugeridos</h3>
+        <p><strong>1. Sensibilidad del sensor IR</strong></p>
+        <p>Modificar:</p>
+        <pre><code>int IR_THRESHOLD = 450;</code></pre>
+        <p>Probar valores: 300, 400, 500, 600.</p>
+        <p>Prueba: colocar el robot en el borde.</p>
+
+        <p><strong>2. Distancia de ataque</strong></p>
+        <p>Modificar:</p>
+        <pre><code>int ENEMY_DISTANCE_CM = 45;</code></pre>
+        <p>Probar: 20, 30, 40, 50.</p>
+        <p>Prueba: acercar un objeto.</p>
+
+        <p><strong>3. Velocidad de ataque</strong></p>
+        <p>Modificar:</p>
+        <pre><code>int SPEED_ATTACK = 255;</code></pre>
+        <p>Probar: 200, 230, 255.</p>
+        <p>Prueba: simulación de combate.</p>
+
+        <p><strong>4. Velocidad de búsqueda</strong></p>
+        <p>Modificar:</p>
+        <pre><code>int SPEED_SEARCH = 190;</code></pre>
+        <p>Probar: 150, 170, 200.</p>
+        <p>Prueba: robot sin enemigo.</p>
+
+        <p><strong>5. Dirección de motores</strong></p>
+        <p>Modificar:</p>
+        <pre><code>bool DRIVE_INVERTED = true;</code></pre>
+        <p>Cambiar a:</p>
+        <pre><code>bool DRIVE_INVERTED = false;</code></pre>
+        <p>Prueba: observar si ahora avanza correctamente.</p>
+      </section>
+
+      <section class="card">
+        <h2>Análisis de la experimentación</h2>
+        <div class="worksheet-field">
+          <label for="experiment-analysis-1">1. ¿Qué variable afectó más el comportamiento del robot?</label>
+          <textarea class="worksheet-textarea" id="experiment-analysis-1" name="experiment_analysis_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="experiment-analysis-2">2. ¿Qué configuración funcionó mejor?</label>
+          <textarea class="worksheet-textarea" id="experiment-analysis-2" name="experiment_analysis_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="experiment-analysis-3">3. ¿Qué combinación hizo al robot más competitivo?</label>
+          <textarea class="worksheet-textarea" id="experiment-analysis-3" name="experiment_analysis_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="experiment-analysis-4">4. ¿Por qué es importante cambiar solo una variable a la vez?</label>
+          <textarea class="worksheet-textarea" id="experiment-analysis-4" name="experiment_analysis_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="experiment-analysis-5">5. ¿Qué aprendiste del proceso de prueba y error?</label>
+          <textarea class="worksheet-textarea" id="experiment-analysis-5" name="experiment_analysis_5"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Monitor Serial y calibración</h2>
+        <p><strong>Propósito:</strong> observar los valores reales de los sensores para ajustar correctamente el robot.</p>
+
+        <h3>Activar Monitor Serial</h3>
+        <ol>
+          <li>Abre Arduino IDE.</li>
+          <li>Haz clic en Monitor Serial.</li>
+          <li>Configura 9600 baudios.</li>
+        </ol>
+
+        <h3>Datos que muestra el robot</h3>
+        <p>Ejemplo:</p>
+        <pre><code>IR_L = 520 | IR_R = 510 | Distancia = 80
+IR_L = 300 | IR_R = 280 | Distancia = 25</code></pre>
+
+        <h3>Interpretación</h3>
+        <p><strong>Sensores IR</strong></p>
+        <table>
+          <thead>
+            <tr>
+              <th>Superficie</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Blanco</td>
+              <td>alto (400-600)</td>
+            </tr>
+            <tr>
+              <td>Negro</td>
+              <td>bajo (0-300)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Detecta borde cuando el valor es menor al <code>IR_THRESHOLD</code>.</p>
+
+        <p><strong>Ultrasonido</strong></p>
+        <table>
+          <thead>
+            <tr>
+              <th>Situación</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Lejos</td>
+              <td>50-200 cm</td>
+            </tr>
+            <tr>
+              <td>Cerca</td>
+              <td>5-40 cm</td>
+            </tr>
+            <tr>
+              <td>Sin detección</td>
+              <td>999</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Calibración del IR</h3>
+        <p><strong>Paso 1:</strong> coloca el robot en superficie blanca y anota valores.</p>
+        <p><strong>Paso 2:</strong> coloca el sensor en línea negra y anota valores.</p>
+        <p><strong>Paso 3:</strong> calcula el umbral.</p>
+        <pre><code>IR_THRESHOLD = (valor blanco + valor negro) / 2</code></pre>
+        <p>Ejemplo:</p>
+        <pre><code>(520 + 250) / 2 = 385</code></pre>
+        <p>Entonces:</p>
+        <pre><code>int IR_THRESHOLD = 385;</code></pre>
+
+        <h3>Actividad</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Superficie</th>
+              <th>IR izquierdo</th>
+              <th>IR derecho</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Blanco</td>
+              <td><textarea class="worksheet-textarea" name="calibration_white_left"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="calibration_white_right"></textarea></td>
+            </tr>
+            <tr>
+              <td>Negro</td>
+              <td><textarea class="worksheet-textarea" name="calibration_black_left"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="calibration_black_right"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="worksheet-field">
+          <label for="calculated-threshold">Calcular: IR_THRESHOLD =</label>
+          <input class="worksheet-input" id="calculated-threshold" name="calculated_threshold" type="text" />
+        </div>
+
+        <h3>Problemas comunes</h3>
+        <ul>
+          <li>Detecta borde todo el tiempo -&gt; umbral muy alto.</li>
+          <li>No detecta borde -&gt; umbral muy bajo.</li>
+          <li>Valores inestables -&gt; luz o conexión.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Reflexión sobre calibración</h2>
+        <div class="worksheet-field">
+          <label for="calibration-reflection-1">1. ¿Por qué es mejor usar datos reales que valores fijos?</label>
+          <textarea class="worksheet-textarea" id="calibration-reflection-1" name="calibration_reflection_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="calibration-reflection-2">2. ¿Cómo mejora el robot al calibrarlo?</label>
+          <textarea class="worksheet-textarea" id="calibration-reflection-2" name="calibration_reflection_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="calibration-reflection-3">3. ¿Qué pasaría si no se calibran sensores en la vida real?</label>
+          <textarea class="worksheet-textarea" id="calibration-reflection-3" name="calibration_reflection_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="calibration-reflection-4">4. ¿Qué aprendiste del Monitor Serial?</label>
+          <textarea class="worksheet-textarea" id="calibration-reflection-4" name="calibration_reflection_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="calibration-reflection-5">5. ¿Cómo se relaciona esto con la ingeniería?</label>
+          <textarea class="worksheet-textarea" id="calibration-reflection-5" name="calibration_reflection_5"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Practicario</h2>
+        <h3>Comprensión</h3>
+        <div class="worksheet-field">
+          <label for="understanding-1">1. ¿Función del L298N?</label>
+          <textarea class="worksheet-textarea" id="understanding-1" name="understanding_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="understanding-2">2. ¿Qué hacen ENA y ENB?</label>
+          <textarea class="worksheet-textarea" id="understanding-2" name="understanding_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="understanding-3">3. ¿Por qué GND común?</label>
+          <textarea class="worksheet-textarea" id="understanding-3" name="understanding_3"></textarea>
+        </div>
+
+        <h3>Código</h3>
+        <div class="worksheet-field">
+          <label for="code-1">4. ¿Qué hace <code>motorForward()</code>?</label>
+          <textarea class="worksheet-textarea" id="code-1" name="code_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="code-2">5. ¿Qué hace <code>turnLeft()</code>?</label>
+          <textarea class="worksheet-textarea" id="code-2" name="code_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="code-3">6. ¿Qué hace <code>readDistanceCM()</code>?</label>
+          <textarea class="worksheet-textarea" id="code-3" name="code_3"></textarea>
+        </div>
+
+        <h3>Lógica</h3>
+        <div class="worksheet-field">
+          <label for="logic-1">7. ¿Qué tiene prioridad?</label>
+          <textarea class="worksheet-textarea" id="logic-1" name="logic_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="logic-2">8. ¿Qué pasa si detecta borde?</label>
+          <textarea class="worksheet-textarea" id="logic-2" name="logic_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="logic-3">9. ¿Qué pasa si no detecta enemigo?</label>
+          <textarea class="worksheet-textarea" id="logic-3" name="logic_3"></textarea>
+        </div>
+
+        <h3>Diagnóstico</h3>
+        <div class="worksheet-field">
+          <label for="diagnosis-1">10. ¿Cómo corregir errores?</label>
+          <textarea class="worksheet-textarea" id="diagnosis-1" name="diagnosis_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="diagnosis-2">11. ¿Qué parámetros ajustar?</label>
+          <textarea class="worksheet-textarea" id="diagnosis-2" name="diagnosis_2"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Reflexión</h2>
+        <div class="worksheet-field">
+          <label for="reflection-1">1. ¿El robot "piensa"?</label>
+          <textarea class="worksheet-textarea" id="reflection-1" name="reflection_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-2">2. ¿Es inteligencia artificial?</label>
+          <textarea class="worksheet-textarea" id="reflection-2" name="reflection_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-3">3. ¿Qué aprendiste del error?</label>
+          <textarea class="worksheet-textarea" id="reflection-3" name="reflection_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-4">4. ¿Qué relación hay entre hardware y software?</label>
+          <textarea class="worksheet-textarea" id="reflection-4" name="reflection_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-5">5. ¿Qué mejorarías?</label>
+          <textarea class="worksheet-textarea" id="reflection-5" name="reflection_5"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Aplicación real</h2>
+        <div class="worksheet-field">
+          <label for="application-1">1. ¿Dónde se usan robots así?</label>
+          <textarea class="worksheet-textarea" id="application-1" name="application_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="application-2">2. ¿Qué problema real resolverían?</label>
+          <textarea class="worksheet-textarea" id="application-2" name="application_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="application-3">3. ¿Qué industria los usa?</label>
+          <textarea class="worksheet-textarea" id="application-3" name="application_3"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Autoevaluación</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Criterio</th>
+              <th>Sí</th>
+              <th>No</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Entendí sensores</td>
+              <td><input name="self_eval_1_yes" type="checkbox" /></td>
+              <td><input name="self_eval_1_no" type="checkbox" /></td>
+            </tr>
+            <tr>
+              <td>Programé</td>
+              <td><input name="self_eval_2_yes" type="checkbox" /></td>
+              <td><input name="self_eval_2_no" type="checkbox" /></td>
+            </tr>
+            <tr>
+              <td>Probé</td>
+              <td><input name="self_eval_3_yes" type="checkbox" /></td>
+              <td><input name="self_eval_3_no" type="checkbox" /></td>
+            </tr>
+            <tr>
+              <td>Detecté errores</td>
+              <td><input name="self_eval_4_yes" type="checkbox" /></td>
+              <td><input name="self_eval_4_no" type="checkbox" /></td>
+            </tr>
+            <tr>
+              <td>Mejoré el sistema</td>
+              <td><input name="self_eval_5_yes" type="checkbox" /></td>
+              <td><input name="self_eval_5_no" type="checkbox" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Evidencias</h2>
+        <ul>
+          <li>Fotos del robot</li>
+          <li>Video funcionando</li>
+          <li>Código</li>
+          <li>Respuestas</li>
+        </ul>
+        <div class="worksheet-field">
+          <label><input name="evidence_1" type="checkbox" /> Agregué fotos del robot</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_2" type="checkbox" /> Grabé el video funcionando</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_3" type="checkbox" /> Guardé el código</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_4" type="checkbox" /> Contesté todas las respuestas</label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Reflexión final</h2>
+        <p>Redacta mínimo 10 líneas explicando qué aprendiste, qué dificultades tuviste, cómo las resolviste y cómo mejorarías el robot.</p>
+        <div class="worksheet-field">
+          <label for="final-reflection">Escribe tu reflexión final.</label>
+          <textarea class="worksheet-textarea" id="final-reflection" name="final_reflection"></textarea>
+        </div>
+      </section>
+
+      <section class="card challenge">
+        <h2>Cierre</h2>
+        <p>"Un robot no se mejora cambiando piezas, se mejora entendiendo sus datos."</p>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

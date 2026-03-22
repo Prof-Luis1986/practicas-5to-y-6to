@@ -10,7 +10,7 @@
   <header class="hero">
     <p class="tag">Informática - Arduino</p>
     <h1>Prácticas organizadas por fases</h1>
-    <p class="subtitle">Usa el menú izquierdo para cambiar entre Fase I, Fase II y Fase III y abrir cada práctica en su página independiente.</p>
+    <p class="subtitle">Usa el menú izquierdo para cambiar entre Fase I, Fase II, Fase III y Fase IV y abrir cada práctica en su página independiente.</p>
   </header>
 
   <div class="page-layout">
@@ -20,6 +20,7 @@
         <a href="#fase-i" class="phase-link" data-phase="fase-i">Fase I</a>
         <a href="#fase-ii" class="phase-link" data-phase="fase-ii">Fase II</a>
         <a href="#fase-iii" class="phase-link" data-phase="fase-iii">Fase III</a>
+        <a href="#fase-iv" class="phase-link" data-phase="fase-iv">Fase IV</a>
       </nav>
     </aside>
 
@@ -153,6 +154,20 @@
           </a>
         </div>
       </section>
+
+      <section class="card phase-panel" id="fase-iv" data-phase="fase-iv" hidden>
+        <h2>Fase IV</h2>
+        <p>Integración de sensores, movimiento autónomo y toma de decisiones para proyectos robóticos completos.</p>
+        <div class="home-grid">
+          <a class="practice-tile" href="practica-14-robot-sumo.html">
+            <article class="card">
+              <span class="phase-label">Fase IV</span>
+              <h2>Práctica 14</h2>
+              <p>Robot sumo autónomo 2WD con Arduino para detectar borde, identificar oponente, atacar y evitar salir del dojo.</p>
+            </article>
+          </a>
+        </div>
+      </section>
     </main>
   </div>
 
@@ -161,7 +176,7 @@
   </footer>
 
   <script>
-    const validPhases = ["fase-i", "fase-ii", "fase-iii"];
+    const validPhases = ["fase-i", "fase-ii", "fase-iii", "fase-iv"];
     const phaseLinks = document.querySelectorAll(".phase-link");
     const phasePanels = document.querySelectorAll(".phase-panel");
 
