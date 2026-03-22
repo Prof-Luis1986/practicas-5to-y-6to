@@ -62,9 +62,65 @@
           <li>2 motores DC</li>
           <li>2 sensores IR</li>
           <li>1 sensor ultrasónico</li>
-          <li>Batería</li>
+          <li>Baterías 18650</li>
           <li>Cables Dupont</li>
         </ul>
+        <p>Para este proyecto se recomienda usar <strong>baterías 18650</strong>, ya que el robot necesita más potencia para mover los motores con fuerza, empujar al oponente y mantener un funcionamiento más estable durante el combate.</p>
+      </section>
+
+      <section class="card">
+        <h2>Componentes principales</h2>
+        <p>Estos son algunos de los componentes más importantes del robot y la función que cumplen dentro del sistema.</p>
+
+        <h3>Sensor Shield v5.0</h3>
+        <p>El shield facilita las conexiones del Arduino porque organiza los pines de entrada y salida. Permite conectar sensores, servos y módulos de forma más rápida y ordenada, algo muy útil cuando el robot integra varios dispositivos al mismo tiempo.</p>
+        <figure>
+          <img src="Shield.webp" alt="Sensor Shield para Arduino UNO" />
+          <figcaption>Shield para Arduino: simplifica el cableado del proyecto.</figcaption>
+        </figure>
+
+        <h3>Sensor ultrasónico</h3>
+        <p>El sensor ultrasónico mide distancias enviando una onda de sonido y calculando cuánto tarda en rebotar. En este robot sirve para detectar al oponente al frente y decidir cuándo avanzar para atacar.</p>
+        <figure>
+          <img src="Ultrasonico.webp" alt="Sensor ultrasónico usado para detectar al oponente" />
+          <figcaption>Ultrasónico: ayuda al robot a saber si hay un objeto o rival cerca.</figcaption>
+        </figure>
+
+        <h3>Motorreductor</h3>
+        <p>El motorreductor convierte energía eléctrica en movimiento y, gracias a su caja reductora, entrega más fuerza y control. Eso permite que el robot tenga empuje suficiente para moverse y empujar al rival.</p>
+        <figure>
+          <img src="MotorReductor.webp" alt="Motorreductor para robot 2WD" />
+          <figcaption>Motorreductor: proporciona movimiento y fuerza al robot.</figcaption>
+        </figure>
+
+        <h3>Sensor IR</h3>
+        <p>Los sensores infrarrojos detectan diferencias de color o reflexión en el piso. En el robot sumo se usan para identificar el borde del dojo y evitar que el robot salga del área de combate.</p>
+        <figure>
+          <img src="SensorIR.webp" alt="Sensor infrarrojo para detectar borde" />
+          <figcaption>Sensor IR: detecta el borde para que el robot retroceda o gire.</figcaption>
+        </figure>
+
+        <h3>Puente H</h3>
+        <p>El puente H, en este caso el L298N, controla el sentido de giro y la velocidad de los motores. Gracias a este módulo el robot puede avanzar, retroceder y girar según lo indiquen las decisiones del programa.</p>
+        <figure>
+          <img src="PuenteH.webp" alt="Puente H L298N para controlar motores DC" />
+          <figcaption>Puente H: controla velocidad y dirección de los motores.</figcaption>
+        </figure>
+
+        <h3>Batería 18650</h3>
+        <p>La batería 18650 es una fuente de energía recargable muy utilizada en proyectos de robótica móvil. En un robot sumo es importante porque entrega la potencia necesaria para alimentar motores, sensores y controladores sin que el sistema pierda fuerza con facilidad.</p>
+        <figure>
+          <img src="18650.png" alt="Batería 18650 usada como fuente de energía del robot" />
+          <figcaption>Batería 18650: aporta la energía necesaria para un robot con mayor potencia.</figcaption>
+        </figure>
+
+        <h3>Topes o palas</h3>
+        <p>Un elemento muy característico de los robots sumo son los <strong>topes</strong> o <strong>palas</strong> frontales. Estas piezas ayudan a empujar al rival, levantar ligeramente su frente o desestabilizarlo, mejorando la capacidad de ataque del robot durante el combate.</p>
+        <p>Además de proteger la parte delantera, los topes permiten aprovechar mejor la fuerza de los motores, porque la energía del empuje se dirige hacia el oponente de forma más eficiente.</p>
+        <figure>
+          <img src="Tope.png" alt="Tope o pala frontal característica de un robot sumo" />
+          <figcaption>Tope o pala: pieza frontal que ayuda al robot a empujar y dominar al rival.</figcaption>
+        </figure>
       </section>
 
       <section class="card">
