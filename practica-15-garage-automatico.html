@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 15 - Garage automático con Arduino</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="practica-15-garage-automatico">
+  <header class="hero">
+    <p class="tag">Fase IV</p>
+    <h1>Práctica 15: Garage automático con Arduino</h1>
+    <p class="subtitle">Sistema automático de acceso vehicular con sensor ultrasónico, servo motor, semáforo y pantalla OLED.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#fase-iv">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Proyecto:</strong> Garage automático con Arduino, sensor ultrasónico, servo, semáforo y pantalla OLED</p>
+        <p><strong>Asignatura:</strong> Programación / Electrónica / Sistemas embebidos</p>
+        <p><strong>Modalidad:</strong> Individual o por equipos</p>
+        <p><strong>Duración estimada:</strong> 2 a 3 sesiones</p>
+        <p><strong>Producto final:</strong> Simulación funcional y explicación del funcionamiento del sistema</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <p class="worksheet-note">Completa la práctica en pantalla, registra observaciones del sistema y al final guarda tus respuestas en PDF.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>1. Nombre de la práctica</h2>
+        <p>Desarrollo de un sistema de garage automático con control de acceso mediante sensor ultrasónico, barrera con servo motor, semáforo y pantalla OLED.</p>
+      </section>
+
+      <section class="card">
+        <h2>2. Propósito</h2>
+        <p>Diseñar, simular y comprender el funcionamiento de un sistema automatizado de acceso vehicular que detecta la presencia de un automóvil, controla una barrera de entrada y muestra mensajes en una pantalla OLED, utilizando Arduino como unidad de control.</p>
+      </section>
+
+      <section class="card">
+        <h2>3. Competencias a desarrollar</h2>
+        <ul>
+          <li>Identifica la función de sensores y actuadores dentro de un sistema automatizado.</li>
+          <li>Comprende el uso del sensor ultrasónico para medir distancia.</li>
+          <li>Aplica estructuras de programación para controlar dispositivos electrónicos.</li>
+          <li>Interpreta la lógica de un sistema de acceso automatizado.</li>
+          <li>Desarrolla simulaciones funcionales en Wokwi.</li>
+          <li>Relaciona el código con el comportamiento físico del circuito.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>4. Aprendizajes esperados</h2>
+        <ul>
+          <li>Medir distancias con el sensor HC-SR04.</li>
+          <li>Controlar un servo motor para abrir y cerrar una barrera.</li>
+          <li>Utilizar una pantalla OLED para mostrar mensajes del sistema.</li>
+          <li>Representar visualmente el estado del acceso con un semáforo.</li>
+          <li>Programar condiciones, ciclos y funciones para automatizar procesos.</li>
+          <li>Realizar pruebas en simulación antes de pasar al circuito real.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>5. Introducción</h2>
+        <p>En la vida diaria existen múltiples sistemas automáticos que facilitan el acceso y control de espacios, como los garages eléctricos, estacionamientos inteligentes y accesos controlados. Estos sistemas combinan sensores, actuadores y dispositivos de salida visual para ofrecer seguridad, orden y comodidad.</p>
+        <p>En este proyecto se desarrollará un garage automático que funciona de la siguiente forma:</p>
+        <ul>
+          <li>El sensor ultrasónico detecta la cercanía de un vehículo.</li>
+          <li>Si el vehículo está dentro de una distancia permitida, el sistema cambia el semáforo a verde.</li>
+          <li>La barrera se abre mediante un servo motor.</li>
+          <li>La pantalla OLED muestra un mensaje de bienvenida.</li>
+          <li>Después de un tiempo, el sistema avisa con la luz amarilla que la barrera se cerrará.</li>
+          <li>Finalmente, el semáforo vuelve a rojo y la barrera se cierra.</li>
+        </ul>
+        <p>Para facilitar el diseño, el circuito puede simularse en Wokwi, ya que esta plataforma permite integrar de forma sencilla la pantalla OLED. En la simulación pueden emplearse LEDs y resistencias como referencia visual del semáforo, mientras que en el montaje real se utilizará un módulo de semáforo, el cual ya integra los LEDs necesarios.</p>
+        <figure>
+          <img src="Casa.png" alt="Casa como referencia visual para la maqueta del garage automático" />
+          <figcaption>Referencia visual de la maqueta tipo casa para el proyecto del garage automático.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>6. Materiales</h2>
+        <h3>Para simulación en Wokwi</h3>
+        <ul>
+          <li>1 Arduino Uno</li>
+          <li>1 sensor ultrasónico HC-SR04</li>
+          <li>1 servo motor</li>
+          <li>1 pantalla OLED I2C SSD1306</li>
+          <li>3 LEDs de referencia: rojo, amarillo y verde</li>
+          <li>3 resistencias de 220 ohms</li>
+          <li>Cables de conexión virtuales</li>
+        </ul>
+
+        <h3>Para montaje real</h3>
+        <ul>
+          <li>1 Arduino Uno</li>
+          <li>1 sensor ultrasónico HC-SR04</li>
+          <li>1 servo motor</li>
+          <li>1 pantalla OLED I2C SSD1306</li>
+          <li>1 módulo de semáforo de 3 luces</li>
+          <li>Protoboard</li>
+          <li>Cables Dupont</li>
+          <li>Fuente de alimentación o cable USB</li>
+        </ul>
+
+        <p><strong>Nota importante:</strong> en el circuito real no será necesario usar los tres LEDs y las resistencias por separado si se cuenta con el módulo de semáforo, ya que este integra el sistema visual de luces. En la simulación sí pueden colocarse LEDs individuales como apoyo para representar cada color del semáforo.</p>
+      </section>
+
+      <section class="card">
+        <h2>7. Conceptos previos</h2>
+        <h3>Sensor ultrasónico HC-SR04</h3>
+        <p>Permite medir la distancia entre el sensor y un objeto. Envía un pulso ultrasónico y calcula el tiempo que tarda en regresar el eco.</p>
+
+        <h3>Servo motor</h3>
+        <p>Es un actuador que puede colocarse en posiciones específicas mediante ángulos. En este proyecto se utiliza para mover la barrera del garage.</p>
+
+        <h3>Pantalla OLED</h3>
+        <p>Se utiliza para mostrar mensajes del sistema, como el estado del acceso, la distancia detectada y mensajes de bienvenida.</p>
+
+        <h3>Semáforo</h3>
+        <p>Representa visualmente el estado del garage:</p>
+        <ul>
+          <li>Rojo: acceso cerrado.</li>
+          <li>Verde: acceso permitido.</li>
+          <li>Amarillo: advertencia de cierre.</li>
+        </ul>
+        <figure>
+          <img src="Semaforo_Modulo.png" alt="Módulo de semáforo como referencia para el garage automático" />
+          <figcaption>Referencia del módulo de semáforo que puede usarse en el montaje real.</figcaption>
+        </figure>
+
+        <h3>Wokwi</h3>
+        <p>Es una plataforma de simulación electrónica en línea que permite diseñar, conectar y probar circuitos con Arduino. En este proyecto es especialmente útil por la integración sencilla de la pantalla OLED.</p>
+      </section>
+
+      <section class="card">
+        <h2>Referencias visuales</h2>
+        <figure>
+          <img src="Garage.png" alt="Referencia visual del garage automático con Arduino" />
+          <figcaption>Imagen de referencia del garage automático y su distribución general.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>8. Desarrollo de la práctica</h2>
+        <h3>Etapa 1. Análisis del problema</h3>
+        <p>El estudiante deberá comprender la lógica del sistema:</p>
+        <ul>
+          <li>El garage permanece cerrado.</li>
+          <li>El sensor mide constantemente la distancia.</li>
+          <li>Si detecta un vehículo cerca, permite el acceso.</li>
+          <li>El semáforo cambia de color según el estado del acceso.</li>
+          <li>La barrera se abre y posteriormente se cierra.</li>
+          <li>La pantalla muestra mensajes relacionados con el proceso.</li>
+        </ul>
+
+        <h3>Etapa 2. Diseño del circuito</h3>
+        <p>Se deberá construir el circuito en simulación considerando:</p>
+        <ul>
+          <li>Sensor ultrasónico conectado a pines digitales.</li>
+          <li>Servo conectado a un pin PWM o compatible con la librería Servo.</li>
+          <li>OLED conectada por I2C.</li>
+          <li>LEDs conectados solo como referencia del semáforo en simulación.</li>
+        </ul>
+        <p><strong>Aclaración importante:</strong> en el proyecto real puede sustituirse el conjunto de tres LEDs por un módulo de semáforo, manteniendo la misma lógica del programa.</p>
+
+        <h3>Etapa 3. Programación del sistema</h3>
+        <p>El código debe cumplir con las siguientes acciones:</p>
+        <ul>
+          <li>Medir la distancia.</li>
+          <li>Mostrar el estado del garage en la OLED.</li>
+          <li>Encender el color correspondiente del semáforo.</li>
+          <li>Abrir la barrera al detectar un vehículo dentro del umbral.</li>
+          <li>Cerrar la barrera después de la cuenta regresiva.</li>
+          <li>Evitar que el ciclo se repita continuamente mientras el automóvil siga enfrente.</li>
+        </ul>
+
+        <h3>Etapa 4. Simulación y pruebas en Wokwi</h3>
+        <p>Se recomienda probar el sistema en Wokwi porque:</p>
+        <ul>
+          <li>Facilita la conexión de la pantalla OLED.</li>
+          <li>Permite visualizar el funcionamiento antes del montaje físico.</li>
+          <li>Ayuda a detectar errores de lógica, conexión o programación.</li>
+          <li>Hace más sencillo ajustar el movimiento del servo y el comportamiento del sensor.</li>
+        </ul>
+        <p>Durante la simulación, el estudiante debe verificar:</p>
+        <ul>
+          <li>Si la distancia se detecta correctamente.</li>
+          <li>Si la barrera abre y cierra.</li>
+          <li>Si el semáforo cambia correctamente.</li>
+          <li>Si la OLED muestra los mensajes esperados.</li>
+          <li>Si el sistema se reinicia adecuadamente cuando el auto se retira.</li>
+        </ul>
+
+        <h3>Etapa 5. Explicación del funcionamiento</h3>
+        <p>Cada estudiante o equipo deberá explicar:</p>
+        <ul>
+          <li>Qué hace cada componente.</li>
+          <li>Cómo funciona el sensor ultrasónico.</li>
+          <li>Por qué se usan funciones en el código.</li>
+          <li>Cómo se controla el servo.</li>
+          <li>Cómo la pantalla OLED mejora la interacción con el usuario.</li>
+          <li>Por qué Wokwi es útil como etapa previa al montaje real.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>9. Código base del proyecto</h2>
+        <pre><code>#include &lt;Wire.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+#include &lt;Servo.h&gt;
+
+// ---------------- OLED ----------------
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &amp;Wire, OLED_RESET);
+
+// LEDs (semaforo)
+const int rojo = 13;
+const int amarillo = 12;
+const int verde = 11;
+
+// Ultrasonico HC-SR04
+const int TRIG = 2;
+const int ECHO = 3;
+
+// Servo
+Servo barrera;
+const int pinServo = 9;
+const int POS_ABIERTO = 0;
+const int POS_CERRADO = 90;
+
+// Config
+const int UMBRAL_CM = 25;
+const int HISTERESIS = 10;
+
+long medirCM() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long dur = pulseIn(ECHO, HIGH, 30000);
+  if (dur == 0) return 999;
+
+  long cm = (long)(dur * 0.0343 / 2.0);
+  if (cm &lt; 0) cm = 999;
+  if (cm &gt; 999) cm = 999;
+  return cm;
+}
+
+void setLeds(bool r, bool y, bool g) {
+  digitalWrite(rojo, r);
+  digitalWrite(amarillo, y);
+  digitalWrite(verde, g);
+}
+
+void mostrarMensaje(const char* l1, const char* l2, int tiempo) {
+  oled.clearDisplay();
+  oled.setTextColor(SSD1306_WHITE);
+
+  oled.setTextSize(1);
+  oled.setCursor(0, 10);
+  oled.println(l1);
+
+  oled.setCursor(0, 30);
+  oled.println(l2);
+
+  oled.display();
+  delay(tiempo);
+}
+
+void mostrarDistancia(long cm) {
+  oled.clearDisplay();
+  oled.setTextColor(SSD1306_WHITE);
+
+  oled.setTextSize(1);
+  oled.setCursor(0, 0);
+  oled.println("Acceso cerrado");
+
+  oled.setCursor(0, 20);
+  oled.print("Distancia: ");
+  oled.print(cm);
+  oled.println(" cm");
+
+  oled.display();
+}
+
+void cuentaRegresiva(int segundos, int ledPin, int posicionServo,
+                     const char* msg1, const char* msg2,
+                     bool moverServoAlFinal = false) {
+  digitalWrite(rojo, LOW);
+  digitalWrite(amarillo, LOW);
+  digitalWrite(verde, LOW);
+
+  digitalWrite(ledPin, HIGH);
+
+  if (!moverServoAlFinal) {
+    barrera.write(posicionServo);
+  }
+
+  for (int i = segundos; i &gt;= 0; i--) {
+    oled.clearDisplay();
+    oled.setTextColor(SSD1306_WHITE);
+
+    oled.setTextSize(1);
+    oled.setCursor(0, 10);
+    oled.println(msg1);
+
+    oled.setCursor(0, 30);
+    oled.print(msg2);
+    oled.print(" ");
+    oled.print(i);
+    oled.print("s");
+
+    oled.display();
+    delay(1000);
+  }
+
+  if (moverServoAlFinal) {
+    barrera.write(posicionServo);
+  }
+
+  digitalWrite(ledPin, LOW);
+}
+
+void setup() {
+  if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    while (true);
+  }
+
+  oled.clearDisplay();
+  oled.display();
+
+  pinMode(rojo, OUTPUT);
+  pinMode(amarillo, OUTPUT);
+  pinMode(verde, OUTPUT);
+
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+
+  barrera.attach(pinServo);
+  barrera.write(POS_CERRADO);
+
+  setLeds(true, false, false);
+  mostrarMensaje("Garage", "Sistema listo", 1500);
+}
+
+void loop() {
+  long cm = medirCM();
+
+  barrera.write(POS_CERRADO);
+  setLeds(true, false, false);
+
+  mostrarDistancia(cm);
+  delay(200);
+
+  if (cm &lt;= UMBRAL_CM) {
+    cuentaRegresiva(5, verde, POS_ABIERTO, "Bienvenido", "a casa", false);
+    mostrarMensaje("Acceso abierto", "Pase por favor", 1200);
+
+    cuentaRegresiva(2, amarillo, POS_CERRADO, "Atencion", "Cerrando en:", true);
+    mostrarMensaje("Barrera bajando", "Espere...", 1200);
+
+    cuentaRegresiva(5, rojo, POS_CERRADO, "Acceso cerrado", "Espere luz verde:", false);
+    mostrarMensaje("No pase", "Espere luz verde", 1200);
+
+    while (medirCM() &lt;= (UMBRAL_CM + HISTERESIS)) {
+      setLeds(true, false, false);
+
+      oled.clearDisplay();
+      oled.setTextColor(SSD1306_WHITE);
+      oled.setTextSize(1);
+      oled.setCursor(0, 10);
+      oled.println("Retire el auto");
+      oled.setCursor(0, 30);
+      oled.println("Para reiniciar");
+      oled.display();
+
+      delay(400);
+    }
+
+    oled.clearDisplay();
+    oled.display();
+  }
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>10. Indicaciones para el estudiante</h2>
+        <ol>
+          <li>Construye el circuito en Wokwi.</li>
+          <li>Verifica que todos los componentes estén correctamente conectados.</li>
+          <li>Carga el código base.</li>
+          <li>Ejecuta la simulación.</li>
+          <li>Acerca el objeto al sensor ultrasónico.</li>
+          <li>Observa el cambio del semáforo.</li>
+          <li>Revisa la apertura y cierre de la barrera.</li>
+          <li>Analiza los mensajes mostrados en la OLED.</li>
+          <li>Realiza las pruebas necesarias.</li>
+          <li>Responde el practicario.</li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>Practicario</h2>
+        <p><strong>Proyecto:</strong> Garage automático con Arduino</p>
+
+        <h3>A. Observación y comprensión</h3>
+        <div class="worksheet-field">
+          <label for="q1">1. ¿Cuál es la función principal del proyecto desarrollado?</label>
+          <textarea class="worksheet-textarea" id="q1" name="answer_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q2">2. ¿Qué papel cumple el sensor ultrasónico dentro del sistema?</label>
+          <textarea class="worksheet-textarea" id="q2" name="answer_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q3">3. ¿Qué componente se encarga de mover la barrera del garage?</label>
+          <textarea class="worksheet-textarea" id="q3" name="answer_3"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q4">4. ¿Qué función cumple la pantalla OLED en este proyecto?</label>
+          <textarea class="worksheet-textarea" id="q4" name="answer_4"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q5">5. ¿Qué representa cada color del semáforo en el sistema? Rojo, Amarillo y Verde.</label>
+          <textarea class="worksheet-textarea" id="q5" name="answer_5"></textarea>
+        </div>
+
+        <h3>B. Análisis del circuito</h3>
+        <div class="worksheet-field">
+          <label for="q6">6. ¿Por qué en la simulación se pueden usar LEDs y resistencias como referencia del semáforo?</label>
+          <textarea class="worksheet-textarea" id="q6" name="answer_6"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q7">7. ¿Por qué en el circuito real se puede sustituir ese arreglo por un módulo de semáforo?</label>
+          <textarea class="worksheet-textarea" id="q7" name="answer_7"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q8">8. ¿Qué ventajas ofrece Wokwi para diseñar y probar este proyecto?</label>
+          <textarea class="worksheet-textarea" id="q8" name="answer_8"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q9">9. ¿Qué tipo de conexión utiliza la pantalla OLED de este proyecto?</label>
+          <textarea class="worksheet-textarea" id="q9" name="answer_9"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q10">10. ¿Qué ocurriría si el sensor ultrasónico no detectara correctamente la distancia?</label>
+          <textarea class="worksheet-textarea" id="q10" name="answer_10"></textarea>
+        </div>
+
+        <h3>C. Análisis del código</h3>
+        <div class="worksheet-field">
+          <label for="q11">11. ¿Qué hace la función <code>medirCM()</code>?</label>
+          <textarea class="worksheet-textarea" id="q11" name="answer_11"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q12">12. ¿Qué hace la función <code>setLeds(bool r, bool y, bool g)</code>?</label>
+          <textarea class="worksheet-textarea" id="q12" name="answer_12"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q13">13. ¿Qué hace la función <code>mostrarMensaje()</code>?</label>
+          <textarea class="worksheet-textarea" id="q13" name="answer_13"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q14">14. ¿Qué sucede en la función <code>cuentaRegresiva()</code>?</label>
+          <textarea class="worksheet-textarea" id="q14" name="answer_14"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q15">15. ¿Qué condición debe cumplirse para que el garage permita el acceso?</label>
+          <textarea class="worksheet-textarea" id="q15" name="answer_15"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q16">16. ¿Cuál es la función de la variable <code>UMBRAL_CM</code>?</label>
+          <textarea class="worksheet-textarea" id="q16" name="answer_16"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q17">17. ¿Para qué sirve la variable <code>HISTERESIS</code>?</label>
+          <textarea class="worksheet-textarea" id="q17" name="answer_17"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q18">18. ¿Por qué el programa usa un ciclo <code>while</code> al final del proceso?</label>
+          <textarea class="worksheet-textarea" id="q18" name="answer_18"></textarea>
+        </div>
+
+        <h3>D. Reflexión y aplicación</h3>
+        <div class="worksheet-field">
+          <label for="q19">19. ¿En qué lugares reales podría aplicarse un sistema como este?</label>
+          <textarea class="worksheet-textarea" id="q19" name="answer_19"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q20">20. ¿Qué ventajas aporta la automatización en un garage o estacionamiento?</label>
+          <textarea class="worksheet-textarea" id="q20" name="answer_20"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q21">21. ¿Qué mejora te gustaría agregar a este proyecto?</label>
+          <textarea class="worksheet-textarea" id="q21" name="answer_21" placeholder="Ejemplos: buzzer, RFID, teclado numérico, control remoto, contador de autos o base de datos."></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q22">22. ¿Qué fue lo más interesante que aprendiste en esta práctica?</label>
+          <textarea class="worksheet-textarea" id="q22" name="answer_22"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q23">23. ¿Qué dificultad encontraste durante el desarrollo del circuito o la simulación?</label>
+          <textarea class="worksheet-textarea" id="q23" name="answer_23"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q24">24. ¿Cómo resolviste esa dificultad?</label>
+          <textarea class="worksheet-textarea" id="q24" name="answer_24"></textarea>
+        </div>
+
+        <h3>E. Actividad de análisis técnico</h3>
+        <div class="worksheet-field">
+          <label for="q25">25. Explica con tus palabras la secuencia completa del funcionamiento del garage desde que el auto se acerca hasta que el sistema vuelve a reposo.</label>
+          <textarea class="worksheet-textarea" id="q25" name="answer_25"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q26">26. Dibuja o describe cómo se conectan el sensor ultrasónico, el servo, la pantalla OLED y el semáforo.</label>
+          <textarea class="worksheet-textarea" id="q26" name="answer_26"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q27">27. Si quisieras cambiar la distancia de detección de 25 cm a 15 cm, ¿qué línea del programa modificarías?</label>
+          <textarea class="worksheet-textarea" id="q27" name="answer_27"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="q28">28. Si el servo abriera al revés, ¿qué tendrías que revisar o modificar?</label>
+          <textarea class="worksheet-textarea" id="q28" name="answer_28"></textarea>
+        </div>
+
+        <h3>F. Conclusión</h3>
+        <div class="worksheet-field">
+          <label for="q29">29. Redacta una conclusión breve sobre la importancia de combinar sensores, actuadores y programación en proyectos de automatización.</label>
+          <textarea class="worksheet-textarea" id="q29" name="answer_29"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Actividad complementaria opcional</h2>
+        <p>Realiza una mejora al proyecto y descríbela brevemente.</p>
+        <div class="worksheet-field">
+          <label for="optional-improvement">Describe tu mejora.</label>
+          <textarea class="worksheet-textarea" id="optional-improvement" name="optional_improvement" placeholder="Ejemplos: sonido de advertencia, más mensajes en OLED, cambiar tiempos, detectar diferentes distancias o usar módulo de semáforo real."></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Evidencias sugeridas</h2>
+        <ul>
+          <li>Captura de la simulación en Wokwi.</li>
+          <li>Fotografía del circuito físico, si lo realizan.</li>
+          <li>Captura del código.</li>
+          <li>Breve explicación escrita del funcionamiento.</li>
+          <li>Respuestas del practicario.</li>
+        </ul>
+        <div class="worksheet-field">
+          <label><input name="evidence_1" type="checkbox" /> Agregué captura de Wokwi</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_2" type="checkbox" /> Agregué foto del circuito físico</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_3" type="checkbox" /> Guardé captura del código</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_4" type="checkbox" /> Expliqué el funcionamiento</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_5" type="checkbox" /> Contesté el practicario</label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Observación didáctica</h2>
+        <p>Para este proyecto conviene explicar a los alumnos que en simulación los LEDs y resistencias solo sirven como representación visual del semáforo, mientras que en el montaje real puede emplearse directamente el módulo de semáforo.</p>
+        <p>La pantalla OLED hace más clara la interacción del sistema con el usuario y Wokwi es una excelente herramienta para diseñar y previsualizar el circuito antes de armarlo físicamente.</p>
+      </section>
+
+      <section class="card">
+        <h2>Maqueta de referencia</h2>
+        <p>Estas imágenes pueden servir como apoyo para planear y construir la maqueta del garage automático. Puedes usarlas como referencia para la estructura, distribución de piezas y presentación del proyecto.</p>
+        <figure>
+          <img src="Casa.png" alt="Maqueta de casa usada como referencia para el garage automático" />
+          <figcaption>La maqueta de casa puede servir como base visual para presentar el proyecto.</figcaption>
+        </figure>
+        <figure>
+          <img src="uno.png" alt="Primera referencia de maqueta para el garage automático" />
+          <figcaption>Referencia 1 de la maqueta del garage automático.</figcaption>
+        </figure>
+        <p><a href="uno.png" download="uno.png">Descargar imagen uno</a></p>
+        <figure>
+          <img src="dos.png" alt="Segunda referencia de maqueta para el garage automático" />
+          <figcaption>Referencia 2 de la maqueta del garage automático.</figcaption>
+        </figure>
+        <p><a href="dos.png" download="dos.png">Descargar imagen dos</a></p>
+        <figure>
+          <img src="tres.png" alt="Tercera referencia de maqueta para el garage automático" />
+          <figcaption>Referencia 3 de la maqueta del garage automático.</figcaption>
+        </figure>
+        <p><a href="tres.png" download="tres.png">Descargar imagen tres</a></p>
+        <figure>
+          <img src="cuatro.png" alt="Cuarta referencia de maqueta para el garage automático" />
+          <figcaption>Referencia 4 de la maqueta del garage automático.</figcaption>
+        </figure>
+        <p><a href="cuatro.png" download="cuatro.png">Descargar imagen cuatro</a></p>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
