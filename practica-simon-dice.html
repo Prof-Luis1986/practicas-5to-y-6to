@@ -14,7 +14,7 @@
   </header>
 
   <div class="topbar">
-    <a class="topbar__link" href="index.html">Volver al índice</a>
+    <a class="topbar__link" href="index.html#fase-ii">Volver al índice</a>
   </div>
 
   <main class="page-shell">
@@ -142,7 +142,7 @@
         </ol>
         <p><strong>Indicaciones importantes:</strong></p>
         <ul>
-          <li>Guarda tu proyecto con el nombre: <code>HimnoAlegria_Arduino_TuNombre</code>.</li>
+          <li>Guarda tu proyecto con el nombre: <code>SimonDice_Arduino_TuNombre</code>.</li>
           <li>Verifica que los LEDs y los sonidos sigan la secuencia del juego.</li>
           <li>Comprueba que el circuito no tenga errores de conexión.</li>
         </ul>
@@ -151,203 +151,551 @@
       <section class="card">
         <h2>Código explicado por partes</h2>
 
-        <h3>Bloque 1 - Pines y sonidos</h3>
-        <pre><code>const int leds[4] = {2, 3, 4, 5};
-const int botones[4] = {6, 7, 8, 9};
-const int tonos[4] = {262, 330, 392, 523};
-const int buzzer = 10;</code></pre>
-        <p>En este bloque se definen los 4 LEDs, los 4 botones, los sonidos de cada color y el pin donde se conecta el buzzer.</p>
+        <h3>Bloque 1 - Librería, pines y variables</h3>
+        <pre><code>#include &lt;EEPROM.h&gt;
 
-        <h3>Bloque 2 - Variables del juego</h3>
-        <pre><code>const int MAX_RONDAS = 20;
-int secuencia[MAX_RONDAS];
-int nivelActual = 1;</code></pre>
-        <p>Aquí se guarda la secuencia del juego y se define cuántas rondas máximas se podrán jugar.</p>
+#define altavoz A0
 
-        <h3>Bloque 3 - Configuración inicial</h3>
-        <pre><code>void setup() {
-  for (int i = 0; i &lt; 4; i++) {
-    pinMode(leds[i], OUTPUT);
-    pinMode(botones[i], INPUT_PULLUP);
+#define rojo 12
+#define verde 11
+#define amarillo 10
+#define azul 9
+
+#define botonrojo 7
+#define botonverde 6
+#define botonamarillo 5
+#define botonazul 4
+
+int aleatorio, dir_lectura, dir_escritura, color_leido, leido, color_pulsado, nivel;
+boolean fin_juego;</code></pre>
+        <p>En este bloque se define el mapeo exacto del diagrama: buzzer en <code>A0</code>, LEDs en <code>12, 11, 10 y 9</code>, y botones en <code>7, 6, 5 y 4</code>. También se declaran las variables que controlan la secuencia y el estado del juego.</p>
+
+        <h3>Bloque 2 - Velocidad y sonidos</h3>
+        <pre><code>void retardo(int latencia) {
+  latencia = nivel;
+  switch (latencia) {
+    case 1:
+      delay(300);
+      break;
+    case 2:
+      delay(200);
+      break;
+    case 3:
+      delay(75);
+      break;
+    case 4:
+      delay(5);
+      break;
+    default:
+      break;
   }
+}
 
-  pinMode(buzzer, OUTPUT);
-  randomSeed(analogRead(A0));
-}</code></pre>
-        <p>Arduino prepara los pines, configura los botones como entrada y genera una semilla aleatoria para que la secuencia cambie en cada partida.</p>
-
-        <h3>Bloque 4 - Mostrar la secuencia</h3>
-        <pre><code>void mostrarSecuencia(int nivel) {
-  for (int i = 0; i &lt; nivel; i++) {
-    int color = secuencia[i];
-    digitalWrite(leds[color], HIGH);
-    tone(buzzer, tonos[color], 350);
-    delay(450);
-    digitalWrite(leds[color], LOW);
-    delay(180);
+void sonido(int tono) {
+  int i, j;
+  for (i = 0; i &lt;= 40; i++) {
+    for (j = 0; j &lt;= 4; j++) {
+      digitalWrite(altavoz, HIGH);
+      delayMicroseconds(90 * (6 - tono));
+      digitalWrite(altavoz, LOW);
+      delayMicroseconds(90 * (6 - tono));
+    }
   }
 }</code></pre>
-        <p>Esta función prende cada LED en orden y activa su sonido para que el jugador observe la secuencia que deberá repetir.</p>
+        <p>Estas funciones controlan la velocidad del juego según el nivel elegido y generan un tono distinto para cada color mediante pulsos en el buzzer.</p>
 
-        <h3>Bloque 5 - Lectura del jugador</h3>
-        <pre><code>int leerBoton() {
-  while (true) {
-    for (int i = 0; i &lt; 4; i++) {
-      if (digitalRead(botones[i]) == LOW) {
-        digitalWrite(leds[i], HIGH);
-        tone(buzzer, tonos[i], 200);
-        delay(250);
-        digitalWrite(leds[i], LOW);
+        <h3>Bloque 3 - Selección de nivel y antirrebote</h3>
+        <pre><code>void antirebote() {
+  delay(30);
+  while (digitalRead(botonrojo) != 1 || digitalRead(botonverde) != 1 || digitalRead(botonamarillo) != 1 || digitalRead(botonazul) != 1) {
+  }
+  delay(30);
+}
 
-        while (digitalRead(botones[i]) == LOW) {
-        }
+void escoge_nivel() {
+  int sale = 1;
+  nivel = 1;
+  digitalWrite(rojo, LOW);
+  digitalWrite(verde, LOW);
+  digitalWrite(amarillo, LOW);
+  digitalWrite(azul, LOW);
 
-        delay(120);
-        return i;
+  delay(100);
+  aleatorio = 1;
+
+  while (sale == 1) {
+    genera_aleatorio();
+
+    if (digitalRead(botonrojo) == LOW) {
+      nivel = 1;
+      digitalWrite(rojo, HIGH);
+      sonido(nivel);
+      sale = 0;
+      antirebote();
+    }
+
+    if (digitalRead(botonverde) == LOW) {
+      nivel = 2;
+      digitalWrite(verde, HIGH);
+      sonido(nivel);
+      sale = 0;
+      antirebote();
+    }
+
+    if (digitalRead(botonamarillo) == LOW) {
+      nivel = 3;
+      digitalWrite(amarillo, HIGH);
+      sonido(nivel);
+      sale = 0;
+      antirebote();
+    }
+
+    if (digitalRead(botonazul) == LOW) {
+      nivel = 4;
+      digitalWrite(azul, HIGH);
+      sonido(nivel);
+      sale = 0;
+      antirebote();
+    }
+  }
+}</code></pre>
+        <p>Aquí el jugador selecciona el nivel usando uno de los cuatro botones. El color elegido determina la dificultad y la función <code>antirebote()</code> evita lecturas falsas por rebote mecánico.</p>
+
+        <h3>Bloque 4 - Memoria de la secuencia</h3>
+        <pre><code>void genera_aleatorio() {
+  if (aleatorio == 4) {
+    aleatorio = 1;
+  }
+  else {
+    aleatorio++;
+  }
+}
+
+void guarda_color() {
+  EEPROM.write(dir_escritura, aleatorio);
+  dir_escritura++;
+}
+
+void comprueba() {
+  leido = EEPROM.read(dir_lectura);
+  if (leido != color_pulsado) {
+    fin_juego = true;
+  }
+}</code></pre>
+        <p>La secuencia del juego se va guardando en la memoria EEPROM. Después, cada pulsación del jugador se compara contra el color esperado para saber si sigue en juego o si falló.</p>
+
+        <h3>Bloque 5 - Mostrar colores y leer pulsaciones</h3>
+        <pre><code>void enciende_led(int color) {
+  switch (color) {
+    case 1: digitalWrite(rojo, HIGH); break;
+    case 2: digitalWrite(verde, HIGH); break;
+    case 3: digitalWrite(amarillo, HIGH); break;
+    case 4: digitalWrite(azul, HIGH); break;
+    default:
+      digitalWrite(rojo, HIGH);
+      digitalWrite(verde, HIGH);
+      digitalWrite(amarillo, HIGH);
+      digitalWrite(azul, HIGH);
+      break;
+  }
+}
+
+void muestra_colores() {
+  digitalWrite(rojo, LOW);
+  digitalWrite(verde, LOW);
+  digitalWrite(amarillo, LOW);
+  digitalWrite(azul, LOW);
+  retardo(nivel);
+
+  for (dir_lectura = 0; dir_lectura &lt; dir_escritura; dir_lectura++) {
+    color_leido = EEPROM.read(dir_lectura);
+    enciende_led(color_leido);
+    sonido(color_leido);
+    retardo(nivel);
+    digitalWrite(rojo, LOW);
+    digitalWrite(verde, LOW);
+    digitalWrite(amarillo, LOW);
+    digitalWrite(azul, LOW);
+    retardo(nivel);
+  }
+}</code></pre>
+        <p>Arduino recorre la secuencia guardada en EEPROM, enciende el LED correspondiente y reproduce su sonido. Así muestra al jugador el patrón que debe repetir.</p>
+
+        <h3>Bloque 6 - Turno del jugador y fallo</h3>
+        <pre><code>void pulsa_secuencia() {
+  boolean sal;
+  dir_lectura = 0;
+  aleatorio = 1;
+
+  while ((dir_lectura &lt; dir_escritura) && (!fin_juego)) {
+    sal = false;
+    while (!sal) {
+      genera_aleatorio();
+      if (digitalRead(botonrojo) == 0) {
+        color_pulsado = 1;
+        sal = true;
+      }
+      else if (digitalRead(botonverde) == 0) {
+        color_pulsado = 2;
+        sal = true;
+      } else if (digitalRead(botonamarillo) == 0) {
+        color_pulsado = 3;
+        sal = true;
+      } else if (digitalRead(botonazul) == 0) {
+        color_pulsado = 4;
+        sal = true;
       }
     }
+    comprueba();
+    enciende_led(color_pulsado);
+    sonido(color_pulsado);
+    antirebote();
+    digitalWrite(rojo, LOW);
+    digitalWrite(verde, LOW);
+    digitalWrite(amarillo, LOW);
+    digitalWrite(azul, LOW);
+    dir_lectura++;
   }
 }</code></pre>
-        <p>Arduino espera a que el jugador presione un botón. Cuando detecta uno, enciende su LED, reproduce su sonido y regresa el número del color seleccionado.</p>
-
-        <h3>Bloque 6 - Validación y avance de nivel</h3>
-        <pre><code>bool turnoJugador(int nivel) {
-  for (int i = 0; i &lt; nivel; i++) {
-    int respuesta = leerBoton();
-
-    if (respuesta != secuencia[i]) {
-      return false;
-    }
-  }
-
-  return true;
-}</code></pre>
-        <p>En este bloque el programa compara cada botón presionado con la secuencia correcta. Si hay un error, el juego termina.</p>
+        <p>En este bloque se esperan las pulsaciones del usuario, se comparan con la secuencia correcta y se activa el fin del juego si alguna entrada no coincide.</p>
       </section>
 
       <section class="card">
         <h2>Código completo</h2>
-        <pre><code>const int leds[4] = {2, 3, 4, 5};
-const int botones[4] = {6, 7, 8, 9};
-const int tonos[4] = {262, 330, 392, 523};
-const int buzzer = 10;
+        <pre><code>#include &lt;EEPROM.h&gt;
 
-const int MAX_RONDAS = 20;
-int secuencia[MAX_RONDAS];
-int nivelActual = 1;
+#define altavoz A0
 
-void encenderTodos(int tiempo) {
-  for (int i = 0; i &lt; 4; i++) {
-    digitalWrite(leds[i], HIGH);
-  }
+#define rojo 12
+#define verde 11
+#define amarillo 10
+#define azul 9
 
-  tone(buzzer, 700, tiempo);
-  delay(tiempo);
+#define botonrojo 7
+#define botonverde 6
+#define botonamarillo 5
+#define botonazul 4
 
-  for (int i = 0; i &lt; 4; i++) {
-    digitalWrite(leds[i], LOW);
+int aleatorio, dir_lectura, dir_escritura, color_leido, leido, color_pulsado, nivel;
+boolean fin_juego;
+
+
+void retardo(int latencia) {
+  latencia = nivel;
+  switch (latencia) {
+    case 1:
+      delay(300);
+      break;
+    case 2:
+      delay(200);
+      break;
+    case 3:
+      delay(75);
+      break;
+    case 4:
+      delay(5);
+      break;
+    default:
+      break;
   }
 }
 
-void mostrarSecuencia(int nivel) {
-  for (int i = 0; i &lt; nivel; i++) {
-    int color = secuencia[i];
-    digitalWrite(leds[color], HIGH);
-    tone(buzzer, tonos[color], 350);
-    delay(450);
-    digitalWrite(leds[color], LOW);
-    delay(180);
+void sonido(int tono) {
+  int i, j;
+  for (i = 0; i &lt;= 40; i++) {
+    for (j = 0; j &lt;= 4; j++) {
+      digitalWrite(altavoz, HIGH);
+      delayMicroseconds(90 * (6 - tono));
+      digitalWrite(altavoz, LOW);
+      delayMicroseconds(90 * (6 - tono));
+    }
   }
 }
 
-int leerBoton() {
-  while (true) {
-    for (int i = 0; i &lt; 4; i++) {
-      if (digitalRead(botones[i]) == LOW) {
-        digitalWrite(leds[i], HIGH);
-        tone(buzzer, tonos[i], 200);
-        delay(250);
-        digitalWrite(leds[i], LOW);
+void muestra_nivel(int pulsos) {
+  int valor = (pulsos / 4);
+  int resto = (pulsos % 4);
+  for (int k = 1; k &lt;= valor; k++) {
+    digitalWrite(rojo, HIGH);
+    digitalWrite(verde, HIGH);
+    digitalWrite(amarillo, HIGH);
+    digitalWrite(azul, HIGH);
+    delay(800);
+    digitalWrite(rojo, LOW);
+    digitalWrite(verde, LOW);
+    digitalWrite(amarillo, LOW);
+    digitalWrite(azul, LOW);
+    delay(800);
+  }
+  switch (resto) {
+    case 1:
+      digitalWrite(rojo, HIGH);
+      break;
+    case 2:
+      digitalWrite(rojo, HIGH);
+      digitalWrite(verde, HIGH);
+      break;
+    case 3:
+      digitalWrite(rojo, HIGH);
+      digitalWrite(verde, HIGH);
+      digitalWrite(amarillo, HIGH);
+      break;
+  }
+  delay(800);
+  digitalWrite(rojo, LOW);
+  digitalWrite(verde, LOW);
+  digitalWrite(amarillo, LOW);
+  digitalWrite(azul, LOW);
+}
 
-        while (digitalRead(botones[i]) == LOW) {
-        }
+void antirebote() {
+  delay(30);
+  while (digitalRead(botonrojo) != 1 || digitalRead(botonverde) != 1 || digitalRead(botonamarillo) != 1 || digitalRead(botonazul) != 1) {
+  }
+  delay(30);
+}
 
-        delay(120);
-        return i;
+void comprueba() {
+  leido = EEPROM.read(dir_lectura);
+  if (leido != color_pulsado) {
+    fin_juego = true;
+  }
+}
+
+void enciende_led(int color) {
+  switch (color) {
+    case 1: digitalWrite(rojo, HIGH);
+      break;
+    case 2: digitalWrite(verde, HIGH);
+      break;
+    case 3: digitalWrite(amarillo, HIGH);
+      break;
+    case 4: digitalWrite(azul, HIGH);
+      break;
+    default: digitalWrite(rojo, HIGH); digitalWrite(verde, HIGH);
+      digitalWrite(amarillo, HIGH); digitalWrite(azul, HIGH);
+      break;
+  }
+}
+
+void genera_aleatorio() {
+  if (aleatorio == 4) {
+    aleatorio = 1;
+  }
+  else {
+    aleatorio++;
+  }
+}
+
+void guarda_color() {
+  EEPROM.write(dir_escritura, aleatorio);
+  dir_escritura++;
+}
+
+void escoge_nivel() {
+  int sale = 1;
+  nivel = 1;
+  digitalWrite(rojo, LOW);
+  digitalWrite(verde, LOW);
+  digitalWrite(amarillo, LOW);
+  digitalWrite(azul, LOW);
+
+  delay(100);
+  aleatorio = 1;
+
+  while (sale == 1) {
+    genera_aleatorio();
+
+    if (digitalRead(botonrojo) == LOW) {
+      nivel = 1;
+      digitalWrite(rojo, HIGH);
+      sonido(nivel);
+      sale = 0;
+      antirebote();
+    }
+
+    if (digitalRead(botonverde) == LOW) {
+      nivel = 2;
+      digitalWrite(verde, HIGH);
+      sonido(nivel);
+      sale = 0;
+      antirebote();
+    }
+
+    if (digitalRead(botonamarillo) == LOW) {
+      nivel = 3;
+      digitalWrite(amarillo, HIGH);
+      sonido(nivel);
+      sale = 0;
+      antirebote();
+    }
+
+    if (digitalRead(botonazul) == LOW) {
+      nivel = 4;
+      digitalWrite(azul, HIGH);
+      sonido(nivel);
+      sale = 0;
+      antirebote();
+    }
+  }
+  digitalWrite(rojo, HIGH);
+  digitalWrite(verde, HIGH);
+  digitalWrite(amarillo, HIGH);
+  digitalWrite(azul, HIGH);
+  delay(1000);
+  digitalWrite(rojo, LOW);
+  digitalWrite(verde, LOW);
+  digitalWrite(amarillo, LOW);
+  digitalWrite(azul, LOW);
+  delay(500);
+}
+
+void has_fallado(int tono) {
+  int i, j;
+  enciende_led(color_pulsado);
+  for (i = 0; i &lt;= 100; i++)  {
+    for (j = 0; j &lt;= 4; j++) {
+      digitalWrite(altavoz, HIGH);
+      delay(1 * (6 - tono));
+      digitalWrite(altavoz, LOW);
+      delay(1 * (6 - tono));
+    }
+  }
+  digitalWrite(rojo, LOW);
+  digitalWrite(verde, LOW);
+  digitalWrite(amarillo, LOW);
+  digitalWrite(azul, LOW);
+
+  delay(1000);
+}
+
+void muestra_colores() {
+  digitalWrite(rojo, LOW);
+  digitalWrite(verde, LOW);
+  digitalWrite(amarillo, LOW);
+  digitalWrite(azul, LOW);
+  retardo(nivel);
+  for (dir_lectura = 0; dir_lectura &lt; dir_escritura; dir_lectura++) {
+    color_leido = EEPROM.read(dir_lectura);
+    enciende_led(color_leido);
+    sonido(color_leido);
+    retardo(nivel);
+    digitalWrite(rojo, LOW);
+    digitalWrite(verde, LOW);
+    digitalWrite(amarillo, LOW);
+    digitalWrite(azul, LOW);
+    retardo(nivel);
+  }
+}
+
+void pulsa_secuencia() {
+  boolean sal;
+  dir_lectura = 0;
+  aleatorio = 1;
+  while ((dir_lectura &lt; dir_escritura) && (!fin_juego)) {
+
+    sal = false;
+    while (!sal) {
+      genera_aleatorio();
+      if (digitalRead(botonrojo) == 0) {
+        color_pulsado = 1;
+        sal = true;
+      }
+      else if (digitalRead(botonverde) == 0) {
+        color_pulsado = 2;
+        sal = true;
+      } else if (digitalRead(botonamarillo) == 0) {
+        color_pulsado = 3;
+        sal = true;
+      } else if (digitalRead(botonazul) == 0) {
+        color_pulsado = 4;
+        sal = true;
+      }
+      else {
+        sal = false;
       }
     }
+    comprueba();
+    enciende_led(color_pulsado);
+    sonido(color_pulsado);
+    antirebote();
+    digitalWrite(rojo, LOW);
+    digitalWrite(verde, LOW);
+    digitalWrite(amarillo, LOW);
+    digitalWrite(azul, LOW);
+    dir_lectura++;
   }
 }
 
-bool turnoJugador(int nivel) {
-  for (int i = 0; i &lt; nivel; i++) {
-    int respuesta = leerBoton();
+void setup()  {
+  pinMode(botonrojo,  INPUT_PULLUP);
+  pinMode(botonverde, INPUT_PULLUP);
+  pinMode(botonamarillo, INPUT_PULLUP);
+  pinMode(botonazul, INPUT_PULLUP);
 
-    if (respuesta != secuencia[i]) {
-      return false;
-    }
-  }
+  pinMode(rojo, OUTPUT);
+  pinMode(verde, OUTPUT);
+  pinMode(amarillo, OUTPUT);
+  pinMode(azul, OUTPUT);
+  pinMode(altavoz, OUTPUT);
 
-  return true;
-}
-
-void juegoPerdido() {
-  for (int i = 0; i &lt; 3; i++) {
-    encenderTodos(180);
-    delay(120);
-  }
-}
-
-void iniciarJuego() {
-  for (int i = 0; i &lt; MAX_RONDAS; i++) {
-    secuencia[i] = random(0, 4);
-  }
-
-  nivelActual = 1;
-}
-
-void setup() {
-  for (int i = 0; i &lt; 4; i++) {
-    pinMode(leds[i], OUTPUT);
-    pinMode(botones[i], INPUT_PULLUP);
-  }
-
-  pinMode(buzzer, OUTPUT);
-  randomSeed(analogRead(A0));
-  iniciarJuego();
+  digitalWrite(rojo, LOW);
+  digitalWrite(verde, LOW);
+  digitalWrite(amarillo, LOW);
+  digitalWrite(azul, LOW);
 }
 
 void loop() {
-  mostrarSecuencia(nivelActual);
-
-  if (turnoJugador(nivelActual)) {
-    tone(buzzer, 900, 250);
-    delay(350);
-    nivelActual++;
-
-    if (nivelActual &gt; MAX_RONDAS) {
-      nivelActual = MAX_RONDAS;
-      encenderTodos(800);
-      iniciarJuego();
-    }
-  } else {
-    juegoPerdido();
-    iniciarJuego();
-    delay(600);
+  for (int i = 0; i &lt; 3; i++) {
+    digitalWrite(rojo, LOW);
+    sonido(1);
+    digitalWrite(azul, HIGH);
+    delay(100);
+    digitalWrite(azul, LOW);
+    sonido(2);
+    digitalWrite(amarillo, HIGH);
+    delay(100);
+    digitalWrite(verde, HIGH);
+    digitalWrite(amarillo, LOW);
+    sonido(3);
+    delay(100);
+    digitalWrite(verde, LOW);
+    sonido(4);
+    digitalWrite(rojo, HIGH);
+    delay(100);
   }
-
-  delay(400);
+  dir_escritura = dir_lectura = color_leido = leido = color_pulsado = 0;
+  fin_juego = false;
+  aleatorio = 1;
+  escoge_nivel();
+  guarda_color();
+  while (!fin_juego) {
+    muestra_colores();
+    pulsa_secuencia();
+    guarda_color();
+    if (!fin_juego) {
+      enciende_led(5);
+      sonido(1);
+      sonido(2);
+      sonido(4);
+      delay(100);
+      retardo(nivel);
+    }
+  }
+  has_fallado(4);
+  muestra_nivel(dir_escritura - 1);
+  delay(300);
 }</code></pre>
       </section>
 
       <section class="card">
         <h2>Explicación general del juego</h2>
         <ul>
-          <li>Arduino genera una secuencia aleatoria de colores.</li>
+          <li>El jugador selecciona la dificultad con uno de los cuatro botones.</li>
+          <li>Arduino guarda la secuencia de colores en memoria EEPROM.</li>
           <li>El sistema muestra la secuencia con LEDs y sonidos.</li>
-          <li>El jugador intenta repetirla con los botones.</li>
-          <li>Si responde bien, avanza al siguiente nivel.</li>
-          <li>Si se equivoca, el juego reinicia.</li>
+          <li>El jugador intenta repetirla con los botones en el mismo orden.</li>
+          <li>Si falla, suena la alerta y se muestra el nivel alcanzado con los LEDs.</li>
         </ul>
       </section>
 
