@@ -10,7 +10,7 @@
   <header class="hero">
     <p class="tag">Fase III</p>
     <h1>Práctica 9: Estacionamiento Inteligente con Arduino</h1>
-    <p class="subtitle">Proyecto de automatización con sensor ultrasónico, semáforo, servomotor y pantalla LCD para simular un acceso inteligente.</p>
+    <p class="subtitle">Proyecto de automatización con sensor ultrasónico, semáforo y servomotor, con una versión principal con pantalla LCD y una versión alternativa sin pantalla.</p>
   </header>
 
   <div class="topbar">
@@ -24,7 +24,7 @@
         <p><strong>Proyecto:</strong> Estacionamiento Inteligente con Arduino</p>
         <p><strong>Nivel:</strong> Bachillerato Tecnológico</p>
         <p><strong>Duración sugerida:</strong> 3 a 4 sesiones de 2 horas (ajustable según grupo)</p>
-        <p><strong>Recursos principales:</strong> Arduino UNO, sensor ultrasónico HC-SR04, módulo semáforo, servomotor SG90, LCD 16x2 con I2C, protoboard, cables, resistencias y cable USB.</p>
+        <p><strong>Recursos principales:</strong> Arduino UNO, sensor ultrasónico HC-SR04, módulo semáforo o LEDs, servomotor SG90, LCD 16x2 con I2C para la versión completa, protoboard, cables, resistencias y cable USB.</p>
 
         <div class="worksheet-meta">
           <div class="worksheet-field">
@@ -390,6 +390,302 @@ void loop() {
       <section class="card">
         <h2>Observación docente</h2>
         <p>Este proyecto refuerza la lógica de programación, la integración hardware-software y el pensamiento tecnológico aplicado a situaciones reales.</p>
+      </section>
+
+      <section class="card challenge">
+        <h2>Versión adicional sin pantalla LCD</h2>
+        <p>Esta variante <strong>no sustituye</strong> la práctica original. Se agrega como una segunda opción de armado para trabajar el mismo sistema de acceso automatizado cuando no se cuenta con pantalla LCD. La lógica se apoya solamente en el sensor ultrasónico, el semáforo de LEDs y la barrera con servomotor.</p>
+        <ul>
+          <li><strong>Estado inicial:</strong> LED rojo encendido y barrera cerrada.</li>
+          <li><strong>Detección de vehículo:</strong> si el objeto está a 25 cm o menos, se activa la secuencia.</li>
+          <li><strong>Luz verde:</strong> acceso permitido y la barrera se abre.</li>
+          <li><strong>Luz amarilla:</strong> advertencia de cierre de la barrera.</li>
+          <li><strong>Luz roja:</strong> acceso cerrado hasta que el vehículo se retire de la zona de detección.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Conexiones de la versión sin pantalla</h2>
+        <p>Usa la captura compartida como referencia visual y confirma estas conexiones antes de energizar el circuito.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Conexión</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Sensor ultrasónico HC-SR04</td><td>TRIG → Pin 2, ECHO → Pin 3, VCC → 5V, GND → GND</td></tr>
+            <tr><td>LED rojo</td><td>Ánodo → Pin 13 con resistencia de 220Ω, cátodo → GND</td></tr>
+            <tr><td>LED amarillo</td><td>Ánodo → Pin 12 con resistencia de 220Ω, cátodo → GND</td></tr>
+            <tr><td>LED verde</td><td>Ánodo → Pin 11 con resistencia de 220Ω, cátodo → GND</td></tr>
+            <tr><td>Servo motor</td><td>Señal → Pin 9, alimentación → 5V, GND → GND</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Código de la versión sin pantalla</h2>
+        <pre><code>#include &lt;Servo.h&gt;
+
+// LEDs (semaforo)
+const int rojo = 13;
+const int amarillo = 12;
+const int verde = 11;
+
+// Ultrasonico HC-SR04
+const int TRIG = 2;
+const int ECHO = 3;
+
+// Servo
+Servo barrera;
+const int pinServo = 9;
+const int POS_ABIERTO = 0;
+const int POS_CERRADO = 90;
+
+// Config
+const int UMBRAL_CM = 25;
+const int HISTERESIS = 10;
+
+// ---- Lectura de distancia ----
+long medirCM() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long dur = pulseIn(ECHO, HIGH, 30000);
+  if (dur == 0) return 999;
+
+  long cm = (long)(dur * 0.0343 / 2.0);
+  if (cm &lt; 0) cm = 999;
+  if (cm &gt; 999) cm = 999;
+  return cm;
+}
+
+// ---- LEDs ----
+void setLeds(bool r, bool y, bool g) {
+  digitalWrite(rojo, r);
+  digitalWrite(amarillo, y);
+  digitalWrite(verde, g);
+}
+
+// ---- Cuenta regresiva ----
+void cuentaRegresiva(int segundos, int ledPin, int posicionServo, bool moverServoAlFinal = false) {
+
+  // apagar todos
+  setLeds(false, false, false);
+
+  // prender LED activo
+  digitalWrite(ledPin, HIGH);
+
+  // mover servo al inicio
+  if (!moverServoAlFinal) {
+    barrera.write(posicionServo);
+  }
+
+  for (int i = segundos; i &gt;= 0; i--) {
+    delay(1000);
+  }
+
+  // mover servo al final (amarillo)
+  if (moverServoAlFinal) {
+    barrera.write(posicionServo);
+  }
+
+  digitalWrite(ledPin, LOW);
+}
+
+void setup() {
+  // LEDs
+  pinMode(rojo, OUTPUT);
+  pinMode(amarillo, OUTPUT);
+  pinMode(verde, OUTPUT);
+
+  // Ultrasonico
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+
+  // Servo
+  barrera.attach(pinServo);
+  barrera.write(POS_CERRADO);
+
+  setLeds(true, false, false);
+}
+
+void loop() {
+  long cm = medirCM();
+
+  // Estado de espera
+  barrera.write(POS_CERRADO);
+  setLeds(true, false, false);
+
+  delay(200);
+
+  // Si llega un auto
+  if (cm &lt;= UMBRAL_CM) {
+
+    // VERDE
+    cuentaRegresiva(5, verde, POS_ABIERTO, false);
+
+    // AMARILLO
+    cuentaRegresiva(2, amarillo, POS_CERRADO, true);
+
+    // ROJO
+    cuentaRegresiva(5, rojo, POS_CERRADO, false);
+
+    // Esperar a que se retire
+    while (medirCM() &lt;= (UMBRAL_CM + HISTERESIS)) {
+      setLeds(true, false, false);
+      delay(400);
+    }
+  }
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Practicario adicional: versión sin pantalla</h2>
+        <p><strong>Practicario:</strong> Sistema de Acceso Automatizado con Semáforo y Sensor Ultrasónico.</p>
+
+        <h3>Propósito de la práctica</h3>
+        <p>Desarrollar un sistema automatizado que controle el acceso de un vehículo mediante el uso de sensores, actuadores y lógica de control, simulando el funcionamiento de una barrera de estacionamiento.</p>
+
+        <h3>Competencias a desarrollar</h3>
+        <ul>
+          <li>Uso de sensores (ultrasónico HC-SR04).</li>
+          <li>Control de actuadores (servo motor).</li>
+          <li>Implementación de lógica condicional.</li>
+          <li>Manejo de salidas digitales (semáforo con LEDs).</li>
+          <li>Comprensión de estados en sistemas automatizados.</li>
+        </ul>
+
+        <h3>Material requerido</h3>
+        <ul>
+          <li>Arduino UNO.</li>
+          <li>Sensor ultrasónico HC-SR04.</li>
+          <li>Servo motor.</li>
+          <li>3 LEDs: rojo, amarillo y verde.</li>
+          <li>Resistencias de 220Ω.</li>
+          <li>Protoboard.</li>
+          <li>Cables Dupont.</li>
+        </ul>
+
+        <h3>Descripción del sistema</h3>
+        <ul>
+          <li>🔴 Rojo: acceso cerrado.</li>
+          <li>🟢 Verde: acceso permitido y barrera abierta.</li>
+          <li>🟡 Amarillo: advertencia de cierre.</li>
+          <li>Cuando un objeto se detecta a cierta distancia, el sistema permite el acceso, abre la barrera, la cierra automáticamente y espera a que el objeto se retire.</li>
+        </ul>
+
+        <h3>Actividad 1: Conexión del circuito</h3>
+        <p><strong>Instrucciones:</strong> Conecta el sensor ultrasónico, los LEDs y el servo siguiendo la tabla de conexiones de esta versión.</p>
+        <div class="worksheet-field">
+          <label for="sp1">Describe cómo realizaste el cableado del sensor, los LEDs y el servo.</label>
+          <textarea class="worksheet-textarea" id="sp1" name="answer_20"></textarea>
+        </div>
+
+        <h3>Actividad 2: Prueba del sensor ultrasónico</h3>
+        <p><strong>Instrucciones:</strong> Carga el código base y observa el comportamiento del sistema.</p>
+        <div class="worksheet-field">
+          <label for="sp2">¿Qué sucede cuando no hay ningún objeto cerca del sensor?</label>
+          <textarea class="worksheet-textarea" id="sp2" name="answer_21"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sp3">¿A qué distancia se activa el sistema?</label>
+          <textarea class="worksheet-textarea" id="sp3" name="answer_22"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sp4">¿Qué ocurre si el objeto permanece frente al sensor?</label>
+          <textarea class="worksheet-textarea" id="sp4" name="answer_23"></textarea>
+        </div>
+
+        <h3>Actividad 3: Análisis del sistema</h3>
+        <div class="worksheet-field">
+          <label for="sp5">¿Cuál es la función del sensor ultrasónico dentro del sistema?</label>
+          <textarea class="worksheet-textarea" id="sp5" name="answer_24"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sp6">¿Qué elemento físico representa el servo motor?</label>
+          <textarea class="worksheet-textarea" id="sp6" name="answer_25"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sp7">¿Qué significa cada color del semáforo dentro del sistema?</label>
+          <textarea class="worksheet-textarea" id="sp7" name="answer_26"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sp8">¿Por qué es importante usar una lógica de espera cuando el objeto sigue detectado?</label>
+          <textarea class="worksheet-textarea" id="sp8" name="answer_27"></textarea>
+        </div>
+
+        <h3>Actividad 4: Modificación del sistema</h3>
+        <p><strong>Realiza los siguientes cambios:</strong> cambia la distancia de activación a 15 cm, aumenta el tiempo de apertura de la barrera a 8 segundos y reduce el tiempo del semáforo amarillo a 1 segundo.</p>
+        <div class="worksheet-field">
+          <label for="sp9">Explica qué cambios hiciste en el código.</label>
+          <textarea class="worksheet-textarea" id="sp9" name="answer_28"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sp10">¿Cómo afectaron los cambios al comportamiento del sistema?</label>
+          <textarea class="worksheet-textarea" id="sp10" name="answer_29"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sp11">¿Qué configuración consideras más adecuada para un estacionamiento real?</label>
+          <textarea class="worksheet-textarea" id="sp11" name="answer_30"></textarea>
+        </div>
+
+        <h3>Actividad 5: Mejora del sistema</h3>
+        <p><strong>Desafío:</strong> agrega al menos una mejora al sistema. Puedes elegir entre botón para apertura manual, buzzer de advertencia, parpadeo del LED rojo o movimiento más suave del servo.</p>
+        <div class="worksheet-field">
+          <label for="sp12">Explica qué mejora agregaste.</label>
+          <textarea class="worksheet-textarea" id="sp12" name="answer_31"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sp13">Describe cómo funciona tu mejora.</label>
+          <textarea class="worksheet-textarea" id="sp13" name="answer_32"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sp14">Anota la evidencia que generaste: foto, video o enlace.</label>
+          <textarea class="worksheet-textarea" id="sp14" name="answer_33"></textarea>
+        </div>
+
+        <h3>Actividad 6: Reflexión</h3>
+        <div class="worksheet-field">
+          <label for="sp15">¿Dónde podrías aplicar este sistema en la vida real?</label>
+          <textarea class="worksheet-textarea" id="sp15" name="answer_34"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sp16">¿Qué problemas podría resolver este tipo de automatización?</label>
+          <textarea class="worksheet-textarea" id="sp16" name="answer_35"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="sp17">¿Qué mejorarías si tuvieras más sensores o componentes?</label>
+          <textarea class="worksheet-textarea" id="sp17" name="answer_36"></textarea>
+        </div>
+
+        <h3>Entregable</h3>
+        <ul>
+          <li>Fotos del circuito.</li>
+          <li>Video del funcionamiento.</li>
+          <li>Respuestas del practicario.</li>
+          <li>Mejora implementada.</li>
+        </ul>
+
+        <h3>Criterios de evaluación</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Criterio</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Funcionamiento del sistema</td><td>40%</td></tr>
+            <tr><td>Respuestas del practicario</td><td>20%</td></tr>
+            <tr><td>Modificaciones realizadas</td><td>20%</td></tr>
+            <tr><td>Mejora implementada</td><td>20%</td></tr>
+          </tbody>
+        </table>
       </section>
 
       <section class="card print-only">
