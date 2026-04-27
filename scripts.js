@@ -50,6 +50,7 @@ function setupProjectSubmissionFields() {
   const worksheetKey = document.body.dataset.worksheetKey;
 
   if (!worksheetKey) return;
+  if (document.body.dataset.disableProjectLinks === "true") return;
 
   const worksheetMeta = document.querySelector(".worksheet-meta");
   if (!worksheetMeta || document.getElementById("project-link")) return;
