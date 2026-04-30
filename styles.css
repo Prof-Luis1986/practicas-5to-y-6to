@@ -448,6 +448,52 @@ pre code {
   font-size: 1rem;
 }
 
+.code-block {
+  margin: 0.4rem 0 1rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #e3e3e3;
+}
+
+.code-block pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.code-block__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.55rem 0.75rem;
+  background: #d5d5d5;
+  border-bottom: 1px solid #c6c6c6;
+}
+
+.copy-code-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.85rem;
+  border: 0;
+  border-radius: 999px;
+  background: #0f5d45;
+  color: #fff;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.copy-code-button:hover {
+  background: #0b6e4f;
+}
+
+.copy-code-button.is-copied {
+  background: #dff5ec;
+  color: #0b6e4f;
+}
+
 .token-comment {
   color: #7a8791;
 }
@@ -721,7 +767,8 @@ figcaption {
   .hero,
   .topbar,
   .button-row,
-  .image-lightbox {
+  .image-lightbox,
+  .code-block__toolbar {
     display: none !important;
   }
 

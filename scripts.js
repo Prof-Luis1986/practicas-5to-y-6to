@@ -46,6 +46,51 @@ function setupCodeHighlighting() {
   });
 }
 
+function setupCopyableCodeBlocks() {
+  if (document.body.dataset.allowCodeCopy !== "true") return;
+
+  document.querySelectorAll("pre").forEach((pre) => {
+    const code = pre.querySelector("code");
+    if (!code || pre.parentElement?.classList.contains("code-block")) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "code-block";
+
+    const toolbar = document.createElement("div");
+    toolbar.className = "code-block__toolbar";
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "copy-code-button";
+    button.textContent = "Copiar codigo";
+
+    button.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(code.textContent || "");
+        button.textContent = "Copiado";
+        button.classList.add("is-copied");
+
+        window.setTimeout(() => {
+          button.textContent = "Copiar codigo";
+          button.classList.remove("is-copied");
+        }, 1800);
+      } catch (error) {
+        console.error("No se pudo copiar el codigo:", error);
+        button.textContent = "No se pudo copiar";
+
+        window.setTimeout(() => {
+          button.textContent = "Copiar codigo";
+        }, 1800);
+      }
+    });
+
+    toolbar.appendChild(button);
+    pre.parentNode.insertBefore(wrapper, pre);
+    wrapper.appendChild(toolbar);
+    wrapper.appendChild(pre);
+  });
+}
+
 function setupProjectSubmissionFields() {
   const worksheetKey = document.body.dataset.worksheetKey;
 
@@ -295,6 +340,8 @@ function setupImageLightbox() {
 }
 
 function setupContentProtection() {
+  const allowCodeCopy = document.body.dataset.allowCodeCopy === "true";
+
   [
     "copy",
     "cut",
@@ -303,7 +350,17 @@ function setupContentProtection() {
     "dragstart",
     "selectstart"
   ].forEach((eventName) => {
-    document.addEventListener(eventName, (event) => event.preventDefault());
+    document.addEventListener(eventName, (event) => {
+      if (
+        allowCodeCopy &&
+        event.target instanceof Element &&
+        event.target.closest(".code-block")
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+    });
   });
 
   document.addEventListener("keydown", (event) => {
@@ -311,6 +368,15 @@ function setupContentProtection() {
     const isModifierPressed = event.ctrlKey || event.metaKey;
 
     if (!isModifierPressed) return;
+
+    if (
+      allowCodeCopy &&
+      event.target instanceof Element &&
+      event.target.closest(".code-block") &&
+      ["a", "c"].includes(key)
+    ) {
+      return;
+    }
 
     if (["a", "c", "s", "u", "v", "x", "p"].includes(key)) {
       event.preventDefault();
@@ -797,6 +863,7 @@ function setupWorksheetStorage() {
 
 document.addEventListener("DOMContentLoaded", () => {
   setupCodeHighlighting();
+  setupCopyableCodeBlocks();
   setupProjectSubmissionFields();
   setupImageLightbox();
   setupContentProtection();
