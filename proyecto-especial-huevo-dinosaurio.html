@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proyecto especial - Huevo dinosaurio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="proyecto-especial-huevo-dinosaurio" data-allow-code-copy="true" data-disable-project-links="true">
+  <header class="hero">
+    <p class="tag">Proyectos especiales (Escape Room)</p>
+    <h1>Huevo dinosaurio</h1>
+    <p class="subtitle">Mecanismo con servomotor para simular pequeños empujes desde el interior de un huevo y una apertura más fuerte.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#proyectos-especiales">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Título de la práctica:</strong> Huevo dinosaurio</p>
+        <p><strong>Modalidad:</strong> Individual o por equipos</p>
+        <p><strong>Duración estimada:</strong> 1 a 2 sesiones</p>
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+        <p class="worksheet-note">Ajusta los ángulos del servo antes de montar el mecanismo final para evitar forzar la tapa o la estructura del huevo.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo</h2>
+        <p>Construir y programar un huevo de dinosaurio animado con servomotor, simulando movimientos internos, apertura y cierre dentro de una experiencia tipo escape room.</p>
+      </section>
+
+      <section class="card">
+        <h2>Materiales</h2>
+        <ul>
+          <li>1 Arduino Uno</li>
+          <li>1 servomotor SG90, MG90S o similar</li>
+          <li>Huevo o estructura mecánica con tapa móvil</li>
+          <li>Fuente de 5V para el servo si el montaje lo requiere</li>
+          <li>Protoboard</li>
+          <li>Cables Dupont</li>
+          <li>Materiales para fijar el servo al mecanismo</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Descripción general</h2>
+        <p>El servo inicia en posición cerrada. Después realiza movimientos cortos para representar empujes desde el interior del huevo. Al final, ejecuta una apertura más amplia, espera un momento y vuelve a cerrar.</p>
+      </section>
+
+      <section class="card">
+        <h2>Explicación del funcionamiento</h2>
+        <p>El programa usa la librería Servo para controlar el ángulo del mecanismo. Los movimientos pequeños alternan entre valores bajos y la posición inicial. La apertura principal usa un ángulo mayor para levantar o empujar la tapa del huevo.</p>
+      </section>
+
+      <section class="card">
+        <h2>Espacio para diagrama</h2>
+        <p>El diagrama de esta práctica se muestra con el archivo del proyecto.</p>
+        <figure>
+          <img src="Huevo_Dino.png" alt="Diagrama de conexión del proyecto Huevo dinosaurio" />
+          <figcaption>Archivo del diagrama: Huevo_Dino.png</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Código completo</h2>
+        <pre><code>#include &lt;Servo.h&gt;
+
+Servo servoHuevo;
+
+int pinServo = 9;
+
+void setup() {
+  servoHuevo.attach(pinServo);
+  servoHuevo.write(0);
+  delay(1000);
+}
+
+void loop() {
+  // Pequenos movimientos como si algo empujara desde dentro
+  servoHuevo.write(10);
+  delay(200);
+  servoHuevo.write(0);
+  delay(200);
+
+  servoHuevo.write(15);
+  delay(250);
+  servoHuevo.write(0);
+  delay(300);
+
+  servoHuevo.write(25);
+  delay(300);
+  servoHuevo.write(5);
+  delay(300);
+
+  // Apertura mas fuerte
+  servoHuevo.write(60);
+  delay(1000);
+
+  // Cierre
+  servoHuevo.write(0);
+  delay(2000);
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Evidencias solicitadas</h2>
+        <ul>
+          <li>Foto del huevo armado con el servo instalado.</li>
+          <li>Captura del código cargado en Arduino IDE.</li>
+          <li>Video corto donde se observe el movimiento de empuje, apertura y cierre.</li>
+          <li>Registro de los ángulos finales usados en el mecanismo.</li>
+        </ul>
+        <div class="worksheet-field">
+          <label><input name="evidence_1" type="checkbox" /> Agregué foto del mecanismo</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_2" type="checkbox" /> Agregué captura del código</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_3" type="checkbox" /> Agregué video del movimiento</label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Preguntas de reflexión</h2>
+        <div class="worksheet-field">
+          <label for="reflection-1">1. ¿Qué parte del código representa los movimientos pequeños dentro del huevo?</label>
+          <textarea class="worksheet-textarea" id="reflection-1" name="reflection_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-2">2. ¿Por qué es importante probar los ángulos antes de fijar el servo?</label>
+          <textarea class="worksheet-textarea" id="reflection-2" name="reflection_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-3">3. ¿Cómo podrías modificar el proyecto para que el huevo se active con un sensor?</label>
+          <textarea class="worksheet-textarea" id="reflection-3" name="reflection_3"></textarea>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
