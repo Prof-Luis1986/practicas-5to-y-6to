@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proyecto especial - Brazo dinosaurio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="proyecto-especial-brazo-dinosaurio" data-allow-code-copy="true" data-disable-project-links="true">
+  <header class="hero">
+    <p class="tag">Proyectos especiales (Escape Room)</p>
+    <h1>Brazo dinosaurio</h1>
+    <p class="subtitle">Brazo animado con servo, sensor ultrasónico, LED y buzzer para activar una reacción mecánica al detectar proximidad.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#proyectos-especiales">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Título de la práctica:</strong> Brazo dinosaurio</p>
+        <p><strong>Modalidad:</strong> Individual o por equipos</p>
+        <p><strong>Duración estimada:</strong> 1 a 2 sesiones</p>
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+        <p class="worksheet-note">El código de esta práctica está preparado para un brazo con un servo. Ajusta los ángulos según tu mecanismo físico.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo</h2>
+        <p>Diseñar un brazo de dinosaurio que reaccione cuando un participante se acerca, combinando movimiento, luz y sonido para crear una señal de sorpresa o advertencia.</p>
+      </section>
+
+      <section class="card">
+        <h2>Materiales</h2>
+        <ul>
+          <li>1 Arduino Uno</li>
+          <li>1 sensor ultrasónico HC-SR04</li>
+          <li>1 servomotor SG90, MG90S o similar</li>
+          <li>1 LED rojo</li>
+          <li>1 resistencia de 220 ohms</li>
+          <li>1 buzzer</li>
+          <li>Protoboard</li>
+          <li>Cables Dupont</li>
+          <li>Estructura mecánica del brazo</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Descripción general</h2>
+        <p>El brazo permanece en reposo mientras no detecta objetos cerca. Cuando el sensor identifica una distancia menor al umbral, el servo mueve el brazo, el LED enciende y el buzzer emite una alerta breve.</p>
+      </section>
+
+      <section class="card">
+        <h2>Explicación del funcionamiento</h2>
+        <p>El sensor ultrasónico mide la distancia constantemente. Si un objeto entra en el rango definido, se llama a la función activarBrazo. Esta función mueve el servo entre dos ángulos, activa el LED y genera sonidos. Al terminar, el brazo vuelve a su posición inicial.</p>
+      </section>
+
+      <section class="card">
+        <h2>Espacio para diagrama</h2>
+        <p>Al subir el archivo del diagrama con este nombre, se mostrará automáticamente en esta sección.</p>
+        <figure>
+          <img src="img/diagrama-brazo-dinosaurio.png" alt="Diagrama de conexión del proyecto Brazo dinosaurio" />
+          <figcaption>Archivo esperado: img/diagrama-brazo-dinosaurio.png</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Código completo</h2>
+        <pre><code>#include &lt;Servo.h&gt;
+
+// ===== BRAZO DINOSAURIO CON SENSOR =====
+
+// -------- Pines --------
+const int TRIG = 9;
+const int ECHO = 10;
+const int PIN_SERVO = 6;
+const int LED_ALERTA = 4;
+const int BUZZER = 8;
+
+// -------- Configuración --------
+const int DISTANCIA_ACTIVACION = 25;
+const int ANGULO_REPOSO = 20;
+const int ANGULO_ATAQUE = 110;
+
+Servo brazo;
+bool brazoActivado = false;
+
+long medirDistancia() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long duracion = pulseIn(ECHO, HIGH, 30000);
+
+  if (duracion == 0) {
+    return -1;
+  }
+
+  return duracion / 58;
+}
+
+void sonidoAlerta() {
+  tone(BUZZER, 900);
+  delay(90);
+  tone(BUZZER, 1300);
+  delay(90);
+  tone(BUZZER, 700);
+  delay(130);
+  noTone(BUZZER);
+}
+
+void activarBrazo() {
+  digitalWrite(LED_ALERTA, HIGH);
+  sonidoAlerta();
+
+  for (int angulo = ANGULO_REPOSO; angulo &lt;= ANGULO_ATAQUE; angulo += 5) {
+    brazo.write(angulo);
+    delay(25);
+  }
+
+  delay(350);
+
+  for (int angulo = ANGULO_ATAQUE; angulo &gt;= ANGULO_REPOSO; angulo -= 5) {
+    brazo.write(angulo);
+    delay(25);
+  }
+
+  digitalWrite(LED_ALERTA, LOW);
+}
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+  pinMode(LED_ALERTA, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+
+  brazo.attach(PIN_SERVO);
+  brazo.write(ANGULO_REPOSO);
+  digitalWrite(LED_ALERTA, LOW);
+  noTone(BUZZER);
+}
+
+void loop() {
+  long distancia = medirDistancia();
+
+  Serial.print("Distancia: ");
+  Serial.print(distancia);
+  Serial.println(" cm");
+
+  if (distancia &gt; 0 &amp;&amp; distancia &lt;= DISTANCIA_ACTIVACION &amp;&amp; !brazoActivado) {
+    brazoActivado = true;
+    activarBrazo();
+  }
+
+  if (distancia == -1 || distancia &gt; DISTANCIA_ACTIVACION + 10) {
+    brazoActivado = false;
+  }
+
+  delay(80);
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Evidencias solicitadas</h2>
+        <ul>
+          <li>Foto del brazo armado y conectado.</li>
+          <li>Captura del código.</li>
+          <li>Video corto donde se observe la activación por proximidad.</li>
+          <li>Registro de los ángulos usados para reposo y ataque.</li>
+        </ul>
+        <div class="worksheet-field">
+          <label><input name="evidence_1" type="checkbox" /> Agregué foto del brazo</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_2" type="checkbox" /> Agregué captura del código</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_3" type="checkbox" /> Agregué video de activación</label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Preguntas de reflexión</h2>
+        <div class="worksheet-field">
+          <label for="reflection-1">1. ¿Qué función cumple la variable brazoActivado?</label>
+          <textarea class="worksheet-textarea" id="reflection-1" name="reflection_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-2">2. ¿Por qué es importante ajustar los ángulos antes de usar el mecanismo final?</label>
+          <textarea class="worksheet-textarea" id="reflection-2" name="reflection_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-3">3. ¿Qué otro sensor podrías usar para activar el brazo en un escape room?</label>
+          <textarea class="worksheet-textarea" id="reflection-3" name="reflection_3"></textarea>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

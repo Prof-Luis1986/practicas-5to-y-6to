@@ -10,7 +10,7 @@
   <header class="hero">
     <p class="tag">Informática - Arduino</p>
     <h1>Prácticas organizadas por fases</h1>
-    <p class="subtitle">Usa el menú izquierdo para cambiar entre Fase I, Fase II, Fase III y Fase IV y abrir cada práctica en su página independiente.</p>
+    <p class="subtitle">Usa el menú izquierdo para cambiar entre Fase I, Fase II, Fase III, Fase IV y Proyectos especiales para abrir cada práctica en su página independiente.</p>
   </header>
 
   <div class="page-layout">
@@ -21,6 +21,7 @@
         <a href="#fase-ii" class="phase-link" data-phase="fase-ii">Fase II</a>
         <a href="#fase-iii" class="phase-link" data-phase="fase-iii">Fase III</a>
         <a href="#fase-iv" class="phase-link" data-phase="fase-iv">Fase IV</a>
+        <a href="#proyectos-especiales" class="phase-link" data-phase="proyectos-especiales">Proyectos especiales (Escape Room)</a>
       </nav>
     </aside>
 
@@ -200,6 +201,44 @@
           </a>
         </div>
       </section>
+
+      <section class="card phase-panel" id="proyectos-especiales" data-phase="proyectos-especiales" hidden>
+        <h2>Proyectos especiales (Escape Room)</h2>
+        <p>Retos temáticos para integrar sensores, servos, luces y sonido dentro de una experiencia tipo escape room.</p>
+        <div class="home-grid">
+          <a class="practice-tile" href="proyecto-especial-contenedor.html">
+            <article class="card">
+              <span class="phase-label">Escape Room</span>
+              <h2>Contenedor</h2>
+              <p>Sistema de contención con sensor ultrasónico, aro NeoPixel y buzzer para representar estados de reposo, actividad, alerta y peligro.</p>
+            </article>
+          </a>
+
+          <a class="practice-tile" href="proyecto-especial-cabeza-dinosaurio.html">
+            <article class="card">
+              <span class="phase-label">Escape Room</span>
+              <h2>Cabeza dinosaurio</h2>
+              <p>Mecanismo de ojos animados con servomotores para simular parpadeos naturales y modo de alerta.</p>
+            </article>
+          </a>
+
+          <a class="practice-tile" href="proyecto-especial-brazo-dinosaurio.html">
+            <article class="card">
+              <span class="phase-label">Escape Room</span>
+              <h2>Brazo dinosaurio</h2>
+              <p>Movimiento mecánico de brazo con servo, sensor de proximidad, LED y buzzer para activar una reacción controlada.</p>
+            </article>
+          </a>
+
+          <a class="practice-tile" href="proyecto-especial-radar.html">
+            <article class="card">
+              <span class="phase-label">Escape Room</span>
+              <h2>Radar</h2>
+              <p>Radar con servo, sensor ultrasónico, LEDs y buzzer para detectar objetos y emitir alertas por distancia.</p>
+            </article>
+          </a>
+        </div>
+      </section>
     </main>
   </div>
 
@@ -208,7 +247,7 @@
   </footer>
 
   <script>
-    const validPhases = ["fase-i", "fase-ii", "fase-iii", "fase-iv"];
+    const validPhases = ["fase-i", "fase-ii", "fase-iii", "fase-iv", "proyectos-especiales"];
     const phaseLinks = document.querySelectorAll(".phase-link");
     const phasePanels = document.querySelectorAll(".phase-panel");
 

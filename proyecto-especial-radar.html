@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proyecto especial - Radar</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="proyecto-especial-radar" data-allow-code-copy="true" data-disable-project-links="true">
+  <header class="hero">
+    <p class="tag">Proyectos especiales (Escape Room)</p>
+    <h1>Radar</h1>
+    <p class="subtitle">Radar simple con servo, sensor ultrasónico, LEDs y buzzer para detectar objetos y generar alertas de proximidad.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#proyectos-especiales">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Título de la práctica:</strong> Radar</p>
+        <p><strong>Modalidad:</strong> Individual o por equipos</p>
+        <p><strong>Duración estimada:</strong> 1 a 2 sesiones</p>
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+        <p class="worksheet-note">Verifica que el servo pueda girar libremente entre 15 y 165 grados antes de ejecutar la prueba completa.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo</h2>
+        <p>Construir un radar de detección con Arduino que mueva un sensor ultrasónico mediante un servo y emita alertas visuales y sonoras según la distancia detectada.</p>
+      </section>
+
+      <section class="card">
+        <h2>Materiales</h2>
+        <ul>
+          <li>1 Arduino Uno</li>
+          <li>1 sensor ultrasónico HC-SR04</li>
+          <li>1 servomotor SG90 o similar</li>
+          <li>1 LED rojo</li>
+          <li>1 LED verde</li>
+          <li>2 resistencias de 220 ohms</li>
+          <li>1 buzzer</li>
+          <li>Protoboard</li>
+          <li>Cables Dupont</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Descripción general</h2>
+        <p>El servo mueve el sensor de un lado a otro, simulando un barrido de radar. En cada ángulo se mide la distancia. Si se detecta un objeto cerca, el sistema cambia a alerta mediante LED rojo y buzzer.</p>
+      </section>
+
+      <section class="card">
+        <h2>Explicación del funcionamiento</h2>
+        <p>El programa recorre ángulos de 15 a 165 grados y después regresa. En cada posición toma una lectura del sensor ultrasónico y la manda al monitor serial junto con el ángulo. La función revisarAlerta decide si enciende el LED verde, el LED rojo o el buzzer.</p>
+      </section>
+
+      <section class="card">
+        <h2>Espacio para diagrama</h2>
+        <p>Al subir el archivo del diagrama con este nombre, se mostrará automáticamente en esta sección.</p>
+        <figure>
+          <img src="img/diagrama-radar.png" alt="Diagrama de conexión del proyecto Radar" />
+          <figcaption>Archivo esperado: img/diagrama-radar.png</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Código completo</h2>
+        <pre><code>#include &lt;Servo.h&gt;
+
+// ===== RADAR SIMPLE CON ALERTA + SERVO =====
+
+// -------- Pines --------
+const int TRIG = 9;
+const int ECHO = 10;
+
+const int LED_ROJO = 3;
+const int LED_VERDE = 4;
+const int BUZZER = 8;
+
+const int PIN_SERVO = 6;
+
+// -------- Distancias --------
+const int DISTANCIA_DETECCION = 30;
+const int DISTANCIA_ALERTA = 10;
+
+Servo servoRadar;
+
+// -------- Función medir distancia --------
+long medirDistancia() {
+
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long duracion = pulseIn(ECHO, HIGH, 30000);
+
+  if (duracion == 0) return -1;
+
+  long distancia = duracion / 58;
+  return distancia;
+}
+
+// -------- Sonidos --------
+void sonidoDeteccion() {
+
+  tone(BUZZER, 1200);
+  delay(40);
+
+  noTone(BUZZER);
+}
+
+void sonidoAlerta() {
+
+  tone(BUZZER, 1800);
+  delay(80);
+
+  tone(BUZZER, 1400);
+  delay(80);
+
+  tone(BUZZER, 2200);
+  delay(80);
+
+  noTone(BUZZER);
+}
+
+// -------- Revisar alerta --------
+void revisarAlerta(long distancia) {
+
+  Serial.print("Distancia: ");
+  Serial.print(distancia);
+  Serial.println(" cm");
+
+  if (distancia &gt; 0 &amp;&amp; distancia &lt;= DISTANCIA_ALERTA) {
+
+    digitalWrite(LED_ROJO, HIGH);
+    digitalWrite(LED_VERDE, LOW);
+
+    sonidoAlerta();
+  }
+
+  else if (distancia &gt; DISTANCIA_ALERTA &amp;&amp;
+           distancia &lt;= DISTANCIA_DETECCION) {
+
+    digitalWrite(LED_ROJO, HIGH);
+    digitalWrite(LED_VERDE, LOW);
+
+    sonidoDeteccion();
+  }
+
+  else {
+
+    digitalWrite(LED_ROJO, LOW);
+    digitalWrite(LED_VERDE, HIGH);
+
+    noTone(BUZZER);
+  }
+}
+
+void setup() {
+
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+
+  pinMode(LED_ROJO, OUTPUT);
+  pinMode(LED_VERDE, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+
+  servoRadar.attach(PIN_SERVO);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+
+  for (int angulo = 15; angulo &lt;= 165; angulo += 5) {
+
+    servoRadar.write(angulo);
+    delay(120);
+
+    long distancia = medirDistancia();
+
+    Serial.print("Angulo: ");
+    Serial.print(angulo);
+    Serial.print(" | ");
+
+    revisarAlerta(distancia);
+  }
+
+  for (int angulo = 165; angulo &gt;= 15; angulo -= 5) {
+
+    servoRadar.write(angulo);
+    delay(120);
+
+    long distancia = medirDistancia();
+
+    Serial.print("Angulo: ");
+    Serial.print(angulo);
+    Serial.print(" | ");
+
+    revisarAlerta(distancia);
+  }
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Evidencias solicitadas</h2>
+        <ul>
+          <li>Foto o captura del circuito.</li>
+          <li>Captura del código.</li>
+          <li>Video del barrido del servo.</li>
+          <li>Captura del monitor serial mostrando ángulo y distancia.</li>
+        </ul>
+        <div class="worksheet-field">
+          <label><input name="evidence_1" type="checkbox" /> Agregué imagen del circuito</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_2" type="checkbox" /> Agregué video del barrido</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_3" type="checkbox" /> Agregué captura del monitor serial</label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Preguntas de reflexión</h2>
+        <div class="worksheet-field">
+          <label for="reflection-1">1. ¿Qué diferencia hay entre distancia de detección y distancia de alerta?</label>
+          <textarea class="worksheet-textarea" id="reflection-1" name="reflection_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-2">2. ¿Por qué el radar mide después de mover el servo y esperar un pequeño tiempo?</label>
+          <textarea class="worksheet-textarea" id="reflection-2" name="reflection_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-3">3. ¿Cómo podrías usar este radar como pista o mecanismo de seguridad dentro de un escape room?</label>
+          <textarea class="worksheet-textarea" id="reflection-3" name="reflection_3"></textarea>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

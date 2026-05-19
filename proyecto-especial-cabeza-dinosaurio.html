@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proyecto especial - Cabeza dinosaurio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="proyecto-especial-cabeza-dinosaurio" data-allow-code-copy="true" data-disable-project-links="true">
+  <header class="hero">
+    <p class="tag">Proyectos especiales (Escape Room)</p>
+    <h1>Cabeza dinosaurio</h1>
+    <p class="subtitle">Mecanismo de ojos animados con servomotores para simular parpadeos naturales en una cabeza de dinosaurio.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#proyectos-especiales">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Título de la práctica:</strong> Cabeza dinosaurio</p>
+        <p><strong>Modalidad:</strong> Individual o por equipos</p>
+        <p><strong>Duración estimada:</strong> 1 a 2 sesiones</p>
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+        <p class="worksheet-note">Ajusta los ángulos de apertura y cierre según el mecanismo físico antes de presentar el proyecto.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo</h2>
+        <p>Programar dos servomotores para controlar los ojos de una cabeza de dinosaurio, generando parpadeos naturales y un modo de alerta.</p>
+      </section>
+
+      <section class="card">
+        <h2>Materiales</h2>
+        <ul>
+          <li>1 Arduino Uno</li>
+          <li>2 servomotores SG90 o similares</li>
+          <li>Mecanismo de párpados u ojos</li>
+          <li>Fuente de 5V para servos si el montaje lo requiere</li>
+          <li>Protoboard</li>
+          <li>Cables Dupont</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Descripción general</h2>
+        <p>La práctica controla dos servos conectados a los mecanismos de los ojos. El programa mantiene los ojos abiertos y cada cierto tiempo ejecuta un parpadeo, variando el intervalo para que el movimiento se perciba más natural.</p>
+      </section>
+
+      <section class="card">
+        <h2>Explicación del funcionamiento</h2>
+        <p>El programa usa la librería Servo para posicionar cada ojo. Con millis se revisa si ya pasó el intervalo de parpadeo; cuando se cumple, los servos cierran y abren los ojos. Después se genera un nuevo intervalo aleatorio.</p>
+      </section>
+
+      <section class="card">
+        <h2>Espacio para diagrama</h2>
+        <p>Al subir el archivo del diagrama con este nombre, se mostrará automáticamente en esta sección.</p>
+        <figure>
+          <img src="img/diagrama-cabeza-dinosaurio.png" alt="Diagrama de conexión del proyecto Cabeza dinosaurio" />
+          <figcaption>Archivo esperado: img/diagrama-cabeza-dinosaurio.png</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Código completo</h2>
+        <pre><code>#include &lt;Servo.h&gt;
+
+// Pines de los servos
+const int PIN_OJO_IZQ = 9;
+const int PIN_OJO_DER = 10;
+
+// Servos
+Servo ojoIzq;
+Servo ojoDer;
+
+// Ajusta estos valores según tu mecanismo
+const int IZQ_ABIERTO = 30;
+const int IZQ_CERRADO = 95;
+
+const int DER_ABIERTO = 150;
+const int DER_CERRADO = 85;
+
+// Tiempos
+unsigned long tiempoAnterior = 0;
+unsigned long intervaloParpadeo = 4000;
+
+void setup() {
+  ojoIzq.attach(PIN_OJO_IZQ);
+  ojoDer.attach(PIN_OJO_DER);
+
+  abrirOjos();
+  delay(1000);
+}
+
+void loop() {
+  unsigned long tiempoActual = millis();
+
+  if (tiempoActual - tiempoAnterior &gt;= intervaloParpadeo) {
+    tiempoAnterior = tiempoActual;
+
+    parpadeoNatural();
+
+    intervaloParpadeo = random(3000, 7000);
+  }
+}
+
+// ---------------- FUNCIONES ----------------
+
+void abrirOjos() {
+  ojoIzq.write(IZQ_ABIERTO);
+  ojoDer.write(DER_ABIERTO);
+}
+
+void cerrarOjos() {
+  ojoIzq.write(IZQ_CERRADO);
+  ojoDer.write(DER_CERRADO);
+}
+
+void parpadeoNatural() {
+  cerrarOjos();
+  delay(180);
+  abrirOjos();
+}
+
+void parpadeoDesfasado() {
+  ojoIzq.write(IZQ_CERRADO);
+  delay(120);
+  ojoDer.write(DER_CERRADO);
+
+  delay(160);
+
+  ojoIzq.write(IZQ_ABIERTO);
+  delay(100);
+  ojoDer.write(DER_ABIERTO);
+}
+
+void modoAlerta() {
+  abrirOjos();
+  delay(300);
+
+  parpadeoDesfasado();
+  delay(300);
+
+  parpadeoDesfasado();
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Evidencias solicitadas</h2>
+        <ul>
+          <li>Foto del mecanismo de ojos conectado a los servos.</li>
+          <li>Captura del código.</li>
+          <li>Video corto mostrando el parpadeo natural.</li>
+          <li>Tabla con los ángulos usados para abrir y cerrar cada ojo.</li>
+        </ul>
+        <div class="worksheet-field">
+          <label><input name="evidence_1" type="checkbox" /> Agregué foto del mecanismo</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_2" type="checkbox" /> Agregué video del parpadeo</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_3" type="checkbox" /> Registré los ángulos finales</label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Preguntas de reflexión</h2>
+        <div class="worksheet-field">
+          <label for="reflection-1">1. ¿Por qué los ángulos de un servo pueden necesitar ajustes en cada maqueta?</label>
+          <textarea class="worksheet-textarea" id="reflection-1" name="reflection_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-2">2. ¿Qué ventaja tiene usar intervalos aleatorios para el parpadeo?</label>
+          <textarea class="worksheet-textarea" id="reflection-2" name="reflection_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-3">3. ¿Cómo podrías activar el modoAlerta desde un sensor o botón?</label>
+          <textarea class="worksheet-textarea" id="reflection-3" name="reflection_3"></textarea>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

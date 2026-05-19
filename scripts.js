@@ -62,7 +62,7 @@ function setupCopyableCodeBlocks() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "copy-code-button";
-    button.textContent = "Copiar codigo";
+    button.textContent = "Copiar código";
 
     button.addEventListener("click", async () => {
       try {
@@ -71,7 +71,7 @@ function setupCopyableCodeBlocks() {
         button.classList.add("is-copied");
 
         window.setTimeout(() => {
-          button.textContent = "Copiar codigo";
+          button.textContent = "Copiar código";
           button.classList.remove("is-copied");
         }, 1800);
       } catch (error) {
@@ -79,7 +79,7 @@ function setupCopyableCodeBlocks() {
         button.textContent = "No se pudo copiar";
 
         window.setTimeout(() => {
-          button.textContent = "Copiar codigo";
+          button.textContent = "Copiar código";
         }, 1800);
       }
     });

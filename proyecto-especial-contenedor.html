@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proyecto especial - Contenedor</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="proyecto-especial-contenedor" data-allow-code-copy="true" data-disable-project-links="true">
+  <header class="hero">
+    <p class="tag">Proyectos especiales (Escape Room)</p>
+    <h1>Contenedor</h1>
+    <p class="subtitle">Sistema de contención con sensor ultrasónico, aro NeoPixel y buzzer para representar estados de proximidad dentro del escape room.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#proyectos-especiales">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Título de la práctica:</strong> Contenedor</p>
+        <p><strong>Modalidad:</strong> Individual o por equipos</p>
+        <p><strong>Duración estimada:</strong> 1 a 2 sesiones</p>
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+        <p class="worksheet-note">Completa la práctica, registra tus evidencias y guarda tus respuestas en PDF cuando termines.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo</h2>
+        <p>Construir un contenedor interactivo que cambie luces y sonidos según la distancia detectada, simulando niveles de seguridad dentro de una misión de escape room.</p>
+      </section>
+
+      <section class="card">
+        <h2>Materiales</h2>
+        <ul>
+          <li>1 Arduino Uno</li>
+          <li>1 sensor ultrasónico HC-SR04</li>
+          <li>1 aro NeoPixel de 12 LEDs</li>
+          <li>1 buzzer</li>
+          <li>Protoboard</li>
+          <li>Cables Dupont</li>
+          <li>Fuente de alimentación o cable USB</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Descripción general</h2>
+        <p>El contenedor permanece en reposo cuando no hay objetos cerca. Al detectar proximidad, cambia de estado y genera efectos visuales y sonoros para indicar actividad, alerta o peligro.</p>
+      </section>
+
+      <section class="card">
+        <h2>Explicación del funcionamiento</h2>
+        <p>El sensor HC-SR04 mide la distancia. El programa compara esa lectura con varios rangos y ejecuta una función distinta para cada estado. El aro NeoPixel comunica el nivel de riesgo mediante color y movimiento, mientras el buzzer produce patrones de sonido.</p>
+        <ul>
+          <li>Más de 50 cm: reposo.</li>
+          <li>Entre 26 y 50 cm: actividad.</li>
+          <li>Entre 11 y 25 cm: alerta.</li>
+          <li>10 cm o menos: peligro.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Espacio para diagrama</h2>
+        <p>Al subir el archivo del diagrama con este nombre, se mostrará automáticamente en esta sección.</p>
+        <figure>
+          <img src="img/diagrama-contenedor.png" alt="Diagrama de conexión del proyecto Contenedor" />
+          <figcaption>Archivo esperado: img/diagrama-contenedor.png</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Código completo</h2>
+        <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
+
+// ---------- PINES ----------
+#define PIN_NEOPIXEL 6
+#define NUM_PIXELS 12
+
+#define TRIG_PIN 9
+#define ECHO_PIN 10
+
+#define BUZZER_PIN 5
+
+// ---------- CONFIGURACIÓN ----------
+Adafruit_NeoPixel ring(NUM_PIXELS, PIN_NEOPIXEL, NEO_GRB + NEO_KHZ800);
+
+long duracion;
+int distancia;
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+
+  ring.begin();
+  ring.setBrightness(40);
+  ring.show();
+
+  noTone(BUZZER_PIN);
+}
+
+void loop() {
+  distancia = medirDistancia();
+
+  Serial.print("Distancia: ");
+  Serial.print(distancia);
+  Serial.println(" cm");
+
+  if (distancia &gt; 50) {
+    estadoReposo();
+  } 
+  else if (distancia &gt; 25 &amp;&amp; distancia &lt;= 50) {
+    estadoActividad();
+  } 
+  else if (distancia &gt; 10 &amp;&amp; distancia &lt;= 25) {
+    estadoAlerta();
+  } 
+  else {
+    estadoPeligro();
+  }
+}
+
+// ---------- MEDICIÓN HC-SR04 ----------
+int medirDistancia() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  duracion = pulseIn(ECHO_PIN, HIGH, 30000);
+
+  if (duracion == 0) {
+    return 999;
+  }
+
+  int distanciaCm = duracion * 0.034 / 2;
+  return distanciaCm;
+}
+
+// ---------- ESTADOS ----------
+void estadoReposo() {
+  ring.setBrightness(25);
+  colorFijo(0, 20, 120);
+  sonidoLatidoSuave();
+}
+
+void estadoActividad() {
+  pulsoColor(0, 120, 40);
+  sonidoBiologico();
+}
+
+void estadoAlerta() {
+  efectoGiro(180, 80, 0, 45);
+  sonidoAnomalia();
+}
+
+void estadoPeligro() {
+  ring.setBrightness(70);
+
+  colorFijo(255, 0, 0);
+  sonidoContencion();
+
+  colorFijo(0, 0, 0);
+  delay(100);
+}
+
+// ---------- EFECTOS DE LUZ ----------
+void colorFijo(int rojo, int verde, int azul) {
+  for (int i = 0; i &lt; NUM_PIXELS; i++) {
+    ring.setPixelColor(i, ring.Color(rojo, verde, azul));
+  }
+  ring.show();
+}
+
+void pulsoColor(int rojo, int verde, int azul) {
+  for (int brillo = 20; brillo &lt;= 70; brillo += 5) {
+    ring.setBrightness(brillo);
+    colorFijo(rojo, verde, azul);
+    delay(25);
+  }
+
+  for (int brillo = 70; brillo &gt;= 20; brillo -= 5) {
+    ring.setBrightness(brillo);
+    colorFijo(rojo, verde, azul);
+    delay(25);
+  }
+}
+
+void efectoGiro(int rojo, int verde, int azul, int espera) {
+  ring.clear();
+
+  for (int i = 0; i &lt; NUM_PIXELS; i++) {
+    ring.setPixelColor(i, ring.Color(rojo, verde, azul));
+    ring.show();
+    delay(espera);
+    ring.setPixelColor(i, 0);
+  }
+}
+
+// ---------- SONIDOS ----------
+void sonidoLatidoSuave() {
+  tone(BUZZER_PIN, 180);
+  delay(80);
+  noTone(BUZZER_PIN);
+  delay(50);
+
+  tone(BUZZER_PIN, 130);
+  delay(110);
+  noTone(BUZZER_PIN);
+  delay(800);
+}
+
+void sonidoBiologico() {
+  tone(BUZZER_PIN, 350);
+  delay(100);
+  noTone(BUZZER_PIN);
+  delay(60);
+
+  tone(BUZZER_PIN, 480);
+  delay(100);
+  noTone(BUZZER_PIN);
+  delay(180);
+
+  tone(BUZZER_PIN, 300);
+  delay(160);
+  noTone(BUZZER_PIN);
+  delay(300);
+}
+
+void sonidoAnomalia() {
+  tone(BUZZER_PIN, 520);
+  delay(90);
+  noTone(BUZZER_PIN);
+  delay(60);
+
+  tone(BUZZER_PIN, 760);
+  delay(90);
+  noTone(BUZZER_PIN);
+  delay(60);
+
+  tone(BUZZER_PIN, 420);
+  delay(120);
+  noTone(BUZZER_PIN);
+  delay(220);
+}
+
+void sonidoContencion() {
+  tone(BUZZER_PIN, 900);
+  delay(90);
+
+  tone(BUZZER_PIN, 700);
+  delay(90);
+
+  tone(BUZZER_PIN, 500);
+  delay(120);
+
+  noTone(BUZZER_PIN);
+  delay(90);
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Evidencias solicitadas</h2>
+        <ul>
+          <li>Foto o captura del circuito armado.</li>
+          <li>Captura del código cargado en Arduino IDE o simulador.</li>
+          <li>Video corto mostrando los cuatro estados del contenedor.</li>
+          <li>Explicación escrita de cómo cambia el sistema según la distancia.</li>
+        </ul>
+        <div class="worksheet-field">
+          <label><input name="evidence_1" type="checkbox" /> Agregué imagen del circuito</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_2" type="checkbox" /> Agregué captura del código</label>
+        </div>
+        <div class="worksheet-field">
+          <label><input name="evidence_3" type="checkbox" /> Agregué video de funcionamiento</label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Preguntas de reflexión</h2>
+        <div class="worksheet-field">
+          <label for="reflection-1">1. ¿Qué estado del sistema se activa cuando el objeto está más cerca del sensor?</label>
+          <textarea class="worksheet-textarea" id="reflection-1" name="reflection_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-2">2. ¿Por qué conviene separar el programa en funciones como estadoReposo, estadoAlerta y estadoPeligro?</label>
+          <textarea class="worksheet-textarea" id="reflection-2" name="reflection_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="reflection-3">3. ¿Cómo modificarías el proyecto para hacerlo más desafiante dentro de un escape room?</label>
+          <textarea class="worksheet-textarea" id="reflection-3" name="reflection_3"></textarea>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
