@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examen Práctico - Arduino y Tinkercad</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content" data-worksheet-key="examen-practico-arduino-tinkercad" data-disable-project-links="true" data-allow-code-copy="true">
+  <header class="hero">
+    <p class="tag">Fase IV</p>
+    <h1>Examen Práctico: Arduino y Tinkercad</h1>
+    <p class="subtitle">Circuito con LEDs y botón para evaluar construcción, programación, simulación y análisis.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#fase-iv">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Datos del examen</h2>
+        <p><strong>Valor:</strong> 10 puntos</p>
+        <p><strong>Tiempo:</strong> 40 minutos</p>
+        <p><strong>Tema:</strong> Circuito con LED verde y botón</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <p class="worksheet-note">Completa el circuito en Tinkercad, termina el programa y responde el análisis. Al finalizar, guarda tus respuestas en PDF.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Situación</h2>
+        <p>Una lámpara inteligente debe encender un LED verde cuando se presione un botón y apagarlo cuando el botón no esté presionado.</p>
+        <p>Tu tarea es construir el circuito y completar el programa para que funcione correctamente.</p>
+      </section>
+
+      <section class="card">
+        <h2>Parte 1. Construcción del circuito</h2>
+        <p><strong>Valor:</strong> 5 puntos</p>
+        <p>Utilizando Tinkercad, construye un circuito que incluya:</p>
+        <ul>
+          <li>1 Arduino Uno</li>
+          <li>1 Protoboard</li>
+          <li>1 LED verde</li>
+          <li>1 Resistencia de 220 Ω</li>
+          <li>1 Pulsador</li>
+          <li>1 Resistencia de 10 kΩ</li>
+          <li>Cables de conexión</li>
+        </ul>
+
+        <h3>Condiciones</h3>
+        <ul>
+          <li>El LED debe conectarse al pin 8.</li>
+          <li>El botón debe conectarse al pin 2.</li>
+          <li>El circuito debe funcionar correctamente durante la simulación.</li>
+        </ul>
+
+        <div class="worksheet-field">
+          <label for="circuit-notes">Notas sobre la construcción del circuito</label>
+          <textarea class="worksheet-textarea" id="circuit-notes" name="circuit_notes"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Parte 2. Completa el programa</h2>
+        <p><strong>Valor:</strong> 3 puntos</p>
+        <p>Completa los espacios faltantes.</p>
+        <pre><code>int led = ___;
+int boton = ___;
+
+void setup() {
+
+  pinMode(led, _______);
+  pinMode(boton, _______);
+
+}
+
+void loop() {
+
+  int estado = digitalRead(_______);
+
+  if (estado == HIGH) {
+
+    digitalWrite(_____, HIGH);
+
+  } else {
+
+    digitalWrite(_____, LOW);
+
+  }
+
+}</code></pre>
+
+        <div class="worksheet-field">
+          <label for="completed-code">Código completado</label>
+          <textarea class="worksheet-textarea" id="completed-code" name="completed_code"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Parte 3. Análisis</h2>
+        <p><strong>Valor:</strong> 2 puntos</p>
+        <div class="worksheet-field">
+          <label for="analysis-1">1. ¿Qué función tiene el botón dentro del circuito?</label>
+          <textarea class="worksheet-textarea" id="analysis-1" name="analysis_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="analysis-2">2. ¿Qué ocurrirá con el LED cuando se presione el botón?</label>
+          <textarea class="worksheet-textarea" id="analysis-2" name="analysis_2"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Rúbrica</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Criterio</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Conexiones correctas</td>
+              <td>5 puntos</td>
+            </tr>
+            <tr>
+              <td>Código completado correctamente</td>
+              <td>3 puntos</td>
+            </tr>
+            <tr>
+              <td>Simulación funcional</td>
+              <td>1 punto</td>
+            </tr>
+            <tr>
+              <td>Respuestas de análisis</td>
+              <td>1 punto</td>
+            </tr>
+            <tr>
+              <td><strong>Total</strong></td>
+              <td><strong>10 puntos</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Evidencia</h2>
+        <p>Entrega:</p>
+        <ul>
+          <li>Captura del circuito.</li>
+          <li>Captura de la simulación funcionando.</li>
+          <li>Código completado.</li>
+        </ul>
+        <div class="worksheet-field">
+          <label for="evidence-notes">Descripción de la evidencia entregada</label>
+          <textarea class="worksheet-textarea" id="evidence-notes" name="evidence_notes"></textarea>
+        </div>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
