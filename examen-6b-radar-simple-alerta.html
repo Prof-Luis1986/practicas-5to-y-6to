@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examen 6°B - Radar Simple con Alerta</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-worksheet-key="examen-6b-radar-simple-alerta" data-disable-project-links="true" data-allow-code-copy="true" data-allow-page-copy="true" data-email-webapp-url="https://script.google.com/macros/s/AKfycbw8XwulnlKUE1jy8JHRmPSHhB8TNS9_p5X9hORVkZEG4UDg_qpnHZYThKLzBz-5uhU88w/exec">
+  <header class="hero">
+    <p class="tag">Fase IV</p>
+    <h1>Examen Práctico de Tecnología - 6°B de Primaria</h1>
+    <p class="subtitle">Radar simple con alerta utilizando Arduino y Tinkercad.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#fase-iv">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Datos del examen</h2>
+        <p><strong>Tema:</strong> Radar simple con alerta utilizando Arduino y Tinkercad</p>
+        <p><strong>Valor:</strong> 10 puntos</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" value="6B" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <p class="worksheet-note">Construye la simulación en Tinkercad Circuits, completa el código, responde el análisis y envía el examen con tu cuenta de Google.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Instrucciones</h2>
+        <p>Utilizando <strong>Tinkercad Circuits</strong>, construye la simulación de un radar simple con alerta.</p>
+        <p>El sistema deberá detectar objetos utilizando un sensor ultrasónico. Cuando un objeto se encuentre cerca, se deberá activar una alerta visual y sonora.</p>
+        <p>Analiza el código proporcionado, completa los espacios faltantes y realiza el diseño del circuito para que funcione correctamente.</p>
+      </section>
+
+      <section class="card">
+        <h2>Materiales</h2>
+        <ul>
+          <li>1 Arduino Uno</li>
+          <li>1 Protoboard</li>
+          <li>1 Sensor ultrasónico HC-SR04</li>
+          <li>1 LED rojo</li>
+          <li>1 LED verde</li>
+          <li>2 resistencias</li>
+          <li>1 Buzzer</li>
+          <li>Cables de conexión</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Parte 1. Diseño del circuito</h2>
+        <p>Construye en Tinkercad el circuito correspondiente al programa.</p>
+        <p>Debes conectar correctamente:</p>
+        <ul>
+          <li>Sensor ultrasónico.</li>
+          <li>LED rojo.</li>
+          <li>LED verde.</li>
+          <li>Buzzer.</li>
+          <li>Arduino Uno.</li>
+        </ul>
+        <p>La simulación deberá funcionar de acuerdo con el código proporcionado.</p>
+
+        <div class="worksheet-field">
+          <label for="circuit-description">Describe cómo conectaste el sensor, los LEDs, las resistencias, el buzzer y el Arduino</label>
+          <textarea class="worksheet-textarea" id="circuit-description" name="circuit_description"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Parte 2. Completa el código</h2>
+        <p>Completa los espacios faltantes.</p>
+        <pre><code>const int TRIG = 9;
+const int ECHO = 10;
+
+const int LED_ROJO = 3;
+const int LED_VERDE = 4;
+
+const int BUZZER = 8;
+
+const int DISTANCIA_ALERTA = 30;
+
+long medirDistancia() {
+
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long duracion = pulseIn(ECHO, HIGH, 30000);
+
+  if (duracion == 0) return -1;
+
+  long distancia = duracion / 58;
+
+  return distancia;
+}
+
+void setup() {
+
+  pinMode(TRIG, __________);
+  pinMode(ECHO, __________);
+
+  pinMode(LED_ROJO, __________);
+  pinMode(LED_VERDE, __________);
+
+  pinMode(BUZZER, __________);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+
+  long distancia = medirDistancia();
+
+  if (distancia > 0 && distancia <= DISTANCIA_ALERTA) {
+
+    digitalWrite(LED_ROJO, __________);
+    digitalWrite(LED_VERDE, __________);
+
+    tone(BUZZER, 1000);
+
+  } else {
+
+    digitalWrite(LED_ROJO, __________);
+    digitalWrite(LED_VERDE, __________);
+
+    noTone(BUZZER);
+
+  }
+
+  delay(200);
+}</code></pre>
+
+        <div class="worksheet-field">
+          <label for="completed-code">Código completado por el alumno</label>
+          <textarea class="worksheet-textarea" id="completed-code" name="completed_code"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Parte 3. Análisis</h2>
+        <div class="worksheet-field">
+          <label for="analysis-1">1. ¿Qué componente se utiliza para medir la distancia?</label>
+          <textarea class="worksheet-textarea" id="analysis-1" name="analysis_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="analysis-2">2. ¿Qué ocurre cuando un objeto se encuentra a menos de 30 cm?</label>
+          <textarea class="worksheet-textarea" id="analysis-2" name="analysis_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="analysis-3">3. ¿Qué función cumple el buzzer dentro del proyecto?</label>
+          <textarea class="worksheet-textarea" id="analysis-3" name="analysis_3"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Entrega</h2>
+        <p>Comparte el enlace de tu proyecto de Tinkercad copiándolo y pegándolo en el siguiente espacio:</p>
+        <div class="worksheet-field">
+          <label for="project-link">Enlace del proyecto</label>
+          <input class="worksheet-input" id="project-link" name="project_link" type="url" inputmode="url" placeholder="https://www.tinkercad.com/..." />
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Evaluación</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Criterio</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Diseño correcto del circuito en Tinkercad</td>
+              <td>3 puntos</td>
+            </tr>
+            <tr>
+              <td>Conexión adecuada de los componentes</td>
+              <td>2 puntos</td>
+            </tr>
+            <tr>
+              <td>Código completado correctamente</td>
+              <td>2 puntos</td>
+            </tr>
+            <tr>
+              <td>Respuestas de análisis</td>
+              <td>1 punto</td>
+            </tr>
+            <tr>
+              <td>Simulación funcionando correctamente</td>
+              <td>1 punto</td>
+            </tr>
+            <tr>
+              <td>Entrega del enlace del proyecto</td>
+              <td>1 punto</td>
+            </tr>
+            <tr>
+              <td><strong>Total</strong></td>
+              <td><strong>10 puntos</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Nota</h2>
+        <p>Antes de entregar, verifica que el circuito funcione correctamente, que el sensor detecte objetos y que la alerta visual y sonora se active cuando corresponda.</p>
+        <div class="button-row">
+          <button class="action-button action-button--secondary" data-email-login type="button">Entrar con Google</button>
+          <button class="action-button" data-worksheet-action="email" type="button" disabled>Enviar examen</button>
+        </div>
+        <p class="email-submit-status" data-email-status aria-live="polite">Inicia sesión con Google para habilitar el envío.</p>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

@@ -340,6 +340,8 @@ function setupImageLightbox() {
 }
 
 function setupContentProtection() {
+  if (document.body.dataset.allowPageCopy === "true") return;
+
   const allowCodeCopy = document.body.dataset.allowCodeCopy === "true";
 
   function isEditableField(target) {
