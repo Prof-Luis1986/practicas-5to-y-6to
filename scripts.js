@@ -448,6 +448,7 @@ function setupWorksheetEmailSubmission() {
   const rawWebAppUrl = document.body.dataset.emailWebappUrl;
   const webAppUrl = getEmailWebAppUrl(rawWebAppUrl);
   const emailButton = document.querySelector('[data-worksheet-action="email"]');
+  const loginButton = document.querySelector("[data-email-login]");
   const status = document.querySelector("[data-email-status]");
 
   if (!webAppUrl || !emailButton) return;
@@ -464,6 +465,10 @@ function setupWorksheetEmailSubmission() {
 
   function updateEmailButton() {
     emailButton.disabled = !isSignedIn || isSending;
+    if (loginButton) {
+      loginButton.hidden = isSignedIn;
+      loginButton.disabled = isSending;
+    }
   }
 
   updateEmailButton();
@@ -478,6 +483,23 @@ function setupWorksheetEmailSubmission() {
     } else if (!isSending) {
       setEmailStatus(`Sesión iniciada${signedInEmail ? `: ${signedInEmail}` : ""}.`, "success");
     }
+  });
+
+  document.addEventListener("worksheet-auth-error", (event) => {
+    const code = event.detail?.code || "";
+    const message = code === "auth/unauthorized-domain"
+      ? "Este dominio no está autorizado en Firebase. Agrega 127.0.0.1, localhost o el dominio publicado en Authentication > Settings > Authorized domains."
+      : "No se pudo iniciar sesión con Google. Revisa la configuración de Firebase Authentication.";
+
+    isSignedIn = false;
+    signedInEmail = "";
+    updateEmailButton();
+    setEmailStatus(message, "error");
+  });
+
+  loginButton?.addEventListener("click", () => {
+    setEmailStatus("Abriendo inicio de sesión con Google...", "loading");
+    document.dispatchEvent(new CustomEvent("worksheet-auth-request"));
   });
 
   emailButton.addEventListener("click", () => {
@@ -892,9 +914,24 @@ function createWorksheetPersistence(options) {
   async function startAuth() {
     try {
       const { auth, authModule, provider } = await getFirebaseServices();
-      await authModule.signInWithRedirect(auth, provider);
+      try {
+        await authModule.signInWithPopup(auth, provider);
+      } catch (popupError) {
+        if (popupError?.code === "auth/unauthorized-domain") {
+          throw popupError;
+        }
+
+        console.warn("No se pudo iniciar sesión con popup, se intentará con redirección:", popupError);
+        await authModule.signInWithRedirect(auth, provider);
+      }
     } catch (error) {
       console.error("No se pudo iniciar sesión con Google:", error);
+      document.dispatchEvent(new CustomEvent("worksheet-auth-error", {
+        detail: {
+          code: error?.code || "",
+          message: error?.message || ""
+        }
+      }));
       setCloudMessage(
         "No se pudo iniciar sesión con Google.",
         "Revisa que el dominio actual esté autorizado en Firebase Authentication.",
@@ -975,6 +1012,8 @@ function createWorksheetPersistence(options) {
 
   bindFieldListeners();
   loadLocalOnStart();
+
+  document.addEventListener("worksheet-auth-request", startAuth);
 
   printButton?.addEventListener("click", () => {
     saveLocal();
