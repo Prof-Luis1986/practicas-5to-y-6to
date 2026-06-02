@@ -410,6 +410,144 @@ function collectWorksheetData(fields) {
   return data;
 }
 
+function getFieldLabel(field) {
+  if (!field.id) return field.name || "";
+  return document.querySelector(`label[for="${CSS.escape(field.id)}"]`)?.textContent.trim() || field.name || "";
+}
+
+function getEmailWebAppUrl(rawUrl) {
+  if (!rawUrl) return "";
+  if (/^https?:\/\//i.test(rawUrl)) return rawUrl;
+  return `https://script.google.com/macros/s/${rawUrl}/exec`;
+}
+
+function createHiddenInput(name, value) {
+  const input = document.createElement("input");
+  input.type = "hidden";
+  input.name = name;
+  input.value = value == null ? "" : String(value);
+  return input;
+}
+
+function setupWorksheetEmailSubmission() {
+  const rawWebAppUrl = document.body.dataset.emailWebappUrl;
+  const webAppUrl = getEmailWebAppUrl(rawWebAppUrl);
+  const emailButton = document.querySelector('[data-worksheet-action="email"]');
+  const status = document.querySelector("[data-email-status]");
+
+  if (!webAppUrl || !emailButton) return;
+
+  let isSignedIn = document.body.dataset.googleSignedIn === "true";
+  let isSending = false;
+  let signedInEmail = "";
+
+  function setEmailStatus(message, mode) {
+    if (!status) return;
+    status.textContent = message;
+    status.dataset.mode = mode || "";
+  }
+
+  function updateEmailButton() {
+    emailButton.disabled = !isSignedIn || isSending;
+  }
+
+  updateEmailButton();
+
+  document.addEventListener("worksheet-auth-change", (event) => {
+    isSignedIn = Boolean(event.detail?.signedIn);
+    signedInEmail = event.detail?.email || "";
+    updateEmailButton();
+
+    if (!isSignedIn) {
+      setEmailStatus("Inicia sesión con Google para habilitar el envío.", "");
+    } else if (!isSending) {
+      setEmailStatus(`Sesión iniciada${signedInEmail ? `: ${signedInEmail}` : ""}.`, "success");
+    }
+  });
+
+  emailButton.addEventListener("click", () => {
+    if (!isSignedIn) {
+      setEmailStatus("Inicia sesión con Google antes de enviar.", "error");
+      updateEmailButton();
+      return;
+    }
+
+    const fields = getWorksheetFieldsDefault().filter((field) => field.name);
+    const values = collectWorksheetData(fields);
+    const studentName = String(values.student_name || "").trim();
+
+    if (!studentName) {
+      setEmailStatus("Escribe el nombre del alumno antes de enviar el examen.", "error");
+      document.querySelector("[name=\"student_name\"]")?.focus();
+      return;
+    }
+
+    const answers = fields.map((field) => ({
+      name: field.name,
+      label: getFieldLabel(field),
+      value: field.type === "checkbox" ? field.checked : field.value
+    }));
+
+    const payload = {
+      worksheetKey: document.body.dataset.worksheetKey || "",
+      title: document.querySelector("h1")?.textContent.trim() || document.title,
+      studentName,
+      groupName: values.group_name || "",
+      deliveryDate: values.delivery_date || "",
+      projectLink: values.project_link || "",
+      signedInEmail,
+      submittedAt: new Date().toISOString(),
+      pageUrl: window.location.href,
+      values,
+      answers
+    };
+
+    const iframeName = `email-submit-frame-${Date.now()}`;
+    const iframe = document.createElement("iframe");
+    iframe.name = iframeName;
+    iframe.hidden = true;
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = webAppUrl;
+    form.target = iframeName;
+    form.hidden = true;
+
+    form.appendChild(createHiddenInput("payload", JSON.stringify(payload)));
+    form.appendChild(createHiddenInput("worksheet_key", payload.worksheetKey));
+    form.appendChild(createHiddenInput("title", payload.title));
+    form.appendChild(createHiddenInput("student_name", payload.studentName));
+    form.appendChild(createHiddenInput("group_name", payload.groupName));
+    form.appendChild(createHiddenInput("delivery_date", payload.deliveryDate));
+    form.appendChild(createHiddenInput("project_link", payload.projectLink));
+    form.appendChild(createHiddenInput("signed_in_email", payload.signedInEmail));
+    form.appendChild(createHiddenInput("submitted_at", payload.submittedAt));
+    form.appendChild(createHiddenInput("page_url", payload.pageUrl));
+
+    Object.entries(values).forEach(([name, value]) => {
+      form.appendChild(createHiddenInput(`field_${name}`, value));
+    });
+
+    iframe.addEventListener("load", () => {
+      isSending = false;
+      updateEmailButton();
+      setEmailStatus("Examen enviado. Revisa tu correo para confirmar la recepción.", "success");
+      window.setTimeout(() => {
+        iframe.remove();
+        form.remove();
+      }, 1000);
+    });
+
+    document.body.appendChild(iframe);
+    document.body.appendChild(form);
+
+    isSending = true;
+    updateEmailButton();
+    setEmailStatus("Enviando examen por correo...", "loading");
+    form.submit();
+  });
+}
+
 function applyWorksheetData(fields, data) {
   fields.forEach((field) => {
     if (!field.name) return;
@@ -566,6 +704,15 @@ function createWorksheetPersistence(options) {
   }
 
   function updateButtons() {
+    document.body.dataset.googleSignedIn = currentUser ? "true" : "false";
+    document.dispatchEvent(new CustomEvent("worksheet-auth-change", {
+      detail: {
+        signedIn: Boolean(currentUser),
+        email: currentUser?.email || "",
+        name: currentUser?.displayName || ""
+      }
+    }));
+
     if (!cloudUi) return;
 
     cloudUi.loginButton.hidden = Boolean(currentUser);
@@ -868,4 +1015,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setupImageLightbox();
   setupContentProtection();
   setupWorksheetStorage();
+  setupWorksheetEmailSubmission();
 });

@@ -161,6 +161,25 @@ h1 {
   color: var(--ink);
 }
 
+.action-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
+.email-submit-status {
+  margin: 0.8rem 0 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.email-submit-status[data-mode="success"] {
+  color: #0b6e4f;
+}
+
+.email-submit-status[data-mode="error"] {
+  color: #9a3412;
+}
+
 .page-shell {
   width: min(1100px, 94%);
   margin: 0 auto 2rem;
