@@ -342,6 +342,13 @@ function setupImageLightbox() {
 function setupContentProtection() {
   const allowCodeCopy = document.body.dataset.allowCodeCopy === "true";
 
+  function isEditableField(target) {
+    return (
+      target instanceof Element &&
+      Boolean(target.closest("input, textarea, select, [contenteditable=\"true\"]"))
+    );
+  }
+
   [
     "copy",
     "cut",
@@ -351,6 +358,10 @@ function setupContentProtection() {
     "selectstart"
   ].forEach((eventName) => {
     document.addEventListener(eventName, (event) => {
+      if (isEditableField(event.target)) {
+        return;
+      }
+
       if (
         allowCodeCopy &&
         event.target instanceof Element &&
@@ -379,6 +390,10 @@ function setupContentProtection() {
     }
 
     if (["a", "c", "s", "u", "v", "x", "p"].includes(key)) {
+      if (isEditableField(event.target) && ["a", "c", "v", "x"].includes(key)) {
+        return;
+      }
+
       event.preventDefault();
     }
   });
