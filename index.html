@@ -10,7 +10,7 @@
   <header class="hero">
     <p class="tag">Informática - Arduino</p>
     <h1>Prácticas organizadas por fases</h1>
-    <p class="subtitle">Usa el menú izquierdo para cambiar entre Fase I, Fase II, Fase III, Fase IV y Proyectos especiales para abrir cada práctica en su página independiente.</p>
+    <p class="subtitle">Usa el menú izquierdo para cambiar entre Fase I, Fase II, Fase III, Fase IV, Test y Proyectos especiales para abrir cada práctica en su página independiente.</p>
   </header>
 
   <div class="page-layout">
@@ -21,6 +21,7 @@
         <a href="#fase-ii" class="phase-link" data-phase="fase-ii">Fase II</a>
         <a href="#fase-iii" class="phase-link" data-phase="fase-iii">Fase III</a>
         <a href="#fase-iv" class="phase-link" data-phase="fase-iv">Fase IV</a>
+        <a href="#test" class="phase-link" data-phase="test">Test</a>
         <a href="#proyectos-especiales" class="phase-link" data-phase="proyectos-especiales">Proyectos especiales (Escape Room)</a>
       </nav>
     </aside>
@@ -208,9 +209,16 @@
             </article>
           </a>
 
+        </div>
+      </section>
+
+      <section class="card phase-panel" id="test" data-phase="test" hidden>
+        <h2>Test</h2>
+        <p>Evaluaciones prácticas de Arduino, Tinkercad y proyectos con sensores.</p>
+        <div class="home-grid">
           <a class="practice-tile" href="examen-practico.html">
             <article class="card">
-              <span class="phase-label">Fase IV</span>
+              <span class="phase-label">Test</span>
               <h2>Examen práctico</h2>
               <p>Evaluación de Arduino y Tinkercad con LED verde, botón, código incompleto, análisis y rúbrica de 10 puntos.</p>
             </article>
@@ -218,7 +226,7 @@
 
           <a class="practice-tile" href="examen-6to-primaria-semaforo.html">
             <article class="card">
-              <span class="phase-label">Fase IV</span>
+              <span class="phase-label">Test</span>
               <h2>Examen 6° de Primaria</h2>
               <p>Evaluación práctica de semáforo con Arduino en Tinkercad, conexiones, código incompleto, simulación y entrega de enlace.</p>
             </article>
@@ -226,7 +234,7 @@
 
           <a class="practice-tile" href="examen-6b-radar-simple-alerta.html">
             <article class="card">
-              <span class="phase-label">Fase IV</span>
+              <span class="phase-label">Test</span>
               <h2>Examen 6°B</h2>
               <p>Evaluación práctica de radar simple con sensor ultrasónico, LEDs, buzzer, código incompleto, análisis y envío con Google.</p>
             </article>
@@ -287,7 +295,7 @@
   </footer>
 
   <script>
-    const validPhases = ["fase-i", "fase-ii", "fase-iii", "fase-iv", "proyectos-especiales"];
+    const validPhases = ["fase-i", "fase-ii", "fase-iii", "fase-iv", "test", "proyectos-especiales"];
     const phaseLinks = document.querySelectorAll(".phase-link");
     const phasePanels = document.querySelectorAll(".phase-panel");
 
