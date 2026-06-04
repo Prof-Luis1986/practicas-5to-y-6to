@@ -446,6 +446,168 @@ function createHiddenInput(name, value) {
   return input;
 }
 
+function appendEmailSubmissionFields(target, payload) {
+  const entries = [
+    ["payload", JSON.stringify(payload)],
+    ["worksheet_key", payload.worksheetKey],
+    ["title", payload.title],
+    ["student_name", payload.studentName],
+    ["group_name", payload.groupName],
+    ["delivery_date", payload.deliveryDate],
+    ["project_link", payload.projectLink],
+    ["signed_in_email", payload.signedInEmail],
+    ["submitted_at", payload.submittedAt],
+    ["page_url", payload.pageUrl]
+  ];
+
+  Object.entries(payload.values || {}).forEach(([name, value]) => {
+    entries.push([`field_${name}`, value]);
+  });
+
+  entries.forEach(([name, value]) => {
+    if (target instanceof FormData) {
+      target.append(name, value == null ? "" : String(value));
+      return;
+    }
+
+    target.appendChild(createHiddenInput(name, value));
+  });
+}
+
+function createNonFallbackSubmissionError(message) {
+  const error = new Error(message);
+  error.allowHiddenFormFallback = false;
+  return error;
+}
+
+function createEmailMessagePayload(payload) {
+  const submittedAt = new Date(payload.submittedAt);
+  const submittedAtText = Number.isNaN(submittedAt.getTime())
+    ? payload.submittedAt
+    : submittedAt.toLocaleString("es-MX", {
+      dateStyle: "medium",
+      timeStyle: "short"
+    });
+  const rows = (payload.answers || []).map((answer) => {
+    const label = answer.label || answer.name;
+    const value = typeof answer.value === "boolean"
+      ? (answer.value ? "Si" : "No")
+      : String(answer.value || "").trim();
+
+    return {
+      label,
+      value: value || "(sin respuesta)"
+    };
+  });
+
+  const text = [
+    payload.title,
+    "",
+    `Alumno: ${payload.studentName}`,
+    `Grupo: ${payload.groupName || "(sin grupo)"}`,
+    `Fecha: ${payload.deliveryDate || "(sin fecha)"}`,
+    `Cuenta Google: ${payload.signedInEmail || "(sin correo)"}`,
+    `Enviado: ${submittedAtText}`,
+    `Pagina: ${payload.pageUrl || ""}`,
+    "",
+    "Respuestas:",
+    ...rows.map((row) => `${row.label}: ${row.value}`)
+  ].join("\n");
+
+  const htmlRows = rows.map((row) => `
+    <tr>
+      <th style="text-align:left;vertical-align:top;padding:8px;border:1px solid #ddd;background:#f7f7f7;">${escapeHtml(row.label)}</th>
+      <td style="vertical-align:top;padding:8px;border:1px solid #ddd;white-space:pre-wrap;">${escapeHtml(row.value)}</td>
+    </tr>
+  `).join("");
+
+  const html = `
+    <h1>${escapeHtml(payload.title)}</h1>
+    <p><strong>Alumno:</strong> ${escapeHtml(payload.studentName)}</p>
+    <p><strong>Grupo:</strong> ${escapeHtml(payload.groupName || "(sin grupo)")}</p>
+    <p><strong>Fecha:</strong> ${escapeHtml(payload.deliveryDate || "(sin fecha)")}</p>
+    <p><strong>Cuenta Google:</strong> ${escapeHtml(payload.signedInEmail || "(sin correo)")}</p>
+    <p><strong>Enviado:</strong> ${escapeHtml(submittedAtText || "")}</p>
+    <p><strong>Pagina:</strong> ${escapeHtml(payload.pageUrl || "")}</p>
+    <h2>Respuestas</h2>
+    <table style="border-collapse:collapse;width:100%;font-family:Arial,sans-serif;font-size:14px;">
+      ${htmlRows}
+    </table>
+  `;
+
+  return {
+    ...payload,
+    to: ["lmartinez@isb.edu.mx"],
+    subject: `${payload.title} - ${payload.studentName}`,
+    text,
+    html
+  };
+}
+
+async function submitEmailWithFetch(webAppUrl, payload) {
+  const emailPayload = createEmailMessagePayload(payload);
+
+  const response = await fetch(webAppUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify(emailPayload)
+  });
+
+  const text = await response.text();
+
+  if (!response.ok) {
+    throw createNonFallbackSubmissionError(`El servidor respondio con ${response.status}.`);
+  }
+
+  const trimmedText = text.trim();
+  if (!trimmedText) return;
+
+  if (/<title>\s*Error\s*<\/title>|No se encontro la funcion|No se encontró la función|Authorization is required|No tienes permiso/i.test(trimmedText)) {
+    throw createNonFallbackSubmissionError("El Apps Script respondio con una pagina de error.");
+  }
+
+  try {
+    const result = JSON.parse(trimmedText);
+    if (result && result.ok === false) {
+      throw createNonFallbackSubmissionError(result.message || result.error || "El servidor rechazo el envio.");
+    }
+  } catch (error) {
+    if (error instanceof SyntaxError) return;
+    throw error;
+  }
+}
+
+function submitEmailWithHiddenForm(webAppUrl, payload) {
+  return new Promise((resolve) => {
+    const iframeName = `email-submit-frame-${Date.now()}`;
+    const iframe = document.createElement("iframe");
+    iframe.name = iframeName;
+    iframe.hidden = true;
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = webAppUrl;
+    form.target = iframeName;
+    form.hidden = true;
+
+    appendEmailSubmissionFields(form, payload);
+
+    iframe.addEventListener("load", () => {
+      window.setTimeout(() => {
+        iframe.remove();
+        form.remove();
+      }, 1000);
+      resolve();
+    }, { once: true });
+
+    document.body.appendChild(iframe);
+    document.body.appendChild(form);
+    form.submit();
+  });
+}
+
 function setupWorksheetEmailSubmission() {
   const rawWebAppUrl = document.body.dataset.emailWebappUrl;
   const webAppUrl = getEmailWebAppUrl(rawWebAppUrl);
@@ -504,7 +666,7 @@ function setupWorksheetEmailSubmission() {
     document.dispatchEvent(new CustomEvent("worksheet-auth-request"));
   });
 
-  emailButton.addEventListener("click", () => {
+  emailButton.addEventListener("click", async () => {
     if (!isSignedIn) {
       setEmailStatus("Inicia sesión con Google antes de enviar.", "error");
       updateEmailButton();
@@ -541,49 +703,32 @@ function setupWorksheetEmailSubmission() {
       answers
     };
 
-    const iframeName = `email-submit-frame-${Date.now()}`;
-    const iframe = document.createElement("iframe");
-    iframe.name = iframeName;
-    iframe.hidden = true;
-
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = webAppUrl;
-    form.target = iframeName;
-    form.hidden = true;
-
-    form.appendChild(createHiddenInput("payload", JSON.stringify(payload)));
-    form.appendChild(createHiddenInput("worksheet_key", payload.worksheetKey));
-    form.appendChild(createHiddenInput("title", payload.title));
-    form.appendChild(createHiddenInput("student_name", payload.studentName));
-    form.appendChild(createHiddenInput("group_name", payload.groupName));
-    form.appendChild(createHiddenInput("delivery_date", payload.deliveryDate));
-    form.appendChild(createHiddenInput("project_link", payload.projectLink));
-    form.appendChild(createHiddenInput("signed_in_email", payload.signedInEmail));
-    form.appendChild(createHiddenInput("submitted_at", payload.submittedAt));
-    form.appendChild(createHiddenInput("page_url", payload.pageUrl));
-
-    Object.entries(values).forEach(([name, value]) => {
-      form.appendChild(createHiddenInput(`field_${name}`, value));
-    });
-
-    iframe.addEventListener("load", () => {
-      isSending = false;
-      updateEmailButton();
-      setEmailStatus("Examen enviado. Revisa tu correo para confirmar la recepción.", "success");
-      window.setTimeout(() => {
-        iframe.remove();
-        form.remove();
-      }, 1000);
-    });
-
-    document.body.appendChild(iframe);
-    document.body.appendChild(form);
-
     isSending = true;
     updateEmailButton();
     setEmailStatus("Enviando examen por correo...", "loading");
-    form.submit();
+
+    try {
+      await submitEmailWithFetch(webAppUrl, payload);
+      setEmailStatus("Examen enviado. Revisa tu correo para confirmar la recepción.", "success");
+    } catch (error) {
+      if (error?.allowHiddenFormFallback === false) {
+        console.error("El servidor rechazo el envio del examen:", error);
+        setEmailStatus("No se pudo enviar el examen. Revisa permisos y despliegue del Apps Script.", "error");
+        return;
+      }
+
+      console.warn("No se pudo confirmar el envio con fetch; usando formulario oculto:", error);
+      try {
+        await submitEmailWithHiddenForm(webAppUrl, payload);
+        setEmailStatus("Examen enviado. Si no llega la confirmación, revisa la configuración del Apps Script.", "success");
+      } catch (fallbackError) {
+        console.error("No se pudo enviar el examen:", fallbackError);
+        setEmailStatus("No se pudo enviar el examen. Revisa conexión, permisos del Apps Script y vuelve a intentar.", "error");
+      }
+    } finally {
+      isSending = false;
+      updateEmailButton();
+    }
   });
 }
 
