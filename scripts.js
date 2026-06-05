@@ -413,7 +413,7 @@ const FIREBASE_CONFIG = {
 let firebaseServicesPromise;
 
 function getWorksheetFieldsDefault() {
-  return Array.from(document.querySelectorAll(".worksheet-input, .worksheet-textarea, input[type=\"checkbox\"]"));
+  return Array.from(document.querySelectorAll(".worksheet-input, .worksheet-textarea, .worksheet-select, input[type=\"checkbox\"]"));
 }
 
 function collectWorksheetData(fields) {

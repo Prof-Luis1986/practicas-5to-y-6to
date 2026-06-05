@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examen 5to V2 - Introducción a Arduino y Radar</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-worksheet-key="examen-5to-v2-arduino-radar" data-disable-project-links="true" data-allow-code-copy="true" data-allow-page-copy="true" data-email-webapp-url="https://script.google.com/macros/s/AKfycbw8XwulnlKUE1jy8JHRmPSHhB8TNS9_p5X9hORVkZEG4UDg_qpnHZYThKLzBz-5uhU88w/exec">
+  <header class="hero">
+    <p class="tag">Test</p>
+    <h1>Examen de Tecnología - 5° de Primaria</h1>
+    <p class="subtitle">Introducción a Arduino y radar de detección.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#test">Volver a exámenes</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Datos del examen</h2>
+        <p><strong>Tema:</strong> Introducción a Arduino y Radar de Detección</p>
+        <p><strong>Valor:</strong> 10 puntos</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <p class="worksheet-note">Responde los conocimientos generales, construye el sistema en Tinkercad, completa el código, pega el enlace del proyecto y envía el examen con tu cuenta de Google.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Parte I. Conocimientos Generales</h2>
+        <p><strong>Valor:</strong> 4 puntos</p>
+
+        <div class="worksheet-field">
+          <label for="general-1">1. ¿Qué es Arduino?</label>
+          <textarea class="worksheet-textarea" id="general-1" name="general_1"></textarea>
+        </div>
+
+        <div class="worksheet-field">
+          <label for="general-2">2. ¿Para qué sirve Arduino?</label>
+          <textarea class="worksheet-textarea" id="general-2" name="general_2"></textarea>
+        </div>
+
+        <div class="worksheet-field">
+          <label for="general-3">3. ¿Quién creó Arduino?</label>
+          <select class="worksheet-input" id="general-3" name="general_3">
+            <option value="">Selecciona una respuesta</option>
+            <option value="Steve Jobs">a) Steve Jobs</option>
+            <option value="Bill Gates">b) Bill Gates</option>
+            <option value="Un grupo de profesores y estudiantes en Italia">c) Un grupo de profesores y estudiantes en Italia</option>
+            <option value="Elon Musk">d) Elon Musk</option>
+          </select>
+        </div>
+
+        <div class="worksheet-field">
+          <label for="general-4">4. ¿Cuál de los siguientes componentes puede detectar distancias?</label>
+          <select class="worksheet-input" id="general-4" name="general_4">
+            <option value="">Selecciona una respuesta</option>
+            <option value="LED">a) LED</option>
+            <option value="Buzzer">b) Buzzer</option>
+            <option value="Sensor ultrasónico">c) Sensor ultrasónico</option>
+            <option value="Resistencia">d) Resistencia</option>
+          </select>
+        </div>
+
+        <h3>5. Relaciona ambas columnas</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Función</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>LED</td>
+              <td>
+                <label class="sr-only" for="match-led">Función del LED</label>
+                <select class="worksheet-input" id="match-led" name="match_led">
+                  <option value="">Selecciona una función</option>
+                  <option value="Produce sonido">Produce sonido</option>
+                  <option value="Detecta distancia">Detecta distancia</option>
+                  <option value="Emite luz">Emite luz</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Buzzer</td>
+              <td>
+                <label class="sr-only" for="match-buzzer">Función del Buzzer</label>
+                <select class="worksheet-input" id="match-buzzer" name="match_buzzer">
+                  <option value="">Selecciona una función</option>
+                  <option value="Produce sonido">Produce sonido</option>
+                  <option value="Detecta distancia">Detecta distancia</option>
+                  <option value="Emite luz">Emite luz</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Sensor ultrasónico</td>
+              <td>
+                <label class="sr-only" for="match-ultrasonic">Función del sensor ultrasónico</label>
+                <select class="worksheet-input" id="match-ultrasonic" name="match_ultrasonic">
+                  <option value="">Selecciona una función</option>
+                  <option value="Produce sonido">Produce sonido</option>
+                  <option value="Detecta distancia">Detecta distancia</option>
+                  <option value="Emite luz">Emite luz</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Parte II. Desarrollo en Tinkercad</h2>
+        <p><strong>Valor:</strong> 4 puntos</p>
+        <h3>Actividad</h3>
+        <p>Construye en Tinkercad un sistema de radar simple utilizando:</p>
+        <ul>
+          <li>Arduino Uno</li>
+          <li>Sensor ultrasónico HC-SR04</li>
+          <li>LED rojo</li>
+          <li>LED verde</li>
+          <li>Buzzer</li>
+          <li>Protoboard</li>
+          <li>Cables</li>
+        </ul>
+
+        <h3>Funcionamiento esperado</h3>
+        <ul>
+          <li>Cuando un objeto esté cerca, se encenderá el LED rojo y sonará el buzzer.</li>
+          <li>Cuando no haya objetos cerca, permanecerá encendido el LED verde.</li>
+        </ul>
+
+        <div class="worksheet-field">
+          <label for="circuit-description">Describe cómo construiste el circuito en Tinkercad</label>
+          <textarea class="worksheet-textarea" id="circuit-description" name="circuit_description"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Completa el código</h2>
+        <p>Llena los espacios faltantes.</p>
+        <pre><code>const int TRIG = 9;
+const int ECHO = 10;
+
+const int LED_ROJO = 3;
+const int LED_VERDE = 4;
+const int BUZZER = 8;
+
+const int DISTANCIA_ALERTA = 30;
+
+void setup() {
+
+  pinMode(TRIG, _______);
+  pinMode(ECHO, _______);
+
+  pinMode(LED_ROJO, _______);
+  pinMode(LED_VERDE, _______);
+  pinMode(BUZZER, _______);
+
+}
+
+void loop() {
+
+  if (distancia > 0 && distancia <= DISTANCIA_ALERTA) {
+
+    digitalWrite(LED_ROJO, _______);
+    digitalWrite(LED_VERDE, _______);
+
+  } else {
+
+    digitalWrite(LED_ROJO, _______);
+    digitalWrite(LED_VERDE, _______);
+
+  }
+
+}</code></pre>
+
+        <div class="worksheet-field">
+          <label for="completed-code">Código completado por el alumno</label>
+          <textarea class="worksheet-textarea" id="completed-code" name="completed_code"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Parte III. Análisis</h2>
+        <p><strong>Valor:</strong> 1 punto</p>
+        <div class="worksheet-field">
+          <label for="analysis-1">Si acercas tu mano al sensor ultrasónico, ¿qué crees que sucederá?</label>
+          <textarea class="worksheet-textarea" id="analysis-1" name="analysis_1"></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Parte IV. Entrega</h2>
+        <p><strong>Valor:</strong> 1 punto</p>
+        <p>Copia y pega el enlace de tu proyecto de Tinkercad.</p>
+        <div class="worksheet-field">
+          <label for="project-link">Enlace del proyecto</label>
+          <input class="worksheet-input" id="project-link" name="project_link" type="url" inputmode="url" placeholder="https://www.tinkercad.com/..." />
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Evaluación</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Criterio</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Conocimientos sobre Arduino</td>
+              <td>4 puntos</td>
+            </tr>
+            <tr>
+              <td>Diseño correcto del circuito</td>
+              <td>2 puntos</td>
+            </tr>
+            <tr>
+              <td>Código completado correctamente</td>
+              <td>2 puntos</td>
+            </tr>
+            <tr>
+              <td>Respuesta de análisis</td>
+              <td>1 punto</td>
+            </tr>
+            <tr>
+              <td>Entrega del enlace</td>
+              <td>1 punto</td>
+            </tr>
+            <tr>
+              <td><strong>Total</strong></td>
+              <td><strong>10 puntos</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Enviar examen</h2>
+        <p>Antes de enviar, verifica que tus respuestas, el código y el enlace del proyecto estén completos.</p>
+        <div class="button-row">
+          <button class="action-button action-button--secondary" data-email-login type="button">Entrar con Google</button>
+          <button class="action-button" data-worksheet-action="email" type="button" disabled>Enviar examen</button>
+        </div>
+        <p class="email-submit-status" data-email-status aria-live="polite">Inicia sesión con Google para habilitar el envío.</p>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
