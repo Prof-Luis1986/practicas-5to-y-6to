@@ -291,10 +291,1135 @@ const SPECIAL_PROJECT_QUESTIONS = {
   ]
 };
 
+const SPECIAL_PROJECT_CODE_STEPS = {
+  "proyecto-especial-contenedor": [
+    {
+      title: "Nombrar los estados antes de controlar componentes",
+      instruction: "Comprueba en el monitor serial que el programa puede comunicar un estado con un nombre claro. En la siguiente prueba conservarás la función mostrarEstado.",
+      code: `void mostrarEstado(const char* estado) {
+  Serial.print("Estado: ");
+  Serial.println(estado);
+}
+
+void setup() {
+  Serial.begin(9600);
+  mostrarEstado("REPOSO");
+  mostrarEstado("ACTIVIDAD");
+  mostrarEstado("ALERTA");
+  mostrarEstado("PELIGRO");
+}
+
+void loop() {
+}`,
+      expected: "El monitor serial muestra los cuatro estados, uno por línea."
+    },
+    {
+      title: "Clasificar una distancia sin usar todavía el sensor",
+      instruction: "Prueba la lógica de rangos con un valor escrito a mano. Cambia distanciaPrueba por 60, 40, 20 y 8 antes de conectar componentes.",
+      code: `void mostrarEstado(int distancia) {
+  if (distancia > 50) {
+    Serial.println("REPOSO");
+  } else if (distancia > 25) {
+    Serial.println("ACTIVIDAD");
+  } else if (distancia > 10) {
+    Serial.println("ALERTA");
+  } else {
+    Serial.println("PELIGRO");
+  }
+}
+
+void setup() {
+  Serial.begin(9600);
+  int distanciaPrueba = 40;
+  mostrarEstado(distanciaPrueba);
+}
+
+void loop() {
+}`,
+      expected: "Cada valor de prueba produce exactamente el estado previsto en la tabla de rangos."
+    },
+    {
+      title: "Leer el sensor en una función independiente",
+      instruction: "Aísla la medición en medirDistancia. No agregues todavía luces ni sonido: primero confirma que el dato de entrada es confiable.",
+      code: `const int TRIG = 9;
+const int ECHO = 10;
+
+int medirDistancia() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long duracion = pulseIn(ECHO, HIGH, 30000);
+  if (duracion == 0) return 999;
+  return duracion / 58;
+}
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+}
+
+void loop() {
+  Serial.println(medirDistancia());
+  delay(300);
+}`,
+      expected: "Las lecturas cambian al mover un objeto y son parecidas a las medidas con una regla."
+    },
+    {
+      title: "Probar luz y sonido con funciones pequeñas",
+      instruction: "Comprueba por separado una función de color y una de sonido. Una función debe realizar una sola tarea.",
+      code: `#include <Adafruit_NeoPixel.h>
+
+const int PIN_ARO = 6;
+const int BUZZER = 5;
+Adafruit_NeoPixel aro(12, PIN_ARO, NEO_GRB + NEO_KHZ800);
+
+void colorFijo(int rojo, int verde, int azul) {
+  for (int i = 0; i < 12; i++) {
+    aro.setPixelColor(i, aro.Color(rojo, verde, azul));
+  }
+  aro.show();
+}
+
+void sonidoPrueba() {
+  tone(BUZZER, 600, 200);
+}
+
+void setup() {
+  aro.begin();
+  pinMode(BUZZER, OUTPUT);
+  colorFijo(0, 120, 40);
+  sonidoPrueba();
+}
+
+void loop() {
+}`,
+      expected: "El aro muestra un color fijo y el buzzer produce un tono corto."
+    },
+    {
+      title: "Separar cada comportamiento en una función",
+      instruction: "Construye estados reutilizables. loop solo decide qué función probar; no debe contener todos los detalles de luces y sonidos.",
+      code: `void estadoReposo() {
+  Serial.println("REPOSO: azul y sonido suave");
+}
+
+void estadoActividad() {
+  Serial.println("ACTIVIDAD: verde pulsante");
+}
+
+void estadoAlerta() {
+  Serial.println("ALERTA: naranja en movimiento");
+}
+
+void estadoPeligro() {
+  Serial.println("PELIGRO: rojo y alarma");
+}
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  estadoReposo();
+  delay(1000);
+  estadoActividad();
+  delay(1000);
+  estadoAlerta();
+  delay(1000);
+  estadoPeligro();
+  delay(2000);
+}`,
+      expected: "Los cuatro estados se ejecutan en orden y cada comportamiento tiene su propia función."
+    },
+    {
+      title: "Integrar medición, decisión y respuesta",
+      instruction: "Organiza loop en tres pasos visibles: medir, mostrar y decidir. Sustituye después los mensajes por las funciones de efectos ya probadas.",
+      code: `int distancia = 20;
+
+void ejecutarEstado(int valor) {
+  if (valor > 50) {
+    Serial.println("estadoReposo()");
+  } else if (valor > 25) {
+    Serial.println("estadoActividad()");
+  } else if (valor > 10) {
+    Serial.println("estadoAlerta()");
+  } else {
+    Serial.println("estadoPeligro()");
+  }
+}
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  Serial.print("Distancia: ");
+  Serial.println(distancia);
+  ejecutarEstado(distancia);
+  delay(500);
+}`,
+      expected: "Una sola lectura produce una sola respuesta y loop permanece corto y comprensible."
+    },
+    {
+      title: "Reducir lecturas inestables con un promedio",
+      instruction: "Agrega una función de mejora sin mezclarla con los efectos. Reemplaza lecturaSimulada por medirDistancia al integrarla al proyecto.",
+      code: `int lecturaSimulada() {
+  return random(18, 23);
+}
+
+int distanciaPromedio() {
+  long suma = 0;
+  const int MUESTRAS = 5;
+
+  for (int i = 0; i < MUESTRAS; i++) {
+    suma += lecturaSimulada();
+    delay(20);
+  }
+  return suma / MUESTRAS;
+}
+
+void setup() {
+  Serial.begin(9600);
+  randomSeed(analogRead(A0));
+}
+
+void loop() {
+  Serial.println(distanciaPromedio());
+  delay(300);
+}`,
+      expected: "El valor promedio cambia menos que las lecturas individuales y la mejora queda aislada en una función."
+    }
+  ],
+  "proyecto-especial-cabeza-dinosaurio": [
+    {
+      title: "Representar la secuencia antes de mover servos",
+      instruction: "Usa mensajes para verificar el orden abrir, esperar, cerrar y abrir. Primero valida la historia del movimiento.",
+      code: `void abrirOjos() {
+  Serial.println("OJOS ABIERTOS");
+}
+
+void cerrarOjos() {
+  Serial.println("OJOS CERRADOS");
+}
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  abrirOjos();
+  delay(1000);
+  cerrarOjos();
+  delay(180);
+}`,
+      expected: "El monitor muestra una secuencia clara de apertura y cierre."
+    },
+    {
+      title: "Guardar posiciones y tiempos con nombres",
+      instruction: "Evita números sin explicación. Modifica solo las constantes para comparar diferentes ritmos.",
+      code: `const int TIEMPO_CERRADO = 180;
+const int PAUSA_NORMAL = 3000;
+const int PAUSA_ALERTA = 300;
+
+void mostrarPlan() {
+  Serial.print("Cierre: ");
+  Serial.println(TIEMPO_CERRADO);
+  Serial.print("Pausa normal: ");
+  Serial.println(PAUSA_NORMAL);
+  Serial.print("Pausa alerta: ");
+  Serial.println(PAUSA_ALERTA);
+}
+
+void setup() {
+  Serial.begin(9600);
+  mostrarPlan();
+}
+
+void loop() {
+}`,
+      expected: "Los valores importantes tienen nombres y pueden ajustarse en un solo lugar."
+    },
+    {
+      title: "Mover un ojo antes de coordinar los dos",
+      instruction: "Comprueba un solo servo. No montes ambos hasta encontrar posiciones seguras de apertura y cierre.",
+      code: `#include <Servo.h>
+
+Servo ojoIzq;
+const int ABIERTO = 30;
+const int CERRADO = 95;
+
+void setup() {
+  ojoIzq.attach(9);
+}
+
+void loop() {
+  ojoIzq.write(ABIERTO);
+  delay(1500);
+  ojoIzq.write(CERRADO);
+  delay(500);
+}`,
+      expected: "Un ojo abre y cierra sin golpear ni forzar el mecanismo."
+    },
+    {
+      title: "Calibrar dos ojos con constantes independientes",
+      instruction: "Cada servo conserva sus propios ángulos. Así una corrección no obliga a cambiar toda la secuencia.",
+      code: `#include <Servo.h>
+
+Servo ojoIzq;
+Servo ojoDer;
+const int IZQ_ABIERTO = 30;
+const int IZQ_CERRADO = 95;
+const int DER_ABIERTO = 150;
+const int DER_CERRADO = 85;
+
+void setup() {
+  ojoIzq.attach(9);
+  ojoDer.attach(10);
+}
+
+void loop() {
+  ojoIzq.write(IZQ_ABIERTO);
+  ojoDer.write(DER_ABIERTO);
+  delay(1000);
+  ojoIzq.write(IZQ_CERRADO);
+  ojoDer.write(DER_CERRADO);
+  delay(500);
+}`,
+      expected: "Los dos ojos alcanzan posiciones seguras aunque usen ángulos diferentes."
+    },
+    {
+      title: "Crear funciones reutilizables de parpadeo",
+      instruction: "Separa abrirOjos, cerrarOjos y parpadeoNatural. loop solo solicita el comportamiento.",
+      code: `#include <Servo.h>
+
+Servo izquierdo;
+Servo derecho;
+
+void abrirOjos() {
+  izquierdo.write(30);
+  derecho.write(150);
+}
+
+void cerrarOjos() {
+  izquierdo.write(95);
+  derecho.write(85);
+}
+
+void parpadeoNatural() {
+  cerrarOjos();
+  delay(180);
+  abrirOjos();
+}
+
+void setup() {
+  izquierdo.attach(9);
+  derecho.attach(10);
+  abrirOjos();
+}
+
+void loop() {
+  parpadeoNatural();
+  delay(3000);
+}`,
+      expected: "loop es breve y el parpadeo completo se reconoce por el nombre de una función."
+    },
+    {
+      title: "Agregar un comportamiento sin alterar el anterior",
+      instruction: "Conserva parpadeoNatural y agrega modoAlerta como una función diferente. No copies toda la lógica dentro de loop.",
+      code: `void parpadeoNatural() {
+  Serial.println("Cerrar 180 ms y abrir");
+}
+
+void parpadeoDesfasado() {
+  Serial.println("Izquierdo, derecho, abrir");
+}
+
+void modoAlerta() {
+  Serial.println("INICIO ALERTA");
+  parpadeoDesfasado();
+  delay(300);
+  parpadeoDesfasado();
+}
+
+void setup() {
+  Serial.begin(9600);
+  parpadeoNatural();
+  modoAlerta();
+}
+
+void loop() {
+}`,
+      expected: "Los dos comportamientos pueden ejecutarse por separado y modoAlerta reutiliza otra función."
+    },
+    {
+      title: "Programar intervalos sin detener toda la lógica",
+      instruction: "Prueba millis para decidir cuándo parpadear. Esta estructura permite añadir después otros comportamientos sin llenar loop de delays.",
+      code: `unsigned long anterior = 0;
+unsigned long intervalo = 3000;
+
+void parpadeoNatural() {
+  Serial.println("PARPADEO");
+}
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  unsigned long ahora = millis();
+
+  if (ahora - anterior >= intervalo) {
+    anterior = ahora;
+    parpadeoNatural();
+    intervalo = random(3000, 7000);
+  }
+}`,
+      expected: "Los parpadeos aparecen con intervalos variables y loop no contiene una secuencia extensa."
+    }
+  ],
+  "proyecto-especial-brazo-dinosaurio": [
+    {
+      title: "Definir los estados del brazo",
+      instruction: "Antes de conectar componentes, representa reposo, activación y regreso con funciones nombradas.",
+      code: `void reposo() {
+  Serial.println("BRAZO EN REPOSO");
+}
+
+void ataque() {
+  Serial.println("BRAZO EN MOVIMIENTO");
+}
+
+void regresar() {
+  Serial.println("BRAZO REGRESA");
+}
+
+void setup() {
+  Serial.begin(9600);
+  reposo();
+  ataque();
+  regresar();
+}
+
+void loop() {
+}`,
+      expected: "El monitor muestra las tres responsabilidades en el orden planeado."
+    },
+    {
+      title: "Probar la decisión con distancias simuladas",
+      instruction: "Valida el umbral antes del sensor. Cambia distancia por valores menores y mayores a 25.",
+      code: `const int DISTANCIA_ACTIVACION = 25;
+int distancia = 20;
+
+bool debeActivarse(int valor) {
+  return valor > 0 && valor <= DISTANCIA_ACTIVACION;
+}
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println(debeActivarse(distancia)
+    ? "ACTIVAR"
+    : "ESPERAR");
+}
+
+void loop() {
+}`,
+      expected: "Los valores cercanos activan y los lejanos esperan, sin controlar todavía el brazo."
+    },
+    {
+      title: "Leer distancia como una responsabilidad aislada",
+      instruction: "Crea medirDistancia y revisa el monitor serial. No agregues el servo hasta confiar en la entrada.",
+      code: `const int TRIG = 9;
+const int ECHO = 10;
+
+long medirDistancia() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+  long tiempo = pulseIn(ECHO, HIGH, 30000);
+  if (tiempo == 0) return -1;
+  return tiempo / 58;
+}
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+}
+
+void loop() {
+  Serial.println(medirDistancia());
+  delay(250);
+}`,
+      expected: "La función devuelve centímetros o -1 cuando no existe una lectura válida."
+    },
+    {
+      title: "Probar cada salida por separado",
+      instruction: "Confirma servo, LED y buzzer con una secuencia corta. Si algo falla, sabrás qué componente revisar.",
+      code: `#include <Servo.h>
+
+Servo brazo;
+const int LED = 4;
+const int BUZZER = 8;
+
+void setup() {
+  brazo.attach(6);
+  pinMode(LED, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+
+  brazo.write(20);
+  digitalWrite(LED, HIGH);
+  tone(BUZZER, 900, 200);
+  delay(700);
+  brazo.write(70);
+  digitalWrite(LED, LOW);
+}
+
+void loop() {
+}`,
+      expected: "Los tres componentes responden y el servo usa un recorrido de prueba seguro."
+    },
+    {
+      title: "Encapsular la reacción completa",
+      instruction: "Coloca movimiento, luz y sonido dentro de activarBrazo. loop no debe repetir esos detalles.",
+      code: `#include <Servo.h>
+
+Servo brazo;
+
+void activarBrazo() {
+  digitalWrite(4, HIGH);
+  tone(8, 900, 250);
+  brazo.write(110);
+  delay(500);
+  brazo.write(20);
+  digitalWrite(4, LOW);
+}
+
+void setup() {
+  brazo.attach(6);
+  pinMode(4, OUTPUT);
+  pinMode(8, OUTPUT);
+  brazo.write(20);
+}
+
+void loop() {
+  activarBrazo();
+  delay(3000);
+}`,
+      expected: "Una llamada a activarBrazo realiza la reacción y devuelve el mecanismo al reposo."
+    },
+    {
+      title: "Evitar activaciones repetidas",
+      instruction: "Usa una variable de estado. El brazo solo se prepara otra vez cuando la persona se aleja.",
+      code: `const int UMBRAL = 25;
+bool brazoActivado = false;
+int distancia = 20;
+
+void activarBrazo() {
+  Serial.println("REACCION");
+}
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (distancia <= UMBRAL && !brazoActivado) {
+    brazoActivado = true;
+    activarBrazo();
+  }
+
+  if (distancia > UMBRAL + 10) {
+    brazoActivado = false;
+  }
+}`,
+      expected: "Una persona que permanece cerca produce una sola reacción, no una repetición continua."
+    },
+    {
+      title: "Centralizar los ajustes de seguridad",
+      instruction: "Agrupa umbral, ángulos y velocidad en constantes. La mejora se realiza cambiando valores, no buscando números por todo el programa.",
+      code: `const int DISTANCIA_ACTIVACION = 25;
+const int MARGEN_REINICIO = 10;
+const int ANGULO_REPOSO = 20;
+const int ANGULO_ATAQUE = 110;
+const int PASO_ANGULO = 5;
+const int ESPERA_MOVIMIENTO = 25;
+
+void mostrarConfiguracion() {
+  Serial.println(DISTANCIA_ACTIVACION);
+  Serial.println(ANGULO_REPOSO);
+  Serial.println(ANGULO_ATAQUE);
+  Serial.println(ESPERA_MOVIMIENTO);
+}
+
+void setup() {
+  Serial.begin(9600);
+  mostrarConfiguracion();
+}
+
+void loop() {
+}`,
+      expected: "Todos los valores ajustables tienen nombres y se encuentran juntos al inicio."
+    }
+  ],
+  "proyecto-especial-huevo-dinosaurio": [
+    {
+      title: "Representar la historia con funciones",
+      instruction: "Primero confirma el orden narrativo sin mover el servo. Cada acción tiene un nombre propio.",
+      code: `void empujes() {
+  Serial.println("EMPUJES PEQUENOS");
+}
+
+void abrirHuevo() {
+  Serial.println("APERTURA FUERTE");
+}
+
+void cerrarHuevo() {
+  Serial.println("CIERRE");
+}
+
+void setup() {
+  Serial.begin(9600);
+  empujes();
+  abrirHuevo();
+  cerrarHuevo();
+}
+
+void loop() {
+}`,
+      expected: "El monitor muestra empujes, apertura y cierre en el orden correcto."
+    },
+    {
+      title: "Nombrar ángulos y tiempos",
+      instruction: "Guarda la planeación en constantes. No disperses números sin significado por todo el código.",
+      code: `const int CERRADO = 0;
+const int EMPUJE_1 = 10;
+const int EMPUJE_2 = 15;
+const int EMPUJE_3 = 25;
+const int APERTURA = 60;
+const int PAUSA_CORTA = 250;
+const int PAUSA_ABIERTO = 1000;
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("Configuracion preparada");
+}
+
+void loop() {
+}`,
+      expected: "Los movimientos y tiempos importantes se pueden ajustar desde una sola sección."
+    },
+    {
+      title: "Confirmar una posición segura del servo",
+      instruction: "Conecta solo el servo y llévalo a la posición cerrada. No montes la tapa hasta comprobar esta base.",
+      code: `#include <Servo.h>
+
+Servo servoHuevo;
+const int PIN_SERVO = 9;
+const int CERRADO = 0;
+
+void setup() {
+  servoHuevo.attach(PIN_SERVO);
+  servoHuevo.write(CERRADO);
+}
+
+void loop() {
+}`,
+      expected: "El servo permanece estable en la posición cerrada sin vibración excesiva."
+    },
+    {
+      title: "Calibrar un ángulo a la vez",
+      instruction: "Modifica ANGULO_PRUEBA gradualmente. Esta prueba evita usar una secuencia completa mientras el mecanismo todavía no está calibrado.",
+      code: `#include <Servo.h>
+
+Servo servoHuevo;
+const int CERRADO = 0;
+const int ANGULO_PRUEBA = 20;
+
+void setup() {
+  servoHuevo.attach(9);
+}
+
+void loop() {
+  servoHuevo.write(CERRADO);
+  delay(1500);
+  servoHuevo.write(ANGULO_PRUEBA);
+  delay(1500);
+}`,
+      expected: "Puedes clasificar el ángulo como insuficiente, seguro o excesivo sin dañar la tapa."
+    },
+    {
+      title: "Crear una función para los empujes",
+      instruction: "Agrupa únicamente los movimientos pequeños. La apertura final todavía no forma parte de esta prueba.",
+      code: `#include <Servo.h>
+
+Servo huevo;
+
+void realizarEmpujes() {
+  huevo.write(10);
+  delay(200);
+  huevo.write(0);
+  delay(200);
+  huevo.write(15);
+  delay(250);
+  huevo.write(0);
+  delay(300);
+  huevo.write(25);
+  delay(300);
+  huevo.write(5);
+}
+
+void setup() {
+  huevo.attach(9);
+}
+
+void loop() {
+  realizarEmpujes();
+  delay(2000);
+}`,
+      expected: "Una sola función produce varios empujes y el programa principal sigue siendo corto."
+    },
+    {
+      title: "Integrar el ciclo completo con funciones",
+      instruction: "Suma apertura y cierre sin desarmar realizarEmpujes. La integración reutiliza lo que ya funcionó.",
+      code: `void realizarEmpujes() {
+  Serial.println("Tres empujes");
+}
+
+void abrirHuevo() {
+  Serial.println("Abrir a 60 grados");
+  delay(1000);
+}
+
+void cerrarHuevo() {
+  Serial.println("Cerrar a 0 grados");
+}
+
+void cicloHuevo() {
+  realizarEmpujes();
+  abrirHuevo();
+  cerrarHuevo();
+}
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  cicloHuevo();
+  delay(2000);
+}`,
+      expected: "cicloHuevo expresa la secuencia completa reutilizando tres funciones con tareas separadas."
+    },
+    {
+      title: "Probar repetición y registrar ciclos",
+      instruction: "Añade un contador para observar cuántos ciclos soporta el mecanismo. No mezcles el registro con las funciones de movimiento.",
+      code: `int numeroCiclo = 0;
+
+void cicloHuevo() {
+  Serial.println("Empujes, apertura y cierre");
+}
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  numeroCiclo++;
+  Serial.print("Ciclo: ");
+  Serial.println(numeroCiclo);
+  cicloHuevo();
+  delay(2000);
+
+  if (numeroCiclo == 5) {
+    Serial.println("Prueba terminada");
+    while (true) {
+    }
+  }
+}`,
+      expected: "El programa ejecuta exactamente cinco ciclos y permite relacionar cualquier falla con un número de ciclo."
+    }
+  ],
+  "proyecto-especial-radar": [
+    {
+      title: "Relacionar ángulo y distancia",
+      instruction: "Representa primero los dos datos fundamentales. No controles componentes hasta comprender qué información produce el radar.",
+      code: `void mostrarLectura(int angulo, int distancia) {
+  Serial.print("Angulo: ");
+  Serial.print(angulo);
+  Serial.print(" | Distancia: ");
+  Serial.println(distancia);
+}
+
+void setup() {
+  Serial.begin(9600);
+  mostrarLectura(45, 30);
+  mostrarLectura(90, 12);
+  mostrarLectura(135, 60);
+}
+
+void loop() {
+}`,
+      expected: "Cada línea conserva junta la dirección y la distancia de un objeto."
+    },
+    {
+      title: "Separar la decisión de alerta",
+      instruction: "Prueba la clasificación con distancias simuladas antes de usar el sensor.",
+      code: `const int DETECCION = 30;
+const int ALERTA = 10;
+
+void revisarAlerta(int distancia) {
+  if (distancia <= ALERTA) {
+    Serial.println("ALERTA");
+  } else if (distancia <= DETECCION) {
+    Serial.println("DETECTADO");
+  } else {
+    Serial.println("LIBRE");
+  }
+}
+
+void setup() {
+  Serial.begin(9600);
+  revisarAlerta(8);
+  revisarAlerta(20);
+  revisarAlerta(50);
+}
+
+void loop() {
+}`,
+      expected: "Las tres distancias producen alerta, detección y zona libre."
+    },
+    {
+      title: "Probar el movimiento sin sensor",
+      instruction: "Comprueba únicamente el arco del servo. Así los problemas mecánicos no se confunden con problemas de medición.",
+      code: `#include <Servo.h>
+
+Servo radar;
+
+void setup() {
+  radar.attach(6);
+}
+
+void loop() {
+  radar.write(15);
+  delay(1000);
+  radar.write(90);
+  delay(1000);
+  radar.write(165);
+  delay(1000);
+}`,
+      expected: "El servo alcanza 15, 90 y 165 grados sin que los cables detengan el movimiento."
+    },
+    {
+      title: "Probar el sensor sin movimiento",
+      instruction: "Mantén el sensor fijo y encapsula la medición. Compara el resultado con una regla.",
+      code: `const int TRIG = 9;
+const int ECHO = 10;
+
+long medirDistancia() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+  long tiempo = pulseIn(ECHO, HIGH, 30000);
+  if (tiempo == 0) return -1;
+  return tiempo / 58;
+}
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+}
+
+void loop() {
+  Serial.println(medirDistancia());
+  delay(300);
+}`,
+      expected: "El sensor fijo entrega distancias razonables antes de combinarse con el servo."
+    },
+    {
+      title: "Construir un barrido en una función",
+      instruction: "Encapsula el recorrido de ida. Después podrás crear el regreso sin duplicar toda la lógica de medición.",
+      code: `#include <Servo.h>
+
+Servo radar;
+
+void medirEnAngulo(int angulo) {
+  radar.write(angulo);
+  delay(120);
+  Serial.print("Medir en ");
+  Serial.println(angulo);
+}
+
+void barridoIda() {
+  for (int angulo = 15; angulo <= 165; angulo += 5) {
+    medirEnAngulo(angulo);
+  }
+}
+
+void setup() {
+  Serial.begin(9600);
+  radar.attach(6);
+}
+
+void loop() {
+  barridoIda();
+}`,
+      expected: "La función recorre el arco y cada posición llama a una función de medición."
+    },
+    {
+      title: "Integrar una lectura con sus señales",
+      instruction: "revisarAlerta recibe un dato y controla las salidas. No copies las condiciones dentro de cada barrido.",
+      code: `const int LED_ROJO = 3;
+const int LED_VERDE = 4;
+const int BUZZER = 8;
+
+void revisarAlerta(int distancia) {
+  bool cerca = distancia > 0 && distancia <= 30;
+  digitalWrite(LED_ROJO, cerca);
+  digitalWrite(LED_VERDE, !cerca);
+
+  if (distancia > 0 && distancia <= 10) {
+    tone(BUZZER, 1800, 100);
+  }
+}
+
+void setup() {
+  pinMode(LED_ROJO, OUTPUT);
+  pinMode(LED_VERDE, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+}
+
+void loop() {
+  revisarAlerta(8);
+  delay(1000);
+  revisarAlerta(50);
+  delay(1000);
+}`,
+      expected: "La misma función produce señales correctas para un objeto cercano y uno lejano."
+    },
+    {
+      title: "Reutilizar una función para ida y regreso",
+      instruction: "Evita dos bloques casi iguales. Una función recibe inicio, fin y paso para recorrer ambas direcciones.",
+      code: `void barrer(int inicio, int fin, int paso) {
+  for (int angulo = inicio;
+       paso > 0 ? angulo <= fin : angulo >= fin;
+       angulo += paso) {
+    Serial.print("Angulo: ");
+    Serial.println(angulo);
+  }
+}
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  barrer(15, 165, 5);
+  barrer(165, 15, -5);
+  delay(1000);
+}`,
+      expected: "Una sola función realiza ida y regreso sin duplicar el bloque for."
+    }
+  ]
+};
+
+function createObjectiveField(objectiveNumber, suffix, label, placeholder = "") {
+  const fieldId = `objective-${objectiveNumber}-delivery-${suffix}`;
+  return `
+    <div class="worksheet-field">
+      <label for="${fieldId}">${label}</label>
+      <textarea
+        class="worksheet-textarea"
+        id="${fieldId}"
+        name="${fieldId}"
+        data-objective-required
+        placeholder="${placeholder}"
+      ></textarea>
+    </div>
+  `;
+}
+
+function createObjectiveTable(objectiveNumber, columns, rowLabels) {
+  const placeholderForColumn = (column) => {
+    const normalizedColumn = column.toLowerCase();
+    if (normalizedColumn.includes("planeado")) return "Escribe el valor que esperas obtener.";
+    if (normalizedColumn.includes("observado")) return "Escribe exactamente qué ocurrió en la prueba.";
+    if (normalizedColumn.includes("ajuste")) return "Explica qué cambiaste después de observar el resultado.";
+    if (normalizedColumn.includes("acción")) return "Escribe una sola acción, por ejemplo: mover el servo.";
+    if (normalizedColumn.includes("valor")) return "Anota un número, tiempo o explicación concreta.";
+    if (normalizedColumn.includes("idea")) return "Escribe una regla o decisión completa.";
+    if (normalizedColumn.includes("importante")) return "Explica la razón con una oración.";
+    return "Escribe una respuesta concreta.";
+  };
+
+  return `
+    <div class="objective-delivery-table">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Elemento</th>
+            ${columns.map((column) => `<th scope="col">${column}</th>`).join("")}
+          </tr>
+        </thead>
+        <tbody>
+          ${rowLabels.map((rowLabel, rowIndex) => `
+            <tr>
+              <th scope="row">${rowLabel}</th>
+              ${columns.map((column, columnIndex) => {
+                const fieldId = `objective-${objectiveNumber}-delivery-r${rowIndex + 1}-c${columnIndex + 1}`;
+                return `
+                  <td>
+                    <label class="sr-only" for="${fieldId}">${rowLabel}: ${column}</label>
+                    <textarea
+                      class="worksheet-textarea worksheet-textarea--compact"
+                      id="${fieldId}"
+                      name="${fieldId}"
+                      data-objective-required
+                      placeholder="${placeholderForColumn(column)}"
+                    ></textarea>
+                  </td>
+                `;
+              }).join("")}
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function createStudentInstructions(card, objectiveNumber, codeStep) {
+  const descriptionParagraph = Array.from(card.querySelectorAll("p")).find(
+    (paragraph) => paragraph.querySelector("strong")?.textContent.trim() === "Descripción:"
+  );
+  const deliveryParagraph = Array.from(card.querySelectorAll("p")).find(
+    (paragraph) => paragraph.querySelector("strong")?.textContent.trim() === "Entrega:"
+  );
+  const evaluationParagraph = Array.from(card.querySelectorAll("p")).find(
+    (paragraph) => paragraph.querySelector("strong")?.textContent.trim() === "Evaluación:"
+  );
+  const description = descriptionParagraph?.textContent.replace(/^Descripción:\s*/, "").trim() || "";
+  const delivery = deliveryParagraph?.textContent.replace(/^Entrega:\s*/, "").trim() || "";
+  const evaluation = evaluationParagraph?.textContent.replace(/^Evaluación:\s*/, "").trim() || "";
+
+  const block = document.createElement("div");
+  block.className = "objective-student-guide";
+  block.innerHTML = `
+    <h3>Instrucciones: realiza este objetivo paso a paso</h3>
+    <ol class="objective-student-guide__steps">
+      <li><strong>Lee la meta.</strong> En este objetivo vas a trabajar solamente en lo siguiente: ${description}</li>
+      <li><strong>Elige cómo vas a trabajar.</strong> Puedes usar un Arduino físico con Arduino IDE o realizar la simulación en Tinkercad Circuits. Si usas Tinkercad, crea un circuito nuevo para esta prueba y guarda el enlace.</li>
+      <li><strong>Prepara tu espacio.</strong> Ten abierto este sitio y Arduino IDE o Tinkercad. Usa únicamente los componentes necesarios para esta prueba; todavía no intentes terminar todo el proyecto.</li>
+      <li><strong>Realiza la actividad.</strong> Sigue la descripción anterior y anota datos reales. Si debes medir, usa una regla; si debes elegir colores, ángulos o tiempos, escribe los valores exactos.</li>
+      <li><strong>Llena el formato de entrega.</strong> Completa todas las celdas y cuadros que aparecen abajo. No escribas solamente “sí”, “no” o “funcionó”. Explica qué hiciste y qué observaste.</li>
+      <li><strong>Haz la prueba de código ${objectiveNumber}.</strong> Crea un programa nuevo, copia únicamente el fragmento de este objetivo y ejecútalo antes de agregar más funciones. La meta de esta prueba es: ${codeStep.title.toLowerCase()}.</li>
+      <li><strong>Comprueba el resultado.</strong> Compara lo que ocurrió con el apartado “Resultado esperado”. Si no coincide, revisa primero conexiones, pines y mensajes de error. Cambia una sola cosa y vuelve a probar.</li>
+      <li><strong>Registra y explica.</strong> Escribe qué funcionó, qué error apareció y qué parte del código conservarás. Después responde las dos preguntas con oraciones completas.</li>
+      <li><strong>Revisa antes de terminar.</strong> Debes entregar: ${delivery} Tu trabajo cumple cuando: ${evaluation}</li>
+      <li><strong>Marca el objetivo.</strong> Activa “Objetivo ${objectiveNumber} completado” únicamente cuando todos los campos estén llenos y la prueba de código produzca el resultado esperado.</li>
+    </ol>
+  `;
+  return block;
+}
+
+function createObjectiveDeliveryForm(card, objectiveNumber) {
+  const deliveryParagraph = Array.from(card.querySelectorAll("p")).find(
+    (paragraph) => paragraph.querySelector("strong")?.textContent.trim() === "Entrega:"
+  );
+  const deliveryText = deliveryParagraph?.textContent.replace(/^Entrega:\s*/, "").trim() || "";
+  const normalized = deliveryText.toLowerCase();
+  let formContent = "";
+
+  if (/secuencia|viñeta|línea de tiempo|diagrama de flujo|lista ordenada/.test(normalized)) {
+    formContent += createObjectiveTable(
+      objectiveNumber,
+      ["Acción o decisión", "Valor, tiempo o explicación"],
+      ["Paso 1", "Paso 2", "Paso 3", "Paso 4"]
+    );
+  } else if (/tabla|registro|prueba|mapa/.test(normalized)) {
+    formContent += createObjectiveTable(
+      objectiveNumber,
+      ["Valor planeado", "Resultado observado", "Ajuste realizado"],
+      ["Prueba 1", "Prueba 2", "Prueba 3", "Prueba 4"]
+    );
+  } else if (/diagrama|boceto|dibujo/.test(normalized)) {
+    formContent += createObjectiveField(
+      objectiveNumber,
+      "diagram-components",
+      "Componentes o partes que debe incluir tu dibujo",
+      "Ejemplo: sensor, servo, tapa, punto de giro, cables..."
+    );
+    formContent += createObjectiveField(
+      objectiveNumber,
+      "diagram-connections",
+      "Describe las conexiones, posiciones, medidas o flechas que dibujaste",
+      "Explica dónde colocaste cada parte y cómo se relaciona con las demás."
+    );
+    formContent += createObjectiveField(
+      objectiveNumber,
+      "diagram-explanation",
+      "Explica cómo funciona tu diseño",
+      "Describe el recorrido, la entrada, la salida y cualquier regla de seguridad."
+    );
+  } else if (/lista/.test(normalized)) {
+    formContent += createObjectiveTable(
+      objectiveNumber,
+      ["Idea, regla o ajuste", "Por qué es importante"],
+      ["Elemento 1", "Elemento 2", "Elemento 3", "Elemento 4"]
+    );
+  } else {
+    formContent += createObjectiveField(
+      objectiveNumber,
+      "main",
+      "Completa aquí la entrega solicitada",
+      deliveryText
+    );
+    formContent += createObjectiveField(
+      objectiveNumber,
+      "data",
+      "Anota los valores, decisiones o resultados concretos",
+      "Incluye ángulos, distancias, tiempos, colores, estados o componentes cuando corresponda."
+    );
+  }
+
+  if (/video|drive|demostración/.test(normalized)) {
+    formContent += createObjectiveField(
+      objectiveNumber,
+      "evidence-description",
+      "Describe qué debe observarse en el video o evidencia de Drive",
+      "Indica qué prueba realizaste, qué funcionó y en qué parte del video puede revisarse."
+    );
+  }
+
+  formContent += createObjectiveField(
+    objectiveNumber,
+    "conclusion",
+    "Conclusión de la entrega",
+    "Escribe qué aprendiste, qué decisión tomaste y qué conservarás para el siguiente objetivo."
+  );
+
+  const block = document.createElement("div");
+  block.className = "objective-delivery-form";
+  block.innerHTML = `
+    <h3>Formato de entrega del objetivo</h3>
+    <p class="objective-delivery-form__instruction"><strong>Debes completar:</strong> ${deliveryText}</p>
+    ${formContent}
+  `;
+  return block;
+}
+
 function setupSpecialProjectLearningSequence() {
   const worksheetKey = document.body.dataset.worksheetKey;
   const questionSets = SPECIAL_PROJECT_QUESTIONS[worksheetKey];
-  if (!questionSets) return;
+  const codeSteps = SPECIAL_PROJECT_CODE_STEPS[worksheetKey];
+  if (!questionSets || !codeSteps) return;
 
   const objectiveCards = Array.from(document.querySelectorAll(".card")).filter((card) =>
     /^Objetivo\s+[1-7]:/.test(card.querySelector("h2")?.textContent.trim() || "")
@@ -325,7 +1450,7 @@ function setupSpecialProjectLearningSequence() {
       <span class="learning-progress__fill" data-learning-progress-fill></span>
     </div>
     <p class="learning-progress__summary" data-learning-summary>0 de 7 objetivos completados.</p>
-    <p class="worksheet-note">Marca un objetivo cuando hayas realizado su actividad, preparado la entrega, respondido sus preguntas y revisado el criterio de evaluación.</p>
+    <p class="worksheet-note">Trabaja los objetivos en orden. No comiences el objetivo siguiente hasta completar la actividad, el formato de entrega, la prueba de código y las preguntas del objetivo actual.</p>
   `;
 
   if (identifiedCard) {
@@ -335,6 +1460,54 @@ function setupSpecialProjectLearningSequence() {
   objectiveCards.forEach((card, index) => {
     const objectiveNumber = index + 1;
     const questions = questionSets[index];
+    const codeStep = codeSteps[index];
+    card.appendChild(createStudentInstructions(card, objectiveNumber, codeStep));
+    card.appendChild(createObjectiveDeliveryForm(card, objectiveNumber));
+
+    const codeTestBlock = document.createElement("div");
+    codeTestBlock.className = "objective-code-test";
+    codeTestBlock.innerHTML = `
+      <h3>Prueba incremental de código</h3>
+      <p><strong>Paso ${objectiveNumber}:</strong> ${codeStep.title}</p>
+      <ol class="objective-code-test__steps">
+        <li>Abre Arduino IDE si trabajarás con un Arduino físico. Si no tienes los componentes o quieres comprobar primero el programa, abre <strong>Tinkercad Circuits</strong> y realiza una simulación.</li>
+        <li>En Tinkercad, selecciona <strong>Crear nuevo circuito</strong>, agrega un Arduino Uno y coloca solamente los componentes necesarios para esta prueba.</li>
+        <li>Crea un programa nuevo. No pegues todavía el código final del proyecto.</li>
+        <li>Copia el fragmento que aparece abajo usando el botón <strong>Copiar código</strong>.</li>
+        <li>Selecciona la tarjeta Arduino Uno. Si trabajas con Arduino físico, selecciona también el puerto correcto.</li>
+        <li>Presiona <strong>Verificar</strong>. Si aparece un error, lee la primera línea del mensaje y corrígelo antes de continuar.</li>
+        <li>Inicia la simulación o carga el programa. Sigue esta indicación específica: ${codeStep.instruction}</li>
+        <li>Realiza la prueba por lo menos dos veces. Cambia únicamente el valor que se indique y compara los resultados.</li>
+        <li>No agregues el siguiente bloque de código hasta que esta prueba funcione.</li>
+      </ol>
+      <pre><code></code></pre>
+      <p><strong>Resultado esperado:</strong> ${codeStep.expected}</p>
+      <div class="worksheet-field objective-tinkercad-link">
+        <label for="objective-${objectiveNumber}-tinkercad-link">Enlace de la simulación de Tinkercad de este objetivo (si utilizaste Tinkercad)</label>
+        <input
+          class="worksheet-input"
+          id="objective-${objectiveNumber}-tinkercad-link"
+          name="objective-${objectiveNumber}-tinkercad-link"
+          type="url"
+          inputmode="url"
+          placeholder="https://www.tinkercad.com/things/..."
+        />
+        <small>Copia el enlace desde Tinkercad y verifica que el profesor pueda abrirlo. Si trabajaste únicamente con Arduino físico, puedes dejar este campo vacío.</small>
+      </div>
+      <div class="worksheet-field">
+        <label for="objective-${objectiveNumber}-code-result">¿Qué funcionó, qué error apareció y qué conservarás para el siguiente objetivo?</label>
+        <textarea
+          class="worksheet-textarea"
+          id="objective-${objectiveNumber}-code-result"
+          name="objective-${objectiveNumber}-code-result"
+          data-objective-required
+          placeholder="Ejemplo: El servo llegó a 90 grados. Primero apareció un error porque escribí mal Servo. Corregí el nombre y conservaré la función moverServo()."
+        ></textarea>
+      </div>
+    `;
+    codeTestBlock.querySelector("code").textContent = codeStep.code;
+    card.appendChild(codeTestBlock);
+
     const reflectionBlock = document.createElement("div");
     reflectionBlock.className = "objective-reflection";
     reflectionBlock.innerHTML = `
@@ -345,7 +1518,13 @@ function setupSpecialProjectLearningSequence() {
           return `
             <div class="worksheet-field">
               <label for="${fieldId}">${questionIndex + 1}. ${question}</label>
-              <textarea class="worksheet-textarea" id="${fieldId}" name="${fieldId}"></textarea>
+              <textarea
+                class="worksheet-textarea"
+                id="${fieldId}"
+                name="${fieldId}"
+                data-objective-required
+                placeholder="Responde con 2 a 4 oraciones. Explica tu decisión y menciona un dato, valor o resultado de tu prueba."
+              ></textarea>
             </div>
           `;
         })
@@ -962,12 +2141,16 @@ function setupWorksheetEmailSubmission() {
       const evidenceLink = String(values.evidence_link || "").trim();
       const submittedLinks = [projectLink, evidenceLink].filter(Boolean);
       const allowedLinkPattern = /^https:\/\/(?:www\.)?(?:tinkercad\.com|drive\.google\.com|docs\.google\.com)\//i;
+      const objectiveTinkercadLinks = Array.from(
+        document.querySelectorAll('input[name$="-tinkercad-link"]')
+      ).map((field) => field.value.trim()).filter(Boolean);
+      const tinkercadLinkPattern = /^https:\/\/(?:www\.)?tinkercad\.com\//i;
       const unansweredObjectiveQuestion = Array.from(
-        document.querySelectorAll('textarea[name^="objective-"]')
+        document.querySelectorAll("[data-objective-required]")
       ).find((field) => !field.value.trim());
 
       if (unansweredObjectiveQuestion) {
-        setEmailStatus("Responde todas las preguntas de investigación y reflexión de los objetivos antes de enviar.", "error");
+        setEmailStatus("Completa todos los formatos de entrega, pruebas de código y preguntas de los objetivos antes de enviar.", "error");
         unansweredObjectiveQuestion.focus();
         return;
       }
@@ -980,6 +2163,11 @@ function setupWorksheetEmailSubmission() {
 
       if (submittedLinks.some((link) => !allowedLinkPattern.test(link))) {
         setEmailStatus("Los enlaces deben pertenecer a Tinkercad, Google Drive o Documentos de Google.", "error");
+        return;
+      }
+
+      if (objectiveTinkercadLinks.some((link) => !tinkercadLinkPattern.test(link))) {
+        setEmailStatus("Los enlaces de simulación de cada objetivo deben pertenecer a Tinkercad.", "error");
         return;
       }
 
@@ -1527,10 +2715,10 @@ function setupWorksheetStorage() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  setupSpecialProjectLearningSequence();
   setupCodeHighlighting();
   setupCopyableCodeBlocks();
   setupProjectSubmissionFields();
-  setupSpecialProjectLearningSequence();
   setupImageLightbox();
   setupContentProtection();
   setupWorksheetStorage();
