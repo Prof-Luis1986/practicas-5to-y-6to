@@ -397,10 +397,27 @@ th {
   margin: 0 0 0.55rem;
 }
 
+.objective-requirements__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.85rem;
+}
+
+.objective-requirements__options > div {
+  padding: 0.8rem;
+  border: 1px solid #e3c870;
+  border-radius: 10px;
+  background: #fffdf5;
+}
+
+.objective-requirements h4 {
+  margin: 0 0 0.45rem;
+  color: #6b4700;
+}
+
 .objective-requirements ul {
   margin: 0;
   padding-left: 1.25rem;
-  columns: 2 16rem;
 }
 
 .objective-requirements li {
@@ -573,6 +590,35 @@ th {
 
 .submission-links__note {
   margin-bottom: 0.85rem;
+}
+
+.project-materials {
+  border: 2px solid #76b99e;
+  background: linear-gradient(135deg, #ffffff 0%, #f0faf5 100%);
+}
+
+.project-materials__intro {
+  margin-bottom: 1rem;
+}
+
+.project-materials h3 {
+  margin: 0.9rem 0 0.35rem;
+  color: var(--accent);
+}
+
+.project-materials__digital {
+  margin-top: 1rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid #b8d7ca;
+}
+
+.project-materials__rule {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-left: 5px solid #b66a00;
+  border-radius: 8px;
+  background: #fff3db;
+  color: #5b3900;
 }
 
 .exercise-list {

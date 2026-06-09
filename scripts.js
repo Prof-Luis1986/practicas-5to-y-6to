@@ -108,7 +108,7 @@ function setupProjectSubmissionFields() {
   fieldsBlock.className = "submission-links";
   fieldsBlock.innerHTML = `
     <h3>Enlaces para entregar el proyecto</h3>
-    <p class="worksheet-note submission-links__note">No subas archivos directamente al sitio. Pega el enlace de Tinkercad o un enlace de Drive con acceso para cualquier persona que tenga el enlace. Debes agregar por lo menos uno.</p>
+    <p class="worksheet-note submission-links__note"><strong>No se pueden subir dibujos ni archivos directamente a este sitio.</strong> Realiza los dibujos, bocetos o diagramas en una hoja o en una aplicación digital. Para entregar evidencia, pega el enlace de Tinkercad o de una carpeta de Drive con acceso para cualquier persona que tenga el enlace. Debes agregar por lo menos uno.</p>
     <div class="worksheet-field">
       <label for="project-link">Enlace del proyecto en Tinkercad (si aplica)</label>
       <input class="worksheet-input" id="project-link" name="project_link" type="url" inputmode="url" placeholder="https://www.tinkercad.com/..." />
@@ -136,6 +136,58 @@ function setupProjectSubmissionFields() {
   }
 
   targetCard.appendChild(fieldsBlock);
+}
+
+function setupSpecialProjectMaterials() {
+  if (document.body.dataset.projectSubmission !== "true") return;
+
+  const cards = Array.from(document.querySelectorAll(".card"));
+  const materialsCard = cards.find(
+    (card) => card.querySelector("h2")?.textContent.trim() === "Materiales"
+  );
+  const identifiedCard = cards.find(
+    (card) => card.querySelector("h2")?.textContent.trim() === "Producto final identificado"
+  );
+  const physicalMaterials = materialsCard?.querySelector("ul");
+
+  if (!materialsCard || !identifiedCard || !physicalMaterials) return;
+
+  materialsCard.classList.add("project-materials");
+  materialsCard.querySelector("h2").textContent = "Materiales para trabajar";
+
+  const introduction = document.createElement("p");
+  introduction.className = "project-materials__intro";
+  introduction.innerHTML =
+    "<strong>Revisa esta lista antes de comenzar.</strong> Puedes desarrollar las pruebas con componentes físicos o mediante simulación digital, según las indicaciones del profesor.";
+
+  const physicalTitle = document.createElement("h3");
+  physicalTitle.textContent = "Opción física";
+
+  const digitalBlock = document.createElement("div");
+  digitalBlock.className = "project-materials__digital";
+  digitalBlock.innerHTML = `
+    <h3>Opción digital</h3>
+    <ul>
+      <li>Computadora o tableta con conexión a internet</li>
+      <li>Cuenta de Tinkercad para crear y guardar el circuito, cuando los componentes estén disponibles en el simulador</li>
+      <li>Arduino IDE si se programará una tarjeta física</li>
+      <li>Google Drive para compartir videos, fotografías, documentos o dibujos digitales mediante un enlace</li>
+      <li>Aplicación de dibujo o diagramación, o una hoja y lápiz para realizar bocetos</li>
+    </ul>
+  `;
+
+  const deliveryRule = document.createElement("aside");
+  deliveryRule.className = "project-materials__rule";
+  deliveryRule.innerHTML = `
+    <strong>Regla para dibujos y archivos:</strong>
+    el sitio no permite subirlos directamente. Conserva el dibujo en físico o digital, describe su contenido en el formato del objetivo y, cuando se solicite evidencia, compártelo mediante un enlace de Drive.
+  `;
+
+  materialsCard.insertBefore(introduction, physicalMaterials);
+  materialsCard.insertBefore(physicalTitle, physicalMaterials);
+  physicalMaterials.insertAdjacentElement("afterend", digitalBlock);
+  digitalBlock.insertAdjacentElement("afterend", deliveryRule);
+  identifiedCard.insertAdjacentElement("afterend", materialsCard);
 }
 
 const SPECIAL_PROJECT_QUESTIONS = {
@@ -1555,11 +1607,26 @@ function createObjectiveRequirements(requirements) {
   const block = document.createElement("div");
   block.className = "objective-requirements";
   block.innerHTML = `
-    <h3>Antes de comenzar: componentes necesarios</h3>
-    <p>Prepara los siguientes componentes para realizar este objetivo:</p>
-    <ul>
-      ${requirements.map((requirement) => `<li>${requirement}</li>`).join("")}
-    </ul>
+    <h3>Antes de comenzar: materiales para este objetivo</h3>
+    <p>Prepara los materiales de la modalidad con la que trabajarás.</p>
+    <div class="objective-requirements__options">
+      <div>
+        <h4>Trabajo físico</h4>
+        <ul>
+          ${requirements.map((requirement) => `<li>${requirement}</li>`).join("")}
+        </ul>
+      </div>
+      <div>
+        <h4>Trabajo digital</h4>
+        <ul>
+          <li>Computadora o tableta con conexión a internet</li>
+          <li>Tinkercad Circuits, cuando la prueba pueda simularse</li>
+          <li>Arduino IDE, si se programará una tarjeta física</li>
+          <li>Hoja y lápiz o aplicación de dibujo para bocetos y diagramas</li>
+          <li>Google Drive para compartir evidencias mediante un enlace</li>
+        </ul>
+      </div>
+    </div>
   `;
   return block;
 }
@@ -1687,13 +1754,13 @@ function createObjectiveDeliveryForm(card, objectiveNumber) {
     formContent += createObjectiveField(
       objectiveNumber,
       "diagram-components",
-      "Componentes o partes que debe incluir tu dibujo",
+      "Componentes o partes que incluye tu dibujo físico o digital",
       "Ejemplo: sensor, servo, tapa, punto de giro, cables..."
     );
     formContent += createObjectiveField(
       objectiveNumber,
       "diagram-connections",
-      "Describe las conexiones, posiciones, medidas o flechas que dibujaste",
+      "Describe las conexiones, posiciones, medidas o flechas de tu dibujo",
       "Explica dónde colocaste cada parte y cómo se relaciona con las demás."
     );
     formContent += createObjectiveField(
@@ -1744,6 +1811,12 @@ function createObjectiveDeliveryForm(card, objectiveNumber) {
   block.innerHTML = `
     <h3>Formato de entrega del objetivo</h3>
     <p class="objective-delivery-form__instruction"><strong>Debes completar:</strong> ${deliveryText}</p>
+    ${/diagrama|boceto|dibujo|viñeta|mapa/.test(normalized) ? `
+      <p class="worksheet-note">
+        Realiza el dibujo en una hoja o aplicación digital. No se sube directamente al sitio:
+        descríbelo en este formato y usa el enlace de Drive de la parte superior si debes mostrarlo al profesor.
+      </p>
+    ` : ""}
     ${formContent}
   `;
   return block;
@@ -3056,6 +3129,7 @@ function setupWorksheetStorage() {
 
 document.addEventListener("DOMContentLoaded", () => {
   setupSpecialProjectLearningSequence();
+  setupSpecialProjectMaterials();
   setupCodeHighlighting();
   setupCopyableCodeBlocks();
   setupProjectSubmissionFields();
