@@ -402,24 +402,44 @@ void loop() {
     {
       title: "Separar cada comportamiento en una función",
       instruction: "Construye estados reutilizables. loop solo decide qué función probar; no debe contener todos los detalles de luces y sonidos.",
-      code: `void estadoReposo() {
-  Serial.println("REPOSO: azul y sonido suave");
+      code: `#include <Adafruit_NeoPixel.h>
+
+const int PIN_ARO = 6;
+const int BUZZER = 5;
+Adafruit_NeoPixel aro(12, PIN_ARO, NEO_GRB + NEO_KHZ800);
+
+void mostrarColor(int rojo, int verde, int azul) {
+  for (int i = 0; i < 12; i++) {
+    aro.setPixelColor(i, aro.Color(rojo, verde, azul));
+  }
+  aro.show();
+}
+
+void estadoReposo() {
+  mostrarColor(0, 0, 80);
+  noTone(BUZZER);
 }
 
 void estadoActividad() {
-  Serial.println("ACTIVIDAD: verde pulsante");
+  mostrarColor(0, 100, 0);
+  tone(BUZZER, 500, 100);
 }
 
 void estadoAlerta() {
-  Serial.println("ALERTA: naranja en movimiento");
+  mostrarColor(150, 50, 0);
+  tone(BUZZER, 900, 150);
 }
 
 void estadoPeligro() {
-  Serial.println("PELIGRO: rojo y alarma");
+  mostrarColor(180, 0, 0);
+  tone(BUZZER, 1500, 300);
 }
 
 void setup() {
-  Serial.begin(9600);
+  aro.begin();
+  aro.clear();
+  aro.show();
+  pinMode(BUZZER, OUTPUT);
 }
 
 void loop() {
@@ -432,58 +452,121 @@ void loop() {
   estadoPeligro();
   delay(2000);
 }`,
-      expected: "Los cuatro estados se ejecutan en orden y cada comportamiento tiene su propia función."
+      expected: "Los cuatro estados se ejecutan en orden con colores y sonidos diferentes."
     },
     {
       title: "Integrar medición, decisión y respuesta",
-      instruction: "Organiza loop en tres pasos visibles: medir, mostrar y decidir. Sustituye después los mensajes por las funciones de efectos ya probadas.",
-      code: `int distancia = 20;
+      instruction: "Organiza loop en tres pasos visibles: medir, mostrar y ejecutar una de las funciones de efectos ya probadas.",
+      code: `#include <Adafruit_NeoPixel.h>
+
+const int PIN_ARO = 6;
+const int BUZZER = 5;
+const int TRIG = 9;
+const int ECHO = 10;
+Adafruit_NeoPixel aro(12, PIN_ARO, NEO_GRB + NEO_KHZ800);
+
+int medirDistancia() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long duracion = pulseIn(ECHO, HIGH, 30000);
+  if (duracion == 0) return -1;
+  return duracion / 58;
+}
+
+void mostrarColor(int rojo, int verde, int azul) {
+  for (int i = 0; i < 12; i++) {
+    aro.setPixelColor(i, aro.Color(rojo, verde, azul));
+  }
+  aro.show();
+}
 
 void ejecutarEstado(int valor) {
-  if (valor > 50) {
-    Serial.println("estadoReposo()");
+  if (valor < 0) {
+    Serial.println("SIN LECTURA");
+    mostrarColor(0, 0, 0);
+    noTone(BUZZER);
+  } else if (valor > 50) {
+    Serial.println("REPOSO");
+    mostrarColor(0, 0, 80);
+    noTone(BUZZER);
   } else if (valor > 25) {
-    Serial.println("estadoActividad()");
+    Serial.println("ACTIVIDAD");
+    mostrarColor(0, 100, 0);
+    tone(BUZZER, 500, 100);
   } else if (valor > 10) {
-    Serial.println("estadoAlerta()");
+    Serial.println("ALERTA");
+    mostrarColor(150, 50, 0);
+    tone(BUZZER, 900, 150);
   } else {
-    Serial.println("estadoPeligro()");
+    Serial.println("PELIGRO");
+    mostrarColor(180, 0, 0);
+    tone(BUZZER, 1500, 300);
   }
 }
 
 void setup() {
   Serial.begin(9600);
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+  pinMode(BUZZER, OUTPUT);
+  aro.begin();
+  aro.clear();
+  aro.show();
 }
 
 void loop() {
+  int distancia = medirDistancia();
   Serial.print("Distancia: ");
   Serial.println(distancia);
   ejecutarEstado(distancia);
   delay(500);
 }`,
-      expected: "Una sola lectura produce una sola respuesta y loop permanece corto y comprensible."
+      expected: "Cada lectura selecciona un solo estado y activa el color y sonido correspondientes."
     },
     {
       title: "Reducir lecturas inestables con un promedio",
-      instruction: "Agrega una función de mejora sin mezclarla con los efectos. Reemplaza lecturaSimulada por medirDistancia al integrarla al proyecto.",
-      code: `int lecturaSimulada() {
-  return random(18, 23);
+      instruction: "Agrega una función de mejora sin mezclarla con los efectos. El promedio debe ignorar lecturas inválidas del sensor.",
+      code: `const int TRIG = 9;
+const int ECHO = 10;
+
+int medirDistancia() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long duracion = pulseIn(ECHO, HIGH, 30000);
+  if (duracion == 0) return -1;
+  return duracion / 58;
 }
 
 int distanciaPromedio() {
   long suma = 0;
+  int validas = 0;
   const int MUESTRAS = 5;
 
   for (int i = 0; i < MUESTRAS; i++) {
-    suma += lecturaSimulada();
+    int lectura = medirDistancia();
+    if (lectura >= 0) {
+      suma += lectura;
+      validas++;
+    }
     delay(20);
   }
-  return suma / MUESTRAS;
+
+  if (validas == 0) return -1;
+  return suma / validas;
 }
 
 void setup() {
   Serial.begin(9600);
-  randomSeed(analogRead(A0));
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
 }
 
 void loop() {
@@ -514,6 +597,8 @@ void loop() {
   delay(1000);
   cerrarOjos();
   delay(180);
+  abrirOjos();
+  delay(2000);
 }`,
       expected: "El monitor muestra una secuencia clara de apertura y cierre."
     },
@@ -629,24 +714,48 @@ void loop() {
     {
       title: "Agregar un comportamiento sin alterar el anterior",
       instruction: "Conserva parpadeoNatural y agrega modoAlerta como una función diferente. No copies toda la lógica dentro de loop.",
-      code: `void parpadeoNatural() {
-  Serial.println("Cerrar 180 ms y abrir");
+      code: `#include <Servo.h>
+
+Servo izquierdo;
+Servo derecho;
+
+void abrirOjos() {
+  izquierdo.write(30);
+  derecho.write(150);
+}
+
+void cerrarOjos() {
+  izquierdo.write(95);
+  derecho.write(85);
+}
+
+void parpadeoNatural() {
+  cerrarOjos();
+  delay(180);
+  abrirOjos();
 }
 
 void parpadeoDesfasado() {
-  Serial.println("Izquierdo, derecho, abrir");
+  izquierdo.write(95);
+  delay(100);
+  derecho.write(85);
+  delay(180);
+  abrirOjos();
 }
 
 void modoAlerta() {
-  Serial.println("INICIO ALERTA");
   parpadeoDesfasado();
   delay(300);
   parpadeoDesfasado();
 }
 
 void setup() {
-  Serial.begin(9600);
+  izquierdo.attach(9);
+  derecho.attach(10);
+  abrirOjos();
+  delay(1000);
   parpadeoNatural();
+  delay(1000);
   modoAlerta();
 }
 
@@ -657,27 +766,48 @@ void loop() {
     {
       title: "Programar intervalos sin detener toda la lógica",
       instruction: "Prueba millis para decidir cuándo parpadear. Esta estructura permite añadir después otros comportamientos sin llenar loop de delays.",
-      code: `unsigned long anterior = 0;
-unsigned long intervalo = 3000;
+      code: `#include <Servo.h>
 
-void parpadeoNatural() {
-  Serial.println("PARPADEO");
+Servo izquierdo;
+Servo derecho;
+
+unsigned long cambioAnterior = 0;
+unsigned long proximoParpadeo = 3000;
+bool ojosCerrados = false;
+
+void abrirOjos() {
+  izquierdo.write(30);
+  derecho.write(150);
+  ojosCerrados = false;
+}
+
+void cerrarOjos() {
+  izquierdo.write(95);
+  derecho.write(85);
+  ojosCerrados = true;
 }
 
 void setup() {
-  Serial.begin(9600);
+  izquierdo.attach(9);
+  derecho.attach(10);
+  randomSeed(analogRead(A0));
+  abrirOjos();
 }
 
 void loop() {
   unsigned long ahora = millis();
 
-  if (ahora - anterior >= intervalo) {
-    anterior = ahora;
-    parpadeoNatural();
-    intervalo = random(3000, 7000);
+  if (!ojosCerrados && ahora >= proximoParpadeo) {
+    cerrarOjos();
+    cambioAnterior = ahora;
+  }
+
+  if (ojosCerrados && ahora - cambioAnterior >= 180) {
+    abrirOjos();
+    proximoParpadeo = ahora + random(3000, 7000);
   }
 }`,
-      expected: "Los parpadeos aparecen con intervalos variables y loop no contiene una secuencia extensa."
+      expected: "Los dos servos parpadean juntos con intervalos variables sin detener el programa con delays largos."
     }
   ],
   "proyecto-especial-brazo-dinosaurio": [
@@ -815,27 +945,64 @@ void loop() {
     {
       title: "Evitar activaciones repetidas",
       instruction: "Usa una variable de estado. El brazo solo se prepara otra vez cuando la persona se aleja.",
-      code: `const int UMBRAL = 25;
+      code: `#include <Servo.h>
+
+const int TRIG = 9;
+const int ECHO = 10;
+const int PIN_SERVO = 6;
+const int LED = 4;
+const int BUZZER = 8;
+const int UMBRAL = 25;
+const int MARGEN_REINICIO = 10;
+
+Servo brazo;
 bool brazoActivado = false;
-int distancia = 20;
 
 void activarBrazo() {
-  Serial.println("REACCION");
+  digitalWrite(LED, HIGH);
+  tone(BUZZER, 900, 250);
+  brazo.write(110);
+  delay(500);
+  brazo.write(20);
+  digitalWrite(LED, LOW);
+}
+
+long medirDistancia() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long tiempo = pulseIn(ECHO, HIGH, 30000);
+  if (tiempo == 0) return -1;
+  return tiempo / 58;
 }
 
 void setup() {
   Serial.begin(9600);
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+  pinMode(LED, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+  brazo.attach(PIN_SERVO);
+  brazo.write(20);
 }
 
 void loop() {
-  if (distancia <= UMBRAL && !brazoActivado) {
+  long distancia = medirDistancia();
+  Serial.println(distancia);
+
+  if (distancia > 0 && distancia <= UMBRAL && !brazoActivado) {
     brazoActivado = true;
     activarBrazo();
   }
 
-  if (distancia > UMBRAL + 10) {
+  if (distancia > UMBRAL + MARGEN_REINICIO) {
     brazoActivado = false;
   }
+
+  delay(100);
 }`,
       expected: "Una persona que permanece cerca produce una sola reacción, no una repetición continua."
     },
@@ -986,17 +1153,33 @@ void loop() {
     {
       title: "Integrar el ciclo completo con funciones",
       instruction: "Suma apertura y cierre sin desarmar realizarEmpujes. La integración reutiliza lo que ya funcionó.",
-      code: `void realizarEmpujes() {
-  Serial.println("Tres empujes");
+      code: `#include <Servo.h>
+
+Servo huevo;
+const int CERRADO = 0;
+const int APERTURA = 60;
+
+void realizarEmpujes() {
+  huevo.write(10);
+  delay(200);
+  huevo.write(CERRADO);
+  delay(200);
+  huevo.write(15);
+  delay(250);
+  huevo.write(CERRADO);
+  delay(300);
+  huevo.write(25);
+  delay(300);
 }
 
 void abrirHuevo() {
-  Serial.println("Abrir a 60 grados");
+  huevo.write(APERTURA);
   delay(1000);
 }
 
 void cerrarHuevo() {
-  Serial.println("Cerrar a 0 grados");
+  huevo.write(CERRADO);
+  delay(500);
 }
 
 void cicloHuevo() {
@@ -1006,7 +1189,8 @@ void cicloHuevo() {
 }
 
 void setup() {
-  Serial.begin(9600);
+  huevo.attach(9);
+  huevo.write(CERRADO);
 }
 
 void loop() {
@@ -1018,14 +1202,28 @@ void loop() {
     {
       title: "Probar repetición y registrar ciclos",
       instruction: "Añade un contador para observar cuántos ciclos soporta el mecanismo. No mezcles el registro con las funciones de movimiento.",
-      code: `int numeroCiclo = 0;
+      code: `#include <Servo.h>
+
+Servo huevo;
+int numeroCiclo = 0;
 
 void cicloHuevo() {
-  Serial.println("Empujes, apertura y cierre");
+  huevo.write(15);
+  delay(250);
+  huevo.write(0);
+  delay(250);
+  huevo.write(25);
+  delay(300);
+  huevo.write(60);
+  delay(1000);
+  huevo.write(0);
+  delay(500);
 }
 
 void setup() {
   Serial.begin(9600);
+  huevo.attach(9);
+  huevo.write(0);
 }
 
 void loop() {
@@ -1073,7 +1271,9 @@ void loop() {
 const int ALERTA = 10;
 
 void revisarAlerta(int distancia) {
-  if (distancia <= ALERTA) {
+  if (distancia <= 0) {
+    Serial.println("LECTURA INVALIDA");
+  } else if (distancia <= ALERTA) {
     Serial.println("ALERTA");
   } else if (distancia <= DETECCION) {
     Serial.println("DETECTADO");
@@ -1149,12 +1349,29 @@ void loop() {
       code: `#include <Servo.h>
 
 Servo radar;
+const int TRIG = 9;
+const int ECHO = 10;
+
+long medirDistancia() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long tiempo = pulseIn(ECHO, HIGH, 30000);
+  if (tiempo == 0) return -1;
+  return tiempo / 58;
+}
 
 void medirEnAngulo(int angulo) {
   radar.write(angulo);
   delay(120);
-  Serial.print("Medir en ");
-  Serial.println(angulo);
+  long distancia = medirDistancia();
+  Serial.print("Angulo: ");
+  Serial.print(angulo);
+  Serial.print(" | Distancia: ");
+  Serial.println(distancia);
 }
 
 void barridoIda() {
@@ -1166,6 +1383,8 @@ void barridoIda() {
 void setup() {
   Serial.begin(9600);
   radar.attach(6);
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
 }
 
 void loop() {
@@ -1181,12 +1400,15 @@ const int LED_VERDE = 4;
 const int BUZZER = 8;
 
 void revisarAlerta(int distancia) {
-  bool cerca = distancia > 0 && distancia <= 30;
-  digitalWrite(LED_ROJO, cerca);
-  digitalWrite(LED_VERDE, !cerca);
+  bool valida = distancia > 0;
+  bool cerca = valida && distancia <= 30;
+  digitalWrite(LED_ROJO, cerca ? HIGH : LOW);
+  digitalWrite(LED_VERDE, valida && !cerca ? HIGH : LOW);
 
-  if (distancia > 0 && distancia <= 10) {
+  if (valida && distancia <= 10) {
     tone(BUZZER, 1800, 100);
+  } else {
+    noTone(BUZZER);
   }
 }
 
@@ -1206,18 +1428,69 @@ void loop() {
     },
     {
       title: "Reutilizar una función para ida y regreso",
-      instruction: "Evita dos bloques casi iguales. Una función recibe inicio, fin y paso para recorrer ambas direcciones.",
-      code: `void barrer(int inicio, int fin, int paso) {
+      instruction: "Evita dos bloques casi iguales. Una función recibe inicio, fin y paso, mide la distancia y actualiza las señales durante ambas direcciones.",
+      code: `#include <Servo.h>
+
+Servo radar;
+const int TRIG = 9;
+const int ECHO = 10;
+const int LED_ROJO = 3;
+const int LED_VERDE = 4;
+const int BUZZER = 8;
+
+long medirDistancia() {
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  long tiempo = pulseIn(ECHO, HIGH, 30000);
+  if (tiempo == 0) return -1;
+  return tiempo / 58;
+}
+
+void actualizarSenales(long distancia) {
+  bool valida = distancia > 0;
+  bool detectado = valida && distancia <= 30;
+
+  digitalWrite(LED_ROJO, detectado ? HIGH : LOW);
+  digitalWrite(LED_VERDE, valida && !detectado ? HIGH : LOW);
+
+  if (valida && distancia <= 10) {
+    tone(BUZZER, 1800, 100);
+  } else {
+    noTone(BUZZER);
+  }
+}
+
+void medirEnAngulo(int angulo) {
+  radar.write(angulo);
+  delay(120);
+  long distancia = medirDistancia();
+  Serial.print("Angulo: ");
+  Serial.print(angulo);
+  Serial.print(" | Distancia: ");
+  Serial.println(distancia);
+  actualizarSenales(distancia);
+}
+
+void barrer(int inicio, int fin, int paso) {
   for (int angulo = inicio;
        paso > 0 ? angulo <= fin : angulo >= fin;
        angulo += paso) {
-    Serial.print("Angulo: ");
-    Serial.println(angulo);
+    medirEnAngulo(angulo);
   }
 }
 
 void setup() {
   Serial.begin(9600);
+  radar.attach(6);
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+  pinMode(LED_ROJO, OUTPUT);
+  pinMode(LED_VERDE, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
 }
 
 void loop() {
@@ -1225,10 +1498,71 @@ void loop() {
   barrer(165, 15, -5);
   delay(1000);
 }`,
-      expected: "Una sola función realiza ida y regreso sin duplicar el bloque for."
+      expected: "Una sola función realiza ida y regreso, registra cada lectura y mantiene activas las señales de detección."
     }
   ]
 };
+
+const SPECIAL_PROJECT_OBJECTIVE_REQUIREMENTS = {
+  "proyecto-especial-contenedor": [
+    ["1 Arduino Uno", "1 cable USB"],
+    ["1 Arduino Uno", "1 cable USB"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 aro NeoPixel de 12 LEDs", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 aro NeoPixel de 12 LEDs", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB"],
+    ["1 Arduino Uno", "1 aro NeoPixel de 12 LEDs", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 aro NeoPixel de 12 LEDs", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 aro NeoPixel de 12 LEDs", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB", "Fuente externa de 5 V si el aro se usa con brillo alto"]
+  ],
+  "proyecto-especial-cabeza-dinosaurio": [
+    ["1 Arduino Uno", "1 cable USB"],
+    ["1 Arduino Uno", "1 cable USB"],
+    ["1 Arduino Uno", "2 servomotores SG90 o similares (se prueba uno a la vez)", "1 protoboard", "Cables Dupont", "1 cable USB", "Mecanismo de párpados u ojos"],
+    ["1 Arduino Uno", "2 servomotores SG90 o similares", "1 protoboard", "Cables Dupont", "1 cable USB", "Mecanismo de párpados u ojos", "Fuente externa regulada de 5 V para los servos"],
+    ["1 Arduino Uno", "2 servomotores SG90 o similares", "Mecanismo de párpados u ojos", "1 protoboard", "Cables Dupont", "1 cable USB", "Fuente externa regulada de 5 V para los servos"],
+    ["1 Arduino Uno", "2 servomotores SG90 o similares", "Mecanismo de párpados u ojos", "1 protoboard", "Cables Dupont", "1 cable USB", "Fuente externa regulada de 5 V para los servos"],
+    ["1 Arduino Uno", "2 servomotores SG90 o similares", "Mecanismo de párpados u ojos", "1 protoboard", "Cables Dupont", "1 cable USB", "Fuente externa regulada de 5 V para los servos"]
+  ],
+  "proyecto-especial-brazo-dinosaurio": [
+    ["1 Arduino Uno", "1 cable USB"],
+    ["1 Arduino Uno", "1 cable USB"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90, MG90S o similar", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB", "Estructura mecánica ligera del brazo"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90, MG90S o similar", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB"],
+    ["1 Arduino Uno", "1 servomotor SG90, MG90S o similar", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "Estructura mecánica ligera del brazo", "1 protoboard", "Cables Dupont", "1 cable USB"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90, MG90S o similar", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB", "Estructura mecánica ligera del brazo"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90, MG90S o similar", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB", "Estructura mecánica ligera del brazo", "Fuente externa regulada de 5 V si el servo lo requiere"]
+  ],
+  "proyecto-especial-huevo-dinosaurio": [
+    ["1 Arduino Uno", "1 cable USB"],
+    ["1 Arduino Uno", "1 cable USB"],
+    ["1 Arduino Uno", "1 servomotor SG90, MG90S o similar", "1 protoboard", "Cables Dupont", "1 cable USB", "Huevo o estructura mecánica con tapa móvil"],
+    ["1 Arduino Uno", "1 servomotor SG90, MG90S o similar", "1 protoboard", "Cables Dupont", "1 cable USB", "Pieza ligera de prueba"],
+    ["1 Arduino Uno", "1 servomotor SG90, MG90S o similar", "1 protoboard", "Cables Dupont", "1 cable USB", "Tapa móvil ligera"],
+    ["1 Arduino Uno", "1 servomotor SG90, MG90S o similar", "Huevo con tapa móvil", "1 protoboard", "Cables Dupont", "1 cable USB"],
+    ["1 Arduino Uno", "1 servomotor SG90, MG90S o similar", "Huevo con tapa móvil", "1 protoboard", "Cables Dupont", "1 cable USB", "Fuente externa regulada de 5 V si el servo lo requiere"]
+  ],
+  "proyecto-especial-radar": [
+    ["1 Arduino Uno", "1 cable USB"],
+    ["1 Arduino Uno", "1 cable USB"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90 o similar", "1 LED rojo", "1 LED verde", "2 resistencias de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB", "Base móvil del radar"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90 o similar", "1 protoboard", "Cables Dupont", "1 cable USB"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90 o similar", "Base móvil del radar", "1 protoboard", "Cables Dupont", "1 cable USB"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90 o similar", "1 LED rojo", "1 LED verde", "2 resistencias de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB", "Base móvil del radar"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90 o similar", "1 LED rojo", "1 LED verde", "2 resistencias de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB", "Base móvil del radar", "Fuente externa regulada de 5 V si el servo lo requiere"]
+  ]
+};
+
+function createObjectiveRequirements(requirements) {
+  const block = document.createElement("div");
+  block.className = "objective-requirements";
+  block.innerHTML = `
+    <h3>Antes de comenzar: componentes necesarios</h3>
+    <p>Prepara los siguientes componentes para realizar este objetivo:</p>
+    <ul>
+      ${requirements.map((requirement) => `<li>${requirement}</li>`).join("")}
+    </ul>
+  `;
+  return block;
+}
 
 function createObjectiveField(objectiveNumber, suffix, label, placeholder = "") {
   const fieldId = `objective-${objectiveNumber}-delivery-${suffix}`;
@@ -1316,7 +1650,7 @@ function createStudentInstructions(card, objectiveNumber, codeStep) {
     <ol class="objective-student-guide__steps">
       <li><strong>Lee la meta.</strong> En este objetivo vas a trabajar solamente en lo siguiente: ${description}</li>
       <li><strong>Elige cómo vas a trabajar.</strong> Puedes usar un Arduino físico con Arduino IDE o realizar la simulación en Tinkercad Circuits. Si usas Tinkercad, crea un circuito nuevo para esta prueba y guarda el enlace.</li>
-      <li><strong>Prepara tu espacio.</strong> Ten abierto este sitio y Arduino IDE o Tinkercad. Usa únicamente los componentes necesarios para esta prueba; todavía no intentes terminar todo el proyecto.</li>
+      <li><strong>Prepara tu espacio.</strong> Reúne los componentes indicados al inicio de este objetivo. Ten abierto este sitio y Arduino IDE o Tinkercad; todavía no intentes terminar todo el proyecto.</li>
       <li><strong>Realiza la actividad.</strong> Sigue la descripción anterior y anota datos reales. Si debes medir, usa una regla; si debes elegir colores, ángulos o tiempos, escribe los valores exactos.</li>
       <li><strong>Llena el formato de entrega.</strong> Completa todas las celdas y cuadros que aparecen abajo. No escribas solamente “sí”, “no” o “funcionó”. Explica qué hiciste y qué observaste.</li>
       <li><strong>Haz la prueba de código ${objectiveNumber}.</strong> Crea un programa nuevo, copia únicamente el fragmento de este objetivo y ejecútalo antes de agregar más funciones. La meta de esta prueba es: ${codeStep.title.toLowerCase()}.</li>
@@ -1419,12 +1753,17 @@ function setupSpecialProjectLearningSequence() {
   const worksheetKey = document.body.dataset.worksheetKey;
   const questionSets = SPECIAL_PROJECT_QUESTIONS[worksheetKey];
   const codeSteps = SPECIAL_PROJECT_CODE_STEPS[worksheetKey];
-  if (!questionSets || !codeSteps) return;
+  const objectiveRequirements = SPECIAL_PROJECT_OBJECTIVE_REQUIREMENTS[worksheetKey];
+  if (!questionSets || !codeSteps || !objectiveRequirements) return;
 
   const objectiveCards = Array.from(document.querySelectorAll(".card")).filter((card) =>
     /^Objetivo\s+[1-7]:/.test(card.querySelector("h2")?.textContent.trim() || "")
   );
-  if (objectiveCards.length !== questionSets.length) return;
+  if (
+    objectiveCards.length !== questionSets.length ||
+    objectiveCards.length !== codeSteps.length ||
+    objectiveCards.length !== objectiveRequirements.length
+  ) return;
 
   const identifiedCard = Array.from(document.querySelectorAll(".card")).find(
     (card) => card.querySelector("h2")?.textContent.trim() === "Producto final identificado"
@@ -1461,6 +1800,7 @@ function setupSpecialProjectLearningSequence() {
     const objectiveNumber = index + 1;
     const questions = questionSets[index];
     const codeStep = codeSteps[index];
+    card.appendChild(createObjectiveRequirements(objectiveRequirements[index]));
     card.appendChild(createStudentInstructions(card, objectiveNumber, codeStep));
     card.appendChild(createObjectiveDeliveryForm(card, objectiveNumber));
 

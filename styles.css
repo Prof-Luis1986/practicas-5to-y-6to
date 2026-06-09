@@ -380,6 +380,34 @@ th {
   border-top: 1px solid #d7e1e7;
 }
 
+.objective-requirements {
+  margin-top: 1.25rem;
+  padding: 1rem 1.1rem;
+  border: 2px solid #f0b429;
+  border-radius: 12px;
+  background: #fff8df;
+}
+
+.objective-requirements h3 {
+  margin: 0 0 0.5rem;
+  color: #6b4700;
+}
+
+.objective-requirements p {
+  margin: 0 0 0.55rem;
+}
+
+.objective-requirements ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  columns: 2 16rem;
+}
+
+.objective-requirements li {
+  break-inside: avoid;
+  margin-bottom: 0.3rem;
+}
+
 .objective-student-guide {
   margin-top: 1.1rem;
   padding: 1rem;
