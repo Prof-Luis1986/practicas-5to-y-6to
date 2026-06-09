@@ -93,9 +93,10 @@ function setupCopyableCodeBlocks() {
 
 function setupProjectSubmissionFields() {
   const worksheetKey = document.body.dataset.worksheetKey;
+  const isSpecialProject = document.body.dataset.projectSubmission === "true";
 
   if (!worksheetKey) return;
-  if (document.body.dataset.disableProjectLinks === "true") return;
+  if (document.body.dataset.disableProjectLinks === "true" && !isSpecialProject) return;
 
   const worksheetMeta = document.querySelector(".worksheet-meta");
   if (!worksheetMeta || document.getElementById("project-link")) return;
@@ -106,19 +107,19 @@ function setupProjectSubmissionFields() {
   const fieldsBlock = document.createElement("div");
   fieldsBlock.className = "submission-links";
   fieldsBlock.innerHTML = `
-    <h3>Entrega digital del proyecto</h3>
-    <p class="worksheet-note submission-links__note">Pega aqui el enlace de tu simulacion o proyecto y, si lo tienes, un enlace externo con evidencias como capturas o video.</p>
+    <h3>Enlaces para entregar el proyecto</h3>
+    <p class="worksheet-note submission-links__note">No subas archivos directamente al sitio. Pega el enlace de Tinkercad o un enlace de Drive con acceso para cualquier persona que tenga el enlace. Debes agregar por lo menos uno.</p>
     <div class="worksheet-field">
-      <label for="project-link">Enlace del proyecto en Tinkercad</label>
+      <label for="project-link">Enlace del proyecto en Tinkercad (si aplica)</label>
       <input class="worksheet-input" id="project-link" name="project_link" type="url" inputmode="url" placeholder="https://www.tinkercad.com/..." />
     </div>
     <div class="worksheet-field">
-      <label for="evidence-link">Enlace de evidencias (opcional)</label>
-      <input class="worksheet-input" id="evidence-link" name="evidence_link" type="url" inputmode="url" placeholder="https://drive.google.com/... o enlace similar" />
+      <label for="evidence-link">Enlace de Drive con video, fotografías o documentos (si aplica)</label>
+      <input class="worksheet-input" id="evidence-link" name="evidence_link" type="url" inputmode="url" placeholder="https://drive.google.com/..." />
     </div>
     <div class="worksheet-field">
-      <label for="project-notes">Descripcion breve del proyecto o de la evidencia</label>
-      <textarea class="worksheet-textarea" id="project-notes" name="project_notes" placeholder="Explica que hiciste, que modificaste o que incluye tu evidencia."></textarea>
+      <label for="project-notes">Descripción de lo que contienen los enlaces</label>
+      <textarea class="worksheet-textarea" id="project-notes" name="project_notes" placeholder="Explica qué incluye cada enlace y qué debe revisar el profesor."></textarea>
     </div>
   `;
 
@@ -135,6 +136,269 @@ function setupProjectSubmissionFields() {
   }
 
   targetCard.appendChild(fieldsBlock);
+}
+
+const SPECIAL_PROJECT_QUESTIONS = {
+  "proyecto-especial-contenedor": [
+    [
+      "¿Qué señales de color y sonido observaste en situaciones reales de seguridad y cuáles funcionarían mejor para que un jugador comprenda cada estado sin recibir una explicación?",
+      "¿Cómo evitarías que dos estados del contenedor se perciban iguales? Justifica tus decisiones de color, movimiento y sonido."
+    ],
+    [
+      "¿Por qué elegiste esos límites de distancia y qué podría ocurrir si dos rangos se traslaparan o quedara un espacio sin estado?",
+      "¿En qué lugar del escape room colocarías el contenedor para que los cuatro rangos puedan experimentarse de forma clara y segura?"
+    ],
+    [
+      "¿Cómo influye la ubicación del sensor en la precisión de las lecturas y qué objetos cercanos podrían provocar mediciones incorrectas?",
+      "¿Qué cambiarías en tu boceto si el aro, el buzzer o los cables no cupieran dentro del contenedor?"
+    ],
+    [
+      "¿Qué diferencia encontraste entre la distancia medida con regla y la mostrada por el sensor, y a qué atribuyes esa diferencia?",
+      "Si un componente no respondiera en la prueba individual, ¿qué revisarías primero y por qué seguirías ese orden?"
+    ],
+    [
+      "¿Qué efecto de luz y sonido comunica mejor cada estado y qué evidencia de tus pruebas respalda tu elección?",
+      "¿Cómo modificarías un efecto que se ve bien por separado, pero resulta confuso al compararlo con los otros estados?"
+    ],
+    [
+      "¿En qué distancias cambió realmente cada estado y cómo se comparan esos resultados con los rangos planeados?",
+      "¿Qué ajuste harías si el contenedor cambiara rápidamente entre dos estados cuando un objeto está justo en el límite?"
+    ],
+    [
+      "¿Cuál fue la mejora que produjo el cambio más importante en claridad o estabilidad y cómo lo comprobaste?",
+      "¿Cómo demostrarías a otro equipo que el contenedor está listo para funcionar varias veces dentro del escape room?"
+    ]
+  ],
+  "proyecto-especial-cabeza-dinosaurio": [
+    [
+      "¿Qué características hacen que un parpadeo parezca natural y cuáles harían que pareciera robótico?",
+      "¿Cómo usarías tus observaciones para explicar por qué los intervalos entre parpadeos no deben ser siempre iguales?"
+    ],
+    [
+      "¿Qué diferencias debe percibir un jugador entre el parpadeo natural y el modo de alerta?",
+      "¿Cómo representarías en tu línea de tiempo un movimiento que comienza normal y después comunica peligro?"
+    ],
+    [
+      "¿Por qué los servos izquierdo y derecho pueden necesitar sentidos o ángulos distintos aunque los ojos hagan la misma acción?",
+      "¿Qué parte del mecanismo modificarías si un párpado chocara con la cabeza antes de cerrar por completo?"
+    ],
+    [
+      "¿Cómo determinaste los ángulos seguros de cada ojo y qué evidencia muestra que no están forzando el mecanismo?",
+      "¿Qué riesgo existe al copiar exactamente los ángulos de otra maqueta sin calibrarlos en la tuya?"
+    ],
+    [
+      "¿Qué combinación de tiempo de cierre e intervalo produjo el parpadeo más natural y cómo lo decidiste?",
+      "¿Cómo cambiaría la expresión de la cabeza si los dos ojos cerraran con una diferencia de tiempo?"
+    ],
+    [
+      "¿Qué elementos del modo de alerta permiten distinguirlo del parpadeo normal sin agregar nuevos componentes?",
+      "¿En qué momento de una misión de escape room tendría sentido activar el modo de alerta y qué mensaje comunicaría?"
+    ],
+    [
+      "¿Qué ajuste mejoró más la coordinación de los ojos y cómo comparaste el funcionamiento antes y después?",
+      "¿Qué prueba repetida usarías para asegurar que el mecanismo no se atore durante una presentación completa?"
+    ]
+  ],
+  "proyecto-especial-brazo-dinosaurio": [
+    [
+      "¿Qué hace que una reacción mecánica produzca sorpresa sin poner en riesgo al participante ni dañar el proyecto?",
+      "¿Qué regla de seguridad consideras indispensable para este brazo y cómo afecta el diseño físico?"
+    ],
+    [
+      "¿Por qué el rango para volver a preparar el brazo debe ser diferente del rango que lo activa?",
+      "¿Qué comportamiento tendría el brazo si una persona permaneciera frente al sensor y cómo evita tu plan activaciones continuas?"
+    ],
+    [
+      "¿Cómo influyen el peso y la longitud del brazo en el esfuerzo que debe realizar el servomotor?",
+      "¿Qué cambiarías en la estructura si el servo puede moverse solo, pero no logra mover el brazo construido?"
+    ],
+    [
+      "¿Qué aprendiste al probar por separado el sensor, el servo, el LED y el buzzer que habría sido difícil descubrir con todo conectado?",
+      "Si la distancia es correcta pero el brazo no se mueve, ¿qué componentes y conexiones revisarías antes de modificar el código?"
+    ],
+    [
+      "¿Cómo afectan los ángulos, la velocidad y la pausa a la impresión de ataque o advertencia?",
+      "¿Qué evidencia usarías para decidir que el movimiento es visible y dramático, pero sigue siendo seguro?"
+    ],
+    [
+      "¿Qué ocurrió en las pruebas cuando el objeto entró, permaneció y salió de la zona de activación?",
+      "¿Cómo explicarías la función de la variable que impide que el brazo se active repetidamente?"
+    ],
+    [
+      "¿Qué mejora aumentó más la seguridad o la consistencia del proyecto y cómo mediste su efecto?",
+      "¿Dónde colocarías el brazo dentro del escape room para conservar la sorpresa y mantener fuera de alcance la parte móvil?"
+    ]
+  ],
+  "proyecto-especial-huevo-dinosaurio": [
+    [
+      "¿Qué orden y qué intensidad de movimientos ayudan a contar que algo intenta salir del huevo?",
+      "¿Cómo cambiaría la historia que comunica el proyecto si la apertura fuerte ocurriera antes de los empujes pequeños?"
+    ],
+    [
+      "¿Cómo decidiste los ángulos y pausas de tu secuencia y qué emoción buscas producir en el jugador?",
+      "¿Qué movimiento eliminarías o modificarías si la secuencia fuera demasiado larga o repetitiva?"
+    ],
+    [
+      "¿Dónde conviene colocar el punto de apoyo para que el servo pueda levantar la tapa con el menor esfuerzo posible?",
+      "¿Qué cambiarías en el mecanismo si la tapa abre, pero no vuelve correctamente a la posición cerrada?"
+    ],
+    [
+      "¿Qué diferencias observaste entre un ángulo insuficiente, uno seguro y uno excesivo?",
+      "¿Por qué es importante hacer estas pruebas con una pieza ligera antes de instalar la tapa final?"
+    ],
+    [
+      "¿Qué combinación de ángulos y pausas hizo que los empujes parecieran menos repetitivos y más reales?",
+      "¿Cómo comprobarías si una vibración proviene del programa, de la fijación del servo o del peso de la tapa?"
+    ],
+    [
+      "¿La secuencia completa comunica con claridad empujes, apertura y cierre? Explica qué evidencia observaste.",
+      "¿Qué parte del código cambiarías para aumentar el dramatismo sin modificar el producto final?"
+    ],
+    [
+      "¿Qué problema apareció al repetir varios ciclos y qué mejora evitó que volviera a ocurrir?",
+      "¿Cómo prepararías el huevo para que pueda presentarse varias veces en el escape room sin reajustar el mecanismo?"
+    ]
+  ],
+  "proyecto-especial-radar": [
+    [
+      "¿Por qué conocer solo la distancia no permite ubicar completamente un objeto durante el barrido?",
+      "¿Cómo explicarías con tu dibujo la diferencia entre cambiar el ángulo del sensor y acercar un objeto?"
+    ],
+    [
+      "¿Qué información debe revisar el programa después de cada movimiento para decidir si existe una detección o una alerta?",
+      "¿Cómo cambiaría la experiencia del escape room si el radar solo avisara que hay un objeto, pero no mostrara el ángulo?"
+    ],
+    [
+      "¿Cómo puede el diseño de la base o la posición de los cables reducir el área que el radar logra explorar?",
+      "¿Qué modificación harías si el sensor completa el barrido sin obstáculos, pero los LEDs no son visibles para los jugadores?"
+    ],
+    [
+      "¿Qué diferencias encontraste entre las distancias reales y las medidas y cómo afectan la elección de los límites de alerta?",
+      "¿Por qué conviene comprobar el sensor fijo y el servo por separado antes de montar el radar completo?"
+    ],
+    [
+      "¿Qué patrón observas al comparar los pares de ángulo y distancia del monitor serial durante un barrido?",
+      "¿Por qué el programa espera después de mover el servo antes de medir y qué sucedería si eliminara esa espera?"
+    ],
+    [
+      "¿Cómo comprobaste que detección y alerta producen respuestas diferentes y comprensibles?",
+      "¿Qué ajuste realizarías si un objeto colocado en el límite hace que las señales cambien de forma inestable?"
+    ],
+    [
+      "¿En qué ángulos o distancias fue menos precisa la detección y qué causa posible identificaste?",
+      "¿Cómo demostrarías que el radar puede funcionar de manera continua como pista o sistema de seguridad del escape room?"
+    ]
+  ]
+};
+
+function setupSpecialProjectLearningSequence() {
+  const worksheetKey = document.body.dataset.worksheetKey;
+  const questionSets = SPECIAL_PROJECT_QUESTIONS[worksheetKey];
+  if (!questionSets) return;
+
+  const objectiveCards = Array.from(document.querySelectorAll(".card")).filter((card) =>
+    /^Objetivo\s+[1-7]:/.test(card.querySelector("h2")?.textContent.trim() || "")
+  );
+  if (objectiveCards.length !== questionSets.length) return;
+
+  const identifiedCard = Array.from(document.querySelectorAll(".card")).find(
+    (card) => card.querySelector("h2")?.textContent.trim() === "Producto final identificado"
+  );
+
+  const progressCard = document.createElement("section");
+  progressCard.className = "card learning-progress";
+  progressCard.setAttribute("aria-labelledby", "learning-progress-title");
+  progressCard.innerHTML = `
+    <div class="learning-progress__heading">
+      <h2 id="learning-progress-title">Avance del proyecto</h2>
+      <strong class="learning-progress__percentage" data-learning-percentage>0%</strong>
+    </div>
+    <div
+      class="learning-progress__track"
+      role="progressbar"
+      aria-label="Porcentaje de objetivos completados"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+      data-learning-progress
+    >
+      <span class="learning-progress__fill" data-learning-progress-fill></span>
+    </div>
+    <p class="learning-progress__summary" data-learning-summary>0 de 7 objetivos completados.</p>
+    <p class="worksheet-note">Marca un objetivo cuando hayas realizado su actividad, preparado la entrega, respondido sus preguntas y revisado el criterio de evaluación.</p>
+  `;
+
+  if (identifiedCard) {
+    identifiedCard.insertAdjacentElement("afterend", progressCard);
+  }
+
+  objectiveCards.forEach((card, index) => {
+    const objectiveNumber = index + 1;
+    const questions = questionSets[index];
+    const reflectionBlock = document.createElement("div");
+    reflectionBlock.className = "objective-reflection";
+    reflectionBlock.innerHTML = `
+      <h3>Preguntas de investigación y reflexión</h3>
+      ${questions
+        .map((question, questionIndex) => {
+          const fieldId = `objective-${objectiveNumber}-question-${questionIndex + 1}`;
+          return `
+            <div class="worksheet-field">
+              <label for="${fieldId}">${questionIndex + 1}. ${question}</label>
+              <textarea class="worksheet-textarea" id="${fieldId}" name="${fieldId}"></textarea>
+            </div>
+          `;
+        })
+        .join("")}
+      <div class="objective-completion">
+        <label>
+          <input
+            type="checkbox"
+            name="objective_${objectiveNumber}_completed"
+            data-objective-completed
+          />
+          Objetivo ${objectiveNumber} completado
+        </label>
+      </div>
+    `;
+    card.appendChild(reflectionBlock);
+  });
+
+  const finalReflectionHeading = Array.from(document.querySelectorAll(".card h2")).find(
+    (heading) => heading.textContent.trim() === "Preguntas de reflexión"
+  );
+  if (finalReflectionHeading) {
+    finalReflectionHeading.textContent = "Reflexión final integradora";
+  }
+
+  const progressElement = progressCard.querySelector("[data-learning-progress]");
+  const progressFill = progressCard.querySelector("[data-learning-progress-fill]");
+  const percentageLabel = progressCard.querySelector("[data-learning-percentage]");
+  const summary = progressCard.querySelector("[data-learning-summary]");
+
+  function updateProgress() {
+    const completionFields = Array.from(document.querySelectorAll("[data-objective-completed]"));
+    const completed = completionFields.filter((field) => field.checked).length;
+    const percentage = Math.round((completed / completionFields.length) * 100);
+
+    progressElement.setAttribute("aria-valuenow", String(percentage));
+    progressFill.style.width = `${percentage}%`;
+    percentageLabel.textContent = `${percentage}%`;
+    summary.textContent = `${completed} de ${completionFields.length} objetivos completados.`;
+
+    objectiveCards.forEach((card, index) => {
+      card.classList.toggle("objective-card--completed", completionFields[index]?.checked);
+    });
+  }
+
+  document.addEventListener("input", (event) => {
+    if (event.target.matches("[data-objective-completed]")) {
+      updateProgress();
+    }
+  });
+  document.addEventListener("worksheet-data-applied", updateProgress);
+  document.addEventListener("worksheet-reset", updateProgress);
+  window.setTimeout(updateProgress, 0);
 }
 
 function setupImageLightbox() {
@@ -455,6 +719,8 @@ function appendEmailSubmissionFields(target, payload) {
     ["group_name", payload.groupName],
     ["delivery_date", payload.deliveryDate],
     ["project_link", payload.projectLink],
+    ["evidence_link", payload.evidenceLink],
+    ["progress_percentage", payload.progressPercentage],
     ["signed_in_email", payload.signedInEmail],
     ["submitted_at", payload.submittedAt],
     ["page_url", payload.pageUrl]
@@ -507,6 +773,9 @@ function createEmailMessagePayload(payload) {
     `Grupo: ${payload.groupName || "(sin grupo)"}`,
     `Fecha: ${payload.deliveryDate || "(sin fecha)"}`,
     `Cuenta Google: ${payload.signedInEmail || "(sin correo)"}`,
+    `Tinkercad: ${payload.projectLink || "(no incluido)"}`,
+    `Drive: ${payload.evidenceLink || "(no incluido)"}`,
+    `Avance: ${payload.progressPercentage == null ? "(no aplica)" : `${payload.progressPercentage}%`}`,
     `Enviado: ${submittedAtText}`,
     `Pagina: ${payload.pageUrl || ""}`,
     "",
@@ -527,6 +796,9 @@ function createEmailMessagePayload(payload) {
     <p><strong>Grupo:</strong> ${escapeHtml(payload.groupName || "(sin grupo)")}</p>
     <p><strong>Fecha:</strong> ${escapeHtml(payload.deliveryDate || "(sin fecha)")}</p>
     <p><strong>Cuenta Google:</strong> ${escapeHtml(payload.signedInEmail || "(sin correo)")}</p>
+    <p><strong>Tinkercad:</strong> ${escapeHtml(payload.projectLink || "(no incluido)")}</p>
+    <p><strong>Drive:</strong> ${escapeHtml(payload.evidenceLink || "(no incluido)")}</p>
+    <p><strong>Avance:</strong> ${payload.progressPercentage == null ? "(no aplica)" : `${escapeHtml(String(payload.progressPercentage))}%`}</p>
     <p><strong>Enviado:</strong> ${escapeHtml(submittedAtText || "")}</p>
     <p><strong>Pagina:</strong> ${escapeHtml(payload.pageUrl || "")}</p>
     <h2>Respuestas</h2>
@@ -620,6 +892,8 @@ function setupWorksheetEmailSubmission() {
   let isSignedIn = document.body.dataset.googleSignedIn === "true";
   let isSending = false;
   let signedInEmail = "";
+  const isProjectSubmission = document.body.dataset.projectSubmission === "true";
+  const submissionName = isProjectSubmission ? "proyecto" : "examen";
 
   function setEmailStatus(message, mode) {
     if (!status) return;
@@ -678,9 +952,44 @@ function setupWorksheetEmailSubmission() {
     const studentName = String(values.student_name || "").trim();
 
     if (!studentName) {
-      setEmailStatus("Escribe el nombre del alumno antes de enviar el examen.", "error");
+      setEmailStatus(`Escribe el nombre del alumno antes de enviar el ${submissionName}.`, "error");
       document.querySelector("[name=\"student_name\"]")?.focus();
       return;
+    }
+
+    if (isProjectSubmission) {
+      const projectLink = String(values.project_link || "").trim();
+      const evidenceLink = String(values.evidence_link || "").trim();
+      const submittedLinks = [projectLink, evidenceLink].filter(Boolean);
+      const allowedLinkPattern = /^https:\/\/(?:www\.)?(?:tinkercad\.com|drive\.google\.com|docs\.google\.com)\//i;
+      const unansweredObjectiveQuestion = Array.from(
+        document.querySelectorAll('textarea[name^="objective-"]')
+      ).find((field) => !field.value.trim());
+
+      if (unansweredObjectiveQuestion) {
+        setEmailStatus("Responde todas las preguntas de investigación y reflexión de los objetivos antes de enviar.", "error");
+        unansweredObjectiveQuestion.focus();
+        return;
+      }
+
+      if (!submittedLinks.length) {
+        setEmailStatus("Agrega por lo menos un enlace de Tinkercad o Drive antes de enviar el proyecto.", "error");
+        document.getElementById("project-link")?.focus();
+        return;
+      }
+
+      if (submittedLinks.some((link) => !allowedLinkPattern.test(link))) {
+        setEmailStatus("Los enlaces deben pertenecer a Tinkercad, Google Drive o Documentos de Google.", "error");
+        return;
+      }
+
+      const incompleteObjective = Array.from(document.querySelectorAll("[data-objective-completed]"))
+        .find((field) => !field.checked);
+      if (incompleteObjective) {
+        setEmailStatus("Completa y marca los siete objetivos antes de enviar el proyecto.", "error");
+        incompleteObjective.focus();
+        return;
+      }
     }
 
     const answers = fields.map((field) => ({
@@ -688,6 +997,10 @@ function setupWorksheetEmailSubmission() {
       label: getFieldLabel(field),
       value: field.type === "checkbox" ? field.checked : field.value
     }));
+    const objectiveFields = Array.from(document.querySelectorAll("[data-objective-completed]"));
+    const progressPercentage = objectiveFields.length
+      ? Math.round((objectiveFields.filter((field) => field.checked).length / objectiveFields.length) * 100)
+      : null;
 
     const payload = {
       worksheetKey: document.body.dataset.worksheetKey || "",
@@ -696,6 +1009,8 @@ function setupWorksheetEmailSubmission() {
       groupName: values.group_name || "",
       deliveryDate: values.delivery_date || "",
       projectLink: values.project_link || "",
+      evidenceLink: values.evidence_link || "",
+      progressPercentage,
       signedInEmail,
       submittedAt: new Date().toISOString(),
       pageUrl: window.location.href,
@@ -705,25 +1020,25 @@ function setupWorksheetEmailSubmission() {
 
     isSending = true;
     updateEmailButton();
-    setEmailStatus("Enviando examen por correo...", "loading");
+    setEmailStatus(`Enviando ${submissionName} por correo...`, "loading");
 
     try {
       await submitEmailWithFetch(webAppUrl, payload);
-      setEmailStatus("Examen enviado. Revisa tu correo para confirmar la recepción.", "success");
+      setEmailStatus(`${isProjectSubmission ? "Proyecto" : "Examen"} enviado. Revisa tu correo para confirmar la recepción.`, "success");
     } catch (error) {
       if (error?.allowHiddenFormFallback === false) {
         console.error("El servidor rechazo el envio del examen:", error);
-        setEmailStatus("No se pudo enviar el examen. Revisa permisos y despliegue del Apps Script.", "error");
+        setEmailStatus(`No se pudo enviar el ${submissionName}. Revisa permisos y despliegue del Apps Script.`, "error");
         return;
       }
 
       console.warn("No se pudo confirmar el envio con fetch; usando formulario oculto:", error);
       try {
         await submitEmailWithHiddenForm(webAppUrl, payload);
-        setEmailStatus("Examen enviado. Si no llega la confirmación, revisa la configuración del Apps Script.", "success");
+        setEmailStatus(`${isProjectSubmission ? "Proyecto" : "Examen"} enviado. Si no llega la confirmación, revisa la configuración del Apps Script.`, "success");
       } catch (fallbackError) {
         console.error("No se pudo enviar el examen:", fallbackError);
-        setEmailStatus("No se pudo enviar el examen. Revisa conexión, permisos del Apps Script y vuelve a intentar.", "error");
+        setEmailStatus(`No se pudo enviar el ${submissionName}. Revisa conexión, permisos del Apps Script y vuelve a intentar.`, "error");
       }
     } finally {
       isSending = false;
@@ -911,6 +1226,7 @@ function createWorksheetPersistence(options) {
     applyWorksheetData(getFieldsSafe(), values);
     writeLocalWorksheetState(worksheetKey, values, updatedAt);
     onDataApplied?.(values);
+    document.dispatchEvent(new CustomEvent("worksheet-data-applied"));
   }
 
   async function deleteRemote() {
@@ -1101,6 +1417,7 @@ function createWorksheetPersistence(options) {
     if (!localState) return;
     applyWorksheetData(getFieldsSafe(), localState.values || {});
     onDataApplied?.(localState.values || {});
+    document.dispatchEvent(new CustomEvent("worksheet-data-applied"));
   }
 
   async function initCloudSync() {
@@ -1164,10 +1481,15 @@ function createWorksheetPersistence(options) {
 
   resetButton?.addEventListener("click", async () => {
     getFieldsSafe().forEach((field) => {
-      field.value = "";
+      if (field.type === "checkbox") {
+        field.checked = false;
+      } else {
+        field.value = "";
+      }
     });
     localStorage.removeItem(worksheetKey);
     onReset?.();
+    document.dispatchEvent(new CustomEvent("worksheet-reset"));
     await deleteRemote();
     setCloudMessage(
       currentUser
@@ -1208,6 +1530,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupCodeHighlighting();
   setupCopyableCodeBlocks();
   setupProjectSubmissionFields();
+  setupSpecialProjectLearningSequence();
   setupImageLightbox();
   setupContentProtection();
   setupWorksheetStorage();

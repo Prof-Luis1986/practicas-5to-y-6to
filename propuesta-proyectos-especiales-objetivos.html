@@ -1,0 +1,341 @@
+<!--
+  Propuesta de secuencias de aprendizaje para "Proyectos especiales (Escape Room)".
+  Este fragmento utiliza la clase .card existente y puede copiarse dentro de
+  <main class="page-shell"><div class="container">...</div></main>.
+-->
+
+<section class="card" id="analisis-proyectos-especiales">
+  <h1>Proyectos especiales (Escape Room): secuencias de aprendizaje</h1>
+  <p>Las siguientes secuencias conservan los productos finales solicitados actualmente. Los objetivos agregan investigación, planeación, pruebas y mejora antes de construir la versión final.</p>
+
+  <h2>Proyectos con elementos similares</h2>
+  <ul>
+    <li><strong>Radar, Contenedor y Brazo dinosaurio:</strong> emplean un sensor ultrasónico y producen una respuesta cuando cambia la distancia.</li>
+    <li><strong>Cabeza dinosaurio, Brazo dinosaurio y Huevo dinosaurio:</strong> utilizan servomotores para crear movimiento en una estructura.</li>
+    <li><strong>Radar, Contenedor y Brazo dinosaurio:</strong> usan señales visuales o sonoras para comunicar detección, alerta o peligro.</li>
+  </ul>
+
+  <h2>Cómo diferenciarlos sin cambiar el producto final</h2>
+  <ul>
+    <li><strong>Radar:</strong> concentrar el aprendizaje en el barrido, la relación entre ángulo y distancia, y la localización aproximada de un objeto.</li>
+    <li><strong>Contenedor:</strong> concentrar el aprendizaje en representar cuatro estados mediante un lenguaje de colores, animaciones y sonidos.</li>
+    <li><strong>Brazo dinosaurio:</strong> concentrar el aprendizaje en una reacción mecánica segura que se active una vez y vuelva al reposo.</li>
+    <li><strong>Cabeza dinosaurio:</strong> concentrar el aprendizaje en coordinar dos servos para producir movimientos naturales y expresivos.</li>
+    <li><strong>Huevo dinosaurio:</strong> concentrar el aprendizaje en diseñar una secuencia narrativa de empujes, apertura y cierre.</li>
+  </ul>
+</section>
+
+<article id="proyecto-contenedor">
+  <section class="card">
+    <h1>Proyecto: Contenedor</h1>
+    <p><strong>Producto final identificado:</strong> Contenedor interactivo con sensor ultrasónico, aro NeoPixel y buzzer que representa los estados de reposo, actividad, alerta y peligro según la distancia.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 1: Investigar cómo comunicar niveles de seguridad</h2>
+    <p><strong>Descripción:</strong> Observar ejemplos sencillos de semáforos, alarmas y tableros de estado. Relacionar colores, movimientos de luz y sonidos con las ideas de reposo, actividad, alerta y peligro.</p>
+    <p><strong>Entrega:</strong> Tabla de cuatro filas con el nombre de cada estado, un color, un tipo de luz y un tipo de sonido.</p>
+    <p><strong>Evaluación:</strong> Los cuatro estados se distinguen con claridad y las elecciones se explican con una razón comprensible.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 2: Planear los rangos de distancia</h2>
+    <p><strong>Descripción:</strong> Medir con una regla distancias de 10, 25 y 50 cm. Predecir qué estado debe activarse en cada zona y elaborar un mapa de proximidad alrededor del contenedor.</p>
+    <p><strong>Entrega:</strong> Dibujo del contenedor con sus cuatro zonas y una tabla de rangos de distancia.</p>
+    <p><strong>Evaluación:</strong> Las zonas no se traslapan, cubren todas las distancias y coinciden con reposo, actividad, alerta y peligro.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 3: Diseñar el sistema y sus conexiones</h2>
+    <p><strong>Descripción:</strong> Identificar la función del sensor ultrasónico, el aro NeoPixel y el buzzer. Revisar el diagrama y planear dónde colocar cada componente en el contenedor.</p>
+    <p><strong>Entrega:</strong> Diagrama etiquetado y boceto del montaje físico con la ubicación de los componentes.</p>
+    <p><strong>Evaluación:</strong> El diagrama incluye alimentación, tierra y pines de señal correctos; el sensor queda orientado hacia la zona de detección.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 4: Probar los componentes por separado</h2>
+    <p><strong>Descripción:</strong> Realizar tres pruebas breves: leer una distancia en el monitor serial, encender el aro con un color fijo y producir un tono corto con el buzzer.</p>
+    <p><strong>Entrega:</strong> Registro de las tres pruebas con una captura o foto y una frase que indique qué funcionó.</p>
+    <p><strong>Evaluación:</strong> Cada componente responde por separado y las lecturas del sensor son razonables al compararlas con una regla.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 5: Construir los cuatro estados</h2>
+    <p><strong>Descripción:</strong> Programar y probar por separado las funciones de reposo, actividad, alerta y peligro usando los efectos de luz y sonido definidos.</p>
+    <p><strong>Entrega:</strong> Video o demostración de los cuatro estados activados uno por uno y tabla con el resultado de cada prueba.</p>
+    <p><strong>Evaluación:</strong> Cada función produce una combinación reconocible y diferente de luz y sonido sin cambiar el propósito del proyecto.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 6: Integrar la distancia con las respuestas</h2>
+    <p><strong>Descripción:</strong> Unir la lectura del sensor con las cuatro funciones. Acercar un objeto lentamente y comprobar que el contenedor cambia de estado en los rangos planeados.</p>
+    <p><strong>Entrega:</strong> Tabla de pruebas con al menos una distancia por estado, el estado esperado y el estado observado.</p>
+    <p><strong>Evaluación:</strong> El sistema selecciona el estado correcto en las cuatro zonas y no deja distancias sin respuesta.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 7: Mejorar la claridad y estabilidad</h2>
+    <p><strong>Descripción:</strong> Revisar conexiones, brillo, volumen y cambios entre estados. Corregir falsas lecturas o efectos difíciles de distinguir y organizar el montaje dentro del contenedor.</p>
+    <p><strong>Entrega:</strong> Lista breve con dos problemas encontrados, la corrección aplicada y una prueba final de los cuatro estados.</p>
+    <p><strong>Evaluación:</strong> El montaje es ordenado, los estados se distinguen y el sistema completa tres recorridos de prueba sin fallas importantes.</p>
+  </section>
+
+  <section class="card">
+    <h2>Producto Final</h2>
+    <p><strong>Descripción:</strong> Construir un contenedor interactivo que cambie luces y sonidos según la distancia detectada, simulando los niveles de reposo, actividad, alerta y peligro dentro de una misión de escape room.</p>
+    <p><strong>Entrega:</strong> Foto o captura del circuito armado; captura del código cargado en Arduino IDE o simulador; video corto mostrando los cuatro estados; explicación escrita de cómo cambia el sistema según la distancia.</p>
+    <p><strong>Evaluación:</strong> El sensor identifica los cuatro rangos, el aro NeoPixel y el buzzer comunican el estado correspondiente, el montaje funciona de manera estable y el alumno explica la relación entre distancia y respuesta.</p>
+  </section>
+</article>
+
+<article id="proyecto-cabeza-dinosaurio">
+  <section class="card">
+    <h1>Proyecto: Cabeza dinosaurio</h1>
+    <p><strong>Producto final identificado:</strong> Mecanismo de ojos con dos servomotores que realiza parpadeos naturales y un modo de alerta en una cabeza de dinosaurio.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 1: Investigar cómo ocurre un parpadeo natural</h2>
+    <p><strong>Descripción:</strong> Observar durante un tiempo breve cómo parpadean las personas o un personaje animado. Identificar cuánto dura un parpadeo y si los intervalos son siempre iguales.</p>
+    <p><strong>Entrega:</strong> Registro de cinco parpadeos observados y tres conclusiones sobre duración, pausa y coordinación de ambos ojos.</p>
+    <p><strong>Evaluación:</strong> Las conclusiones reconocen que el cierre es breve, los ojos trabajan coordinados y las pausas pueden variar.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 2: Planear los movimientos de los ojos</h2>
+    <p><strong>Descripción:</strong> Definir los estados ojos abiertos, ojos cerrados, parpadeo natural y modo de alerta. Ordenar en una línea de tiempo las posiciones y pausas necesarias.</p>
+    <p><strong>Entrega:</strong> Secuencia ilustrada de cada estado con posiciones y tiempos aproximados.</p>
+    <p><strong>Evaluación:</strong> La secuencia distingue el parpadeo normal del modo de alerta y puede realizarse con dos servos.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 3: Diseñar el mecanismo de dos servos</h2>
+    <p><strong>Descripción:</strong> Revisar el diagrama, identificar el ojo izquierdo y el derecho, y crear un boceto que muestre cómo cada servo moverá su párpado u ojo sin chocar con la estructura.</p>
+    <p><strong>Entrega:</strong> Diagrama etiquetado y boceto frontal del mecanismo con el sentido de movimiento de cada servo.</p>
+    <p><strong>Evaluación:</strong> Cada servo está asociado con el ojo correcto y el diseño deja espacio para abrir y cerrar sin forzar las piezas.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 4: Calibrar cada servo por separado</h2>
+    <p><strong>Descripción:</strong> Conectar un servo a la vez y probar ángulos pequeños hasta encontrar una posición abierta y una cerrada segura para cada ojo.</p>
+    <p><strong>Entrega:</strong> Tabla con los ángulos abierto y cerrado del ojo izquierdo y del ojo derecho.</p>
+    <p><strong>Evaluación:</strong> Los cuatro valores fueron probados, no fuerzan el mecanismo y permiten distinguir claramente ojos abiertos y cerrados.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 5: Programar el parpadeo natural</h2>
+    <p><strong>Descripción:</strong> Coordinar ambos servos para cerrar y abrir los ojos. Probar diferentes duraciones e intervalos hasta obtener un movimiento breve y natural.</p>
+    <p><strong>Entrega:</strong> Video de tres parpadeos y registro de la duración de cierre elegida.</p>
+    <p><strong>Evaluación:</strong> Ambos ojos completan el movimiento, regresan a la posición abierta y los intervalos variables evitan un ritmo mecánico repetitivo.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 6: Integrar y distinguir el modo de alerta</h2>
+    <p><strong>Descripción:</strong> Probar la secuencia de parpadeo desfasado y el modo de alerta. Comparar su ritmo con el parpadeo natural para asegurar que comuniquen comportamientos diferentes.</p>
+    <p><strong>Entrega:</strong> Video comparativo con un parpadeo natural y una ejecución del modo de alerta.</p>
+    <p><strong>Evaluación:</strong> Las dos secuencias son visibles, distintas y terminan con los ojos en una posición correcta.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 7: Mejorar sincronización y montaje</h2>
+    <p><strong>Descripción:</strong> Colocar los servos en la cabeza, observar roces o diferencias entre ambos ojos y ajustar ángulos o tiempos sin cambiar las funciones del proyecto.</p>
+    <p><strong>Entrega:</strong> Lista de ajustes realizados y prueba continua de al menos cinco parpadeos más un modo de alerta.</p>
+    <p><strong>Evaluación:</strong> El mecanismo no se atora, los servos no se fuerzan y ambos ojos conservan movimientos coordinados y repetibles.</p>
+  </section>
+
+  <section class="card">
+    <h2>Producto Final</h2>
+    <p><strong>Descripción:</strong> Programar dos servomotores para controlar los ojos de una cabeza de dinosaurio, generando parpadeos naturales y un modo de alerta.</p>
+    <p><strong>Entrega:</strong> Foto del mecanismo de ojos conectado a los servos; captura del código; video corto mostrando el parpadeo natural y el modo de alerta; tabla con los ángulos usados para abrir y cerrar cada ojo.</p>
+    <p><strong>Evaluación:</strong> Los ojos abren y cierran sin forzar el mecanismo, el parpadeo usa intervalos variables, el modo de alerta se distingue y los ángulos finales están registrados.</p>
+  </section>
+</article>
+
+<article id="proyecto-brazo-dinosaurio">
+  <section class="card">
+    <h1>Proyecto: Brazo dinosaurio</h1>
+    <p><strong>Producto final identificado:</strong> Brazo animado con servomotor, sensor ultrasónico, LED y buzzer que reacciona al detectar proximidad y después regresa al reposo.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 1: Investigar reacciones mecánicas seguras</h2>
+    <p><strong>Descripción:</strong> Analizar ejemplos de barreras, figuras animadas o mecanismos que pasan del reposo a una acción. Identificar qué hace que el movimiento sea visible sin ser peligroso.</p>
+    <p><strong>Entrega:</strong> Lista de tres reglas de seguridad y dibujo de una reacción de reposo, ataque y regreso.</p>
+    <p><strong>Evaluación:</strong> Las reglas consideran distancia del público, límites del movimiento y firmeza de la estructura.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 2: Planear la activación por proximidad</h2>
+    <p><strong>Descripción:</strong> Elegir una zona de activación de hasta 25 cm y una zona de reinicio más lejana. Representar qué debe hacer el sistema antes, durante y después de detectar a una persona.</p>
+    <p><strong>Entrega:</strong> Diagrama de flujo con reposo, detección, activación, regreso y reinicio.</p>
+    <p><strong>Evaluación:</strong> El plan evita activaciones continuas y explica cuándo el brazo queda listo para reaccionar otra vez.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 3: Diseñar el brazo y sus conexiones</h2>
+    <p><strong>Descripción:</strong> Revisar el diagrama eléctrico y diseñar una estructura ligera que el servo pueda mover. Definir la ubicación del sensor, LED, buzzer y punto de giro.</p>
+    <p><strong>Entrega:</strong> Diagrama etiquetado y boceto lateral del brazo con medidas aproximadas y sentido de movimiento.</p>
+    <p><strong>Evaluación:</strong> El diseño incluye todos los componentes, deja libre el recorrido y usa un brazo suficientemente ligero para el servo.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 4: Probar sensor, señales y servo</h2>
+    <p><strong>Descripción:</strong> Comprobar por separado la lectura de distancia, el encendido del LED, el sonido del buzzer y el movimiento del servo entre dos ángulos seguros.</p>
+    <p><strong>Entrega:</strong> Lista de verificación de los cuatro componentes y tabla con los ángulos iniciales de reposo y ataque.</p>
+    <p><strong>Evaluación:</strong> Los componentes funcionan de forma individual, la distancia se mide correctamente y el servo no llega a sus límites físicos.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 5: Construir la secuencia de movimiento</h2>
+    <p><strong>Descripción:</strong> Programar el avance del brazo, la pausa y el regreso al reposo. Agregar el LED y el sonido para que acompañen la reacción.</p>
+    <p><strong>Entrega:</strong> Video de la secuencia activada manualmente y registro de los ángulos y tiempos usados.</p>
+    <p><strong>Evaluación:</strong> El brazo completa la ida y el regreso, las señales se activan durante la reacción y el mecanismo conserva su estabilidad.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 6: Integrar la detección automática</h2>
+    <p><strong>Descripción:</strong> Unir la lectura ultrasónica con la secuencia completa. Probar que el brazo se active una sola vez al entrar en la zona y se prepare de nuevo al alejarse.</p>
+    <p><strong>Entrega:</strong> Tabla de pruebas con objeto lejos, objeto cerca, objeto que permanece cerca y objeto que vuelve a alejarse.</p>
+    <p><strong>Evaluación:</strong> La reacción ocurre al cruzar el umbral, no se repite sin control y vuelve a estar disponible después del reinicio.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 7: Mejorar seguridad y efecto</h2>
+    <p><strong>Descripción:</strong> Ajustar el umbral, los ángulos y la velocidad. Fijar cables y estructura, y comprobar que el participante pueda observar el efecto sin tocar la zona móvil.</p>
+    <p><strong>Entrega:</strong> Lista de dos mejoras aplicadas y video de tres activaciones completas desde diferentes distancias.</p>
+    <p><strong>Evaluación:</strong> El brazo se mueve con estabilidad, se detiene dentro del recorrido seguro y responde de manera consistente.</p>
+  </section>
+
+  <section class="card">
+    <h2>Producto Final</h2>
+    <p><strong>Descripción:</strong> Diseñar un brazo de dinosaurio que reaccione cuando un participante se acerca, combinando movimiento, luz y sonido para crear una señal de sorpresa o advertencia.</p>
+    <p><strong>Entrega:</strong> Foto del brazo armado y conectado; captura del código; video corto donde se observe la activación por proximidad; registro de los ángulos usados para reposo y ataque.</p>
+    <p><strong>Evaluación:</strong> El sensor activa el brazo en el rango definido, el servo ejecuta la reacción y regresa al reposo, el LED y el buzzer acompañan la acción y el montaje es estable.</p>
+  </section>
+</article>
+
+<article id="proyecto-huevo-dinosaurio">
+  <section class="card">
+    <h1>Proyecto: Huevo dinosaurio</h1>
+    <p><strong>Producto final identificado:</strong> Huevo de dinosaurio animado con un servomotor que realiza pequeños empujes internos, una apertura más amplia y un cierre.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 1: Investigar cómo contar una acción con movimiento</h2>
+    <p><strong>Descripción:</strong> Observar una escena breve de eclosión o imaginar cómo algo empujaría desde el interior de un huevo. Identificar movimientos pequeños, pausa, movimiento fuerte y cierre.</p>
+    <p><strong>Entrega:</strong> Secuencia de cuatro viñetas que represente el inicio, los empujes, la apertura y el cierre.</p>
+    <p><strong>Evaluación:</strong> La secuencia tiene un orden claro y diferencia los empujes pequeños de la apertura principal.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 2: Planear la secuencia de animación</h2>
+    <p><strong>Descripción:</strong> Convertir las viñetas en una tabla de movimientos con posición inicial, ángulo aproximado y tiempo de espera para cada paso.</p>
+    <p><strong>Entrega:</strong> Tabla de la secuencia completa desde el huevo cerrado hasta su regreso a la posición inicial.</p>
+    <p><strong>Evaluación:</strong> La planeación incluye al menos tres empujes, una apertura más amplia, una pausa y un cierre.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 3: Diseñar el mecanismo de apertura</h2>
+    <p><strong>Descripción:</strong> Dibujar cómo el servo empujará o levantará la tapa. Identificar el punto de apoyo, el recorrido y una forma de fijar el servo sin impedir el movimiento.</p>
+    <p><strong>Entrega:</strong> Boceto lateral del huevo y diagrama de conexión con el pin del servo etiquetado.</p>
+    <p><strong>Evaluación:</strong> El diseño muestra una unión posible, una tapa móvil y espacio suficiente para el recorrido del servo.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 4: Probar ángulos sin la tapa final</h2>
+    <p><strong>Descripción:</strong> Conectar el servo y probar de manera gradual varios ángulos con una pieza ligera de ensayo. Identificar posiciones seguras para cerrado, empujes y apertura.</p>
+    <p><strong>Entrega:</strong> Tabla de ángulos probados con resultado seguro, insuficiente o excesivo.</p>
+    <p><strong>Evaluación:</strong> Los ángulos seleccionados producen movimientos distintos y no bloquean ni fuerzan el servo.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 5: Construir y programar los empujes</h2>
+    <p><strong>Descripción:</strong> Montar el mecanismo y programar únicamente los movimientos pequeños. Ajustar amplitud y pausas para que parezcan intentos de salir desde el interior.</p>
+    <p><strong>Entrega:</strong> Video de los empujes y registro de los ángulos y tiempos elegidos.</p>
+    <p><strong>Evaluación:</strong> Se observan varios empujes diferentes, la tapa regresa después de cada uno y el mecanismo permanece firme.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 6: Integrar apertura y cierre</h2>
+    <p><strong>Descripción:</strong> Agregar la apertura amplia, la espera y el cierre a la secuencia de empujes. Ejecutar el ciclo completo y comprobar el orden.</p>
+    <p><strong>Entrega:</strong> Video de un ciclo completo y lista ordenada de las acciones observadas.</p>
+    <p><strong>Evaluación:</strong> El huevo inicia cerrado, realiza empujes, abre con mayor amplitud, espera y vuelve a cerrar.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 7: Mejorar realismo y resistencia</h2>
+    <p><strong>Descripción:</strong> Ajustar tiempos y ángulos para mejorar el ritmo. Reforzar la fijación del servo y probar varios ciclos para encontrar roces, vibraciones o calentamiento.</p>
+    <p><strong>Entrega:</strong> Registro de cinco ciclos con problemas encontrados, correcciones y valores finales.</p>
+    <p><strong>Evaluación:</strong> La secuencia se percibe progresiva, la tapa se mueve sin atorarse y el mecanismo completa cinco ciclos sin soltarse.</p>
+  </section>
+
+  <section class="card">
+    <h2>Producto Final</h2>
+    <p><strong>Descripción:</strong> Construir y programar un huevo de dinosaurio animado con servomotor, simulando movimientos internos, apertura y cierre dentro de una experiencia tipo escape room.</p>
+    <p><strong>Entrega:</strong> Foto del huevo armado con el servo instalado; captura del código cargado en Arduino IDE; video corto donde se observe el movimiento de empuje, apertura y cierre; registro de los ángulos finales usados en el mecanismo.</p>
+    <p><strong>Evaluación:</strong> El huevo completa la secuencia solicitada en el orden correcto, usa ángulos seguros, mantiene firme el mecanismo y diferencia con claridad los empujes de la apertura principal.</p>
+  </section>
+</article>
+
+<article id="proyecto-radar">
+  <section class="card">
+    <h1>Proyecto: Radar</h1>
+    <p><strong>Producto final identificado:</strong> Radar con sensor ultrasónico montado en un servo, LEDs y buzzer que barre un área, mide distancia y genera alertas de proximidad.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 1: Investigar cómo localiza objetos un radar</h2>
+    <p><strong>Descripción:</strong> Explorar con una actividad sencilla cómo un sensor puede mirar en distintas direcciones. Relacionar la dirección con un ángulo y la cercanía con una distancia.</p>
+    <p><strong>Entrega:</strong> Dibujo de un semicírculo con ángulos de 15, 45, 90, 135 y 165 grados, y tres objetos colocados a distintas distancias.</p>
+    <p><strong>Evaluación:</strong> El dibujo diferencia correctamente dirección y distancia y explica por qué se necesitan ambos datos.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 2: Planear el barrido y las alertas</h2>
+    <p><strong>Descripción:</strong> Definir el recorrido de ida y vuelta del servo y distinguir tres situaciones: sin objeto cercano, objeto detectado y objeto en alerta.</p>
+    <p><strong>Entrega:</strong> Diagrama de flujo con barrido, medición y respuesta de LED verde, LED rojo y buzzer.</p>
+    <p><strong>Evaluación:</strong> El plan incluye recorrido de ida y regreso, una medición en cada posición y respuestas distintas para detección y alerta.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 3: Diseñar la base móvil y el circuito</h2>
+    <p><strong>Descripción:</strong> Revisar el diagrama y crear una base que permita al servo girar el sensor sin que los cables detengan el movimiento. Ubicar los LEDs y el buzzer de forma visible.</p>
+    <p><strong>Entrega:</strong> Diagrama etiquetado y boceto superior de la base con el arco de movimiento.</p>
+    <p><strong>Evaluación:</strong> El diseño incluye todos los componentes, respeta los pines y deja libre el recorrido entre 15 y 165 grados.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 4: Probar medición y movimiento por separado</h2>
+    <p><strong>Descripción:</strong> Medir objetos a tres distancias conocidas con el sensor fijo. Después mover el servo a cinco ángulos definidos sin instalar todavía el sensor sobre la base final.</p>
+    <p><strong>Entrega:</strong> Tabla que compare distancia real y distancia medida, más una lista de los cinco ángulos probados.</p>
+    <p><strong>Evaluación:</strong> Las mediciones son cercanas a las reales y el servo alcanza los ángulos sin vibrar ni golpear la estructura.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 5: Construir el barrido con registro serial</h2>
+    <p><strong>Descripción:</strong> Montar el sensor sobre el servo, ejecutar el barrido de ida y regreso y enviar al monitor serial el ángulo y la distancia de cada lectura.</p>
+    <p><strong>Entrega:</strong> Video del barrido y captura del monitor serial con pares de ángulo y distancia.</p>
+    <p><strong>Evaluación:</strong> El sensor recorre el arco completo, mide después de cada movimiento y muestra ambos datos de forma legible.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 6: Integrar las alertas de proximidad</h2>
+    <p><strong>Descripción:</strong> Conectar los LEDs y el buzzer. Probar objetos fuera de detección, dentro de detección y dentro de alerta para verificar cada respuesta.</p>
+    <p><strong>Entrega:</strong> Tabla de tres pruebas con distancia, respuesta esperada y respuesta observada.</p>
+    <p><strong>Evaluación:</strong> El LED verde indica zona libre, el LED rojo señala detección y el buzzer distingue la alerta más cercana.</p>
+  </section>
+
+  <section class="card">
+    <h2>Objetivo 7: Mejorar precisión y continuidad</h2>
+    <p><strong>Descripción:</strong> Ajustar la espera después de mover el servo, ordenar los cables y repetir pruebas con objetos en diferentes ángulos. Corregir lecturas inestables o zonas que el sensor no alcanza.</p>
+    <p><strong>Entrega:</strong> Mapa de prueba con al menos cinco posiciones, resultado de detección y una mejora aplicada.</p>
+    <p><strong>Evaluación:</strong> El radar completa tres barridos continuos, detecta objetos en varias posiciones y mantiene libres el servo y el cableado.</p>
+  </section>
+
+  <section class="card">
+    <h2>Producto Final</h2>
+    <p><strong>Descripción:</strong> Construir un radar de detección con Arduino que mueva un sensor ultrasónico mediante un servo y emita alertas visuales y sonoras según la distancia detectada.</p>
+    <p><strong>Entrega:</strong> Foto o captura del circuito; captura del código; video del barrido del servo; captura del monitor serial mostrando ángulo y distancia.</p>
+    <p><strong>Evaluación:</strong> El servo realiza el barrido de ida y vuelta, el sensor registra ángulo y distancia, los LEDs y el buzzer responden a los rangos definidos y el sistema funciona de manera continua.</p>
+  </section>
+</article>

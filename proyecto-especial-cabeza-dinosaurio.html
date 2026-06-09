@@ -6,7 +6,7 @@
   <title>Proyecto especial - Cabeza dinosaurio</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="locked-content" data-worksheet-key="proyecto-especial-cabeza-dinosaurio" data-allow-code-copy="true" data-disable-project-links="true">
+<body class="locked-content" data-worksheet-key="proyecto-especial-cabeza-dinosaurio" data-allow-code-copy="true" data-disable-project-links="true" data-project-submission="true" data-email-webapp-url="https://script.google.com/macros/s/AKfycbw8XwulnlKUE1jy8JHRmPSHhB8TNS9_p5X9hORVkZEG4UDg_qpnHZYThKLzBz-5uhU88w/exec">
   <header class="hero">
     <p class="tag">Proyectos especiales (Escape Room)</p>
     <h1>Cabeza dinosaurio</h1>
@@ -23,7 +23,7 @@
         <h2>Guía de trabajo</h2>
         <p><strong>Título de la práctica:</strong> Cabeza dinosaurio</p>
         <p><strong>Modalidad:</strong> Individual o por equipos</p>
-        <p><strong>Duración estimada:</strong> 1 a 2 sesiones</p>
+        <p><strong>Duración estimada:</strong> 4 a 6 sesiones</p>
         <div class="worksheet-meta">
           <div class="worksheet-field">
             <label for="student-name">Nombre</label>
@@ -46,8 +46,57 @@
       </section>
 
       <section class="card">
-        <h2>Objetivo</h2>
+        <h2>Producto final identificado</h2>
         <p>Programar dos servomotores para controlar los ojos de una cabeza de dinosaurio, generando parpadeos naturales y un modo de alerta.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 1: Investigar cómo ocurre un parpadeo natural</h2>
+        <p><strong>Descripción:</strong> Observar durante un tiempo breve cómo parpadean las personas o un personaje animado. Identificar cuánto dura un parpadeo y si los intervalos son siempre iguales.</p>
+        <p><strong>Entrega:</strong> Registro de cinco parpadeos observados y tres conclusiones sobre duración, pausa y coordinación de ambos ojos.</p>
+        <p><strong>Evaluación:</strong> Las conclusiones reconocen que el cierre es breve, los ojos trabajan coordinados y las pausas pueden variar.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 2: Planear los movimientos de los ojos</h2>
+        <p><strong>Descripción:</strong> Definir los estados ojos abiertos, ojos cerrados, parpadeo natural y modo de alerta. Ordenar en una línea de tiempo las posiciones y pausas necesarias.</p>
+        <p><strong>Entrega:</strong> Secuencia ilustrada de cada estado con posiciones y tiempos aproximados.</p>
+        <p><strong>Evaluación:</strong> La secuencia distingue el parpadeo normal del modo de alerta y puede realizarse con dos servos.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 3: Diseñar el mecanismo de dos servos</h2>
+        <p><strong>Descripción:</strong> Revisar el diagrama, identificar el ojo izquierdo y el derecho, y crear un boceto que muestre cómo cada servo moverá su párpado u ojo sin chocar con la estructura.</p>
+        <p><strong>Entrega:</strong> Diagrama etiquetado y boceto frontal del mecanismo con el sentido de movimiento de cada servo.</p>
+        <p><strong>Evaluación:</strong> Cada servo está asociado con el ojo correcto y el diseño deja espacio para abrir y cerrar sin forzar las piezas.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 4: Calibrar cada servo por separado</h2>
+        <p><strong>Descripción:</strong> Conectar un servo a la vez y probar ángulos pequeños hasta encontrar una posición abierta y una cerrada segura para cada ojo.</p>
+        <p><strong>Entrega:</strong> Tabla con los ángulos abierto y cerrado del ojo izquierdo y del ojo derecho.</p>
+        <p><strong>Evaluación:</strong> Los cuatro valores fueron probados, no fuerzan el mecanismo y permiten distinguir claramente ojos abiertos y cerrados.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 5: Programar el parpadeo natural</h2>
+        <p><strong>Descripción:</strong> Coordinar ambos servos para cerrar y abrir los ojos. Probar diferentes duraciones e intervalos hasta obtener un movimiento breve y natural.</p>
+        <p><strong>Entrega:</strong> Video de tres parpadeos y registro de la duración de cierre elegida.</p>
+        <p><strong>Evaluación:</strong> Ambos ojos completan el movimiento, regresan a la posición abierta y los intervalos variables evitan un ritmo mecánico repetitivo.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 6: Integrar y distinguir el modo de alerta</h2>
+        <p><strong>Descripción:</strong> Probar la secuencia de parpadeo desfasado y el modo de alerta. Comparar su ritmo con el parpadeo natural para asegurar que comuniquen comportamientos diferentes.</p>
+        <p><strong>Entrega:</strong> Video comparativo con un parpadeo natural y una ejecución del modo de alerta.</p>
+        <p><strong>Evaluación:</strong> Las dos secuencias son visibles, distintas y terminan con los ojos en una posición correcta.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 7: Mejorar sincronización y montaje</h2>
+        <p><strong>Descripción:</strong> Colocar los servos en la cabeza, observar roces o diferencias entre ambos ojos y ajustar ángulos o tiempos sin cambiar las funciones del proyecto.</p>
+        <p><strong>Entrega:</strong> Lista de ajustes realizados y prueba continua de al menos cinco parpadeos más un modo de alerta.</p>
+        <p><strong>Evaluación:</strong> El mecanismo no se atora, los servos no se fuerzan y ambos ojos conservan movimientos coordinados y repetibles.</p>
       </section>
 
       <section class="card">
@@ -166,18 +215,21 @@ void modoAlerta() {
       </section>
 
       <section class="card">
-        <h2>Evidencias solicitadas</h2>
+        <h2>Producto final</h2>
+        <p><strong>Descripción:</strong> Mecanismo de ojos con dos servomotores que realiza parpadeos naturales y un modo de alerta en una cabeza de dinosaurio.</p>
+        <p><strong>Entrega:</strong></p>
         <ul>
-          <li>Foto del mecanismo de ojos conectado a los servos.</li>
-          <li>Captura del código.</li>
-          <li>Video corto mostrando el parpadeo natural.</li>
-          <li>Tabla con los ángulos usados para abrir y cerrar cada ojo.</li>
+          <li>Enlace de Drive con video del mecanismo, el parpadeo natural y el modo de alerta.</li>
+          <li>Enlace de Tinkercad del circuito y código, si se realizó en simulador.</li>
+          <li>Documento o texto en Drive con la tabla de ángulos usados para cada ojo.</li>
+          <li>Los enlaces deben permitir acceso a cualquier persona que los tenga.</li>
         </ul>
+        <p><strong>Evaluación:</strong> Los ojos abren y cierran sin forzar el mecanismo, el parpadeo usa intervalos variables, el modo de alerta se distingue y los ángulos finales están registrados.</p>
         <div class="worksheet-field">
-          <label><input name="evidence_1" type="checkbox" /> Agregué foto del mecanismo</label>
+          <label><input name="evidence_1" type="checkbox" /> Agregué en Drive el video del mecanismo</label>
         </div>
         <div class="worksheet-field">
-          <label><input name="evidence_2" type="checkbox" /> Agregué video del parpadeo</label>
+          <label><input name="evidence_2" type="checkbox" /> Agregué el enlace de Tinkercad o la explicación del código</label>
         </div>
         <div class="worksheet-field">
           <label><input name="evidence_3" type="checkbox" /> Registré los ángulos finales</label>
@@ -199,6 +251,16 @@ void modoAlerta() {
           <textarea class="worksheet-textarea" id="reflection-3" name="reflection_3"></textarea>
         </div>
       </section>
+
+      <section class="card">
+        <h2>Enviar proyecto</h2>
+        <p>Antes de enviar, verifica que los siete objetivos estén completos y que al menos un enlace de Tinkercad o Drive funcione sin solicitar permiso.</p>
+        <div class="button-row">
+          <button class="action-button action-button--secondary" data-email-login type="button">Entrar con Google</button>
+          <button class="action-button" data-worksheet-action="email" type="button" disabled>Enviar proyecto</button>
+        </div>
+        <p class="email-submit-status" data-email-status aria-live="polite">Inicia sesión con Google para habilitar el envío.</p>
+      </section>
     </div>
   </main>
 
@@ -216,6 +278,6 @@ void modoAlerta() {
     Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
   </footer>
 
-  <script src="scripts.js?v=20260605b"></script>
+  <script src="scripts.js?v=20260608e"></script>
 </body>
 </html>

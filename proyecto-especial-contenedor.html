@@ -6,7 +6,7 @@
   <title>Proyecto especial - Contenedor</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="locked-content" data-worksheet-key="proyecto-especial-contenedor" data-allow-code-copy="true" data-disable-project-links="true">
+<body class="locked-content" data-worksheet-key="proyecto-especial-contenedor" data-allow-code-copy="true" data-disable-project-links="true" data-project-submission="true" data-email-webapp-url="https://script.google.com/macros/s/AKfycbw8XwulnlKUE1jy8JHRmPSHhB8TNS9_p5X9hORVkZEG4UDg_qpnHZYThKLzBz-5uhU88w/exec">
   <header class="hero">
     <p class="tag">Proyectos especiales (Escape Room)</p>
     <h1>Contenedor</h1>
@@ -23,7 +23,7 @@
         <h2>Guía de trabajo</h2>
         <p><strong>Título de la práctica:</strong> Contenedor</p>
         <p><strong>Modalidad:</strong> Individual o por equipos</p>
-        <p><strong>Duración estimada:</strong> 1 a 2 sesiones</p>
+        <p><strong>Duración estimada:</strong> 4 a 6 sesiones</p>
         <div class="worksheet-meta">
           <div class="worksheet-field">
             <label for="student-name">Nombre</label>
@@ -38,7 +38,7 @@
             <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
           </div>
         </div>
-        <p class="worksheet-note">Completa la práctica, registra tus evidencias y guarda tus respuestas en PDF cuando termines.</p>
+        <p class="worksheet-note">Completa la práctica y entrega mediante un enlace de Tinkercad o una carpeta de Drive con acceso para cualquier persona que tenga el enlace.</p>
         <div class="button-row">
           <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
           <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
@@ -46,8 +46,57 @@
       </section>
 
       <section class="card">
-        <h2>Objetivo</h2>
-        <p>Construir un contenedor interactivo que cambie luces y sonidos según la distancia detectada, simulando niveles de seguridad dentro de una misión de escape room.</p>
+        <h2>Producto final identificado</h2>
+        <p>Construir un contenedor interactivo que cambie luces y sonidos según la distancia detectada, simulando los estados de reposo, actividad, alerta y peligro dentro de una misión de escape room.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 1: Investigar cómo comunicar niveles de seguridad</h2>
+        <p><strong>Descripción:</strong> Observar ejemplos sencillos de semáforos, alarmas y tableros de estado. Relacionar colores, movimientos de luz y sonidos con las ideas de reposo, actividad, alerta y peligro.</p>
+        <p><strong>Entrega:</strong> Tabla de cuatro filas con el nombre de cada estado, un color, un tipo de luz y un tipo de sonido.</p>
+        <p><strong>Evaluación:</strong> Los cuatro estados se distinguen con claridad y las elecciones se explican con una razón comprensible.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 2: Planear los rangos de distancia</h2>
+        <p><strong>Descripción:</strong> Medir con una regla distancias de 10, 25 y 50 cm. Predecir qué estado debe activarse en cada zona y elaborar un mapa de proximidad alrededor del contenedor.</p>
+        <p><strong>Entrega:</strong> Dibujo del contenedor con sus cuatro zonas y una tabla de rangos de distancia.</p>
+        <p><strong>Evaluación:</strong> Las zonas no se traslapan, cubren todas las distancias y coinciden con reposo, actividad, alerta y peligro.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 3: Diseñar el sistema y sus conexiones</h2>
+        <p><strong>Descripción:</strong> Identificar la función del sensor ultrasónico, el aro NeoPixel y el buzzer. Revisar el diagrama y planear dónde colocar cada componente en el contenedor.</p>
+        <p><strong>Entrega:</strong> Diagrama etiquetado y boceto del montaje físico con la ubicación de los componentes.</p>
+        <p><strong>Evaluación:</strong> El diagrama incluye alimentación, tierra y pines de señal correctos; el sensor queda orientado hacia la zona de detección.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 4: Probar los componentes por separado</h2>
+        <p><strong>Descripción:</strong> Realizar tres pruebas breves: leer una distancia en el monitor serial, encender el aro con un color fijo y producir un tono corto con el buzzer.</p>
+        <p><strong>Entrega:</strong> Registro escrito de las tres pruebas y enlace de Drive con un video breve que muestre qué funcionó.</p>
+        <p><strong>Evaluación:</strong> Cada componente responde por separado y las lecturas del sensor son razonables al compararlas con una regla.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 5: Construir los cuatro estados</h2>
+        <p><strong>Descripción:</strong> Programar y probar por separado las funciones de reposo, actividad, alerta y peligro usando los efectos de luz y sonido definidos.</p>
+        <p><strong>Entrega:</strong> Video o demostración de los cuatro estados activados uno por uno y tabla con el resultado de cada prueba.</p>
+        <p><strong>Evaluación:</strong> Cada función produce una combinación reconocible y diferente de luz y sonido.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 6: Integrar la distancia con las respuestas</h2>
+        <p><strong>Descripción:</strong> Unir la lectura del sensor con las cuatro funciones. Acercar un objeto lentamente y comprobar que el contenedor cambia de estado en los rangos planeados.</p>
+        <p><strong>Entrega:</strong> Tabla de pruebas con al menos una distancia por estado, el estado esperado y el estado observado.</p>
+        <p><strong>Evaluación:</strong> El sistema selecciona el estado correcto en las cuatro zonas y no deja distancias sin respuesta.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 7: Mejorar la claridad y estabilidad</h2>
+        <p><strong>Descripción:</strong> Revisar conexiones, brillo, volumen y cambios entre estados. Corregir falsas lecturas o efectos difíciles de distinguir y organizar el montaje dentro del contenedor.</p>
+        <p><strong>Entrega:</strong> Lista breve con dos problemas encontrados, la corrección aplicada y una prueba final de los cuatro estados.</p>
+        <p><strong>Evaluación:</strong> El montaje es ordenado, los estados se distinguen y el sistema completa tres recorridos de prueba sin fallas importantes.</p>
       </section>
 
       <section class="card">
@@ -284,21 +333,24 @@ void sonidoContencion() {
       </section>
 
       <section class="card">
-        <h2>Evidencias solicitadas</h2>
+        <h2>Producto final</h2>
+        <p><strong>Descripción:</strong> Contenedor interactivo que cambia luces y sonidos según la distancia detectada para representar cuatro niveles de seguridad.</p>
+        <p><strong>Entrega:</strong></p>
         <ul>
-          <li>Foto o captura del circuito armado.</li>
-          <li>Captura del código cargado en Arduino IDE o simulador.</li>
-          <li>Video corto mostrando los cuatro estados del contenedor.</li>
-          <li>Explicación escrita de cómo cambia el sistema según la distancia.</li>
+          <li>Enlace de Tinkercad del circuito y código, si se realizó en simulador.</li>
+          <li>Enlace de Drive con video corto mostrando los cuatro estados del contenedor físico.</li>
+          <li>Documento o texto en Drive que explique cómo cambia el sistema según la distancia.</li>
+          <li>Los enlaces deben permitir acceso a cualquier persona que los tenga.</li>
         </ul>
+        <p><strong>Evaluación:</strong> El sensor identifica los cuatro rangos, el aro NeoPixel y el buzzer comunican el estado correspondiente, el montaje funciona de manera estable y el alumno explica la relación entre distancia y respuesta.</p>
         <div class="worksheet-field">
-          <label><input name="evidence_1" type="checkbox" /> Agregué imagen del circuito</label>
+          <label><input name="evidence_1" type="checkbox" /> Agregué el enlace de Tinkercad o Drive del circuito</label>
         </div>
         <div class="worksheet-field">
-          <label><input name="evidence_2" type="checkbox" /> Agregué captura del código</label>
+          <label><input name="evidence_2" type="checkbox" /> El enlace permite revisar el código o la explicación del programa</label>
         </div>
         <div class="worksheet-field">
-          <label><input name="evidence_3" type="checkbox" /> Agregué video de funcionamiento</label>
+          <label><input name="evidence_3" type="checkbox" /> Agregué en Drive el video de funcionamiento</label>
         </div>
       </section>
 
@@ -317,6 +369,16 @@ void sonidoContencion() {
           <textarea class="worksheet-textarea" id="reflection-3" name="reflection_3"></textarea>
         </div>
       </section>
+
+      <section class="card">
+        <h2>Enviar proyecto</h2>
+        <p>Antes de enviar, verifica que los siete objetivos estén completos y que al menos un enlace de Tinkercad o Drive funcione sin solicitar permiso.</p>
+        <div class="button-row">
+          <button class="action-button action-button--secondary" data-email-login type="button">Entrar con Google</button>
+          <button class="action-button" data-worksheet-action="email" type="button" disabled>Enviar proyecto</button>
+        </div>
+        <p class="email-submit-status" data-email-status aria-live="polite">Inicia sesión con Google para habilitar el envío.</p>
+      </section>
     </div>
   </main>
 
@@ -334,6 +396,6 @@ void sonidoContencion() {
     Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
   </footer>
 
-  <script src="scripts.js?v=20260605b"></script>
+  <script src="scripts.js?v=20260608e"></script>
 </body>
 </html>

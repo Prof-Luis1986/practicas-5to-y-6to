@@ -6,7 +6,7 @@
   <title>Proyecto especial - Huevo dinosaurio</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="locked-content" data-worksheet-key="proyecto-especial-huevo-dinosaurio" data-allow-code-copy="true" data-disable-project-links="true">
+<body class="locked-content" data-worksheet-key="proyecto-especial-huevo-dinosaurio" data-allow-code-copy="true" data-disable-project-links="true" data-project-submission="true" data-email-webapp-url="https://script.google.com/macros/s/AKfycbw8XwulnlKUE1jy8JHRmPSHhB8TNS9_p5X9hORVkZEG4UDg_qpnHZYThKLzBz-5uhU88w/exec">
   <header class="hero">
     <p class="tag">Proyectos especiales (Escape Room)</p>
     <h1>Huevo dinosaurio</h1>
@@ -23,7 +23,7 @@
         <h2>Guía de trabajo</h2>
         <p><strong>Título de la práctica:</strong> Huevo dinosaurio</p>
         <p><strong>Modalidad:</strong> Individual o por equipos</p>
-        <p><strong>Duración estimada:</strong> 1 a 2 sesiones</p>
+        <p><strong>Duración estimada:</strong> 4 a 6 sesiones</p>
         <div class="worksheet-meta">
           <div class="worksheet-field">
             <label for="student-name">Nombre</label>
@@ -46,8 +46,57 @@
       </section>
 
       <section class="card">
-        <h2>Objetivo</h2>
+        <h2>Producto final identificado</h2>
         <p>Construir y programar un huevo de dinosaurio animado con servomotor, simulando movimientos internos, apertura y cierre dentro de una experiencia tipo escape room.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 1: Investigar cómo contar una acción con movimiento</h2>
+        <p><strong>Descripción:</strong> Observar una escena breve de eclosión o imaginar cómo algo empujaría desde el interior de un huevo. Identificar movimientos pequeños, pausa, movimiento fuerte y cierre.</p>
+        <p><strong>Entrega:</strong> Secuencia de cuatro viñetas que represente el inicio, los empujes, la apertura y el cierre.</p>
+        <p><strong>Evaluación:</strong> La secuencia tiene un orden claro y diferencia los empujes pequeños de la apertura principal.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 2: Planear la secuencia de animación</h2>
+        <p><strong>Descripción:</strong> Convertir las viñetas en una tabla de movimientos con posición inicial, ángulo aproximado y tiempo de espera para cada paso.</p>
+        <p><strong>Entrega:</strong> Tabla de la secuencia completa desde el huevo cerrado hasta su regreso a la posición inicial.</p>
+        <p><strong>Evaluación:</strong> La planeación incluye al menos tres empujes, una apertura más amplia, una pausa y un cierre.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 3: Diseñar el mecanismo de apertura</h2>
+        <p><strong>Descripción:</strong> Dibujar cómo el servo empujará o levantará la tapa. Identificar el punto de apoyo, el recorrido y una forma de fijar el servo sin impedir el movimiento.</p>
+        <p><strong>Entrega:</strong> Boceto lateral del huevo y diagrama de conexión con el pin del servo etiquetado.</p>
+        <p><strong>Evaluación:</strong> El diseño muestra una unión posible, una tapa móvil y espacio suficiente para el recorrido del servo.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 4: Probar ángulos sin la tapa final</h2>
+        <p><strong>Descripción:</strong> Conectar el servo y probar de manera gradual varios ángulos con una pieza ligera de ensayo. Identificar posiciones seguras para cerrado, empujes y apertura.</p>
+        <p><strong>Entrega:</strong> Tabla de ángulos probados con resultado seguro, insuficiente o excesivo.</p>
+        <p><strong>Evaluación:</strong> Los ángulos seleccionados producen movimientos distintos y no bloquean ni fuerzan el servo.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 5: Construir y programar los empujes</h2>
+        <p><strong>Descripción:</strong> Montar el mecanismo y programar únicamente los movimientos pequeños. Ajustar amplitud y pausas para que parezcan intentos de salir desde el interior.</p>
+        <p><strong>Entrega:</strong> Video de los empujes y registro de los ángulos y tiempos elegidos.</p>
+        <p><strong>Evaluación:</strong> Se observan varios empujes diferentes, la tapa regresa después de cada uno y el mecanismo permanece firme.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 6: Integrar apertura y cierre</h2>
+        <p><strong>Descripción:</strong> Agregar la apertura amplia, la espera y el cierre a la secuencia de empujes. Ejecutar el ciclo completo y comprobar el orden.</p>
+        <p><strong>Entrega:</strong> Video de un ciclo completo y lista ordenada de las acciones observadas.</p>
+        <p><strong>Evaluación:</strong> El huevo inicia cerrado, realiza empujes, abre con mayor amplitud, espera y vuelve a cerrar.</p>
+      </section>
+
+      <section class="card">
+        <h2>Objetivo 7: Mejorar realismo y resistencia</h2>
+        <p><strong>Descripción:</strong> Ajustar tiempos y ángulos para mejorar el ritmo. Reforzar la fijación del servo y probar varios ciclos para encontrar roces, vibraciones o calentamiento.</p>
+        <p><strong>Entrega:</strong> Registro de cinco ciclos con problemas encontrados, correcciones y valores finales.</p>
+        <p><strong>Evaluación:</strong> La secuencia se percibe progresiva, la tapa se mueve sin atorarse y el mecanismo completa cinco ciclos sin soltarse.</p>
       </section>
 
       <section class="card">
@@ -124,18 +173,21 @@ void loop() {
       </section>
 
       <section class="card">
-        <h2>Evidencias solicitadas</h2>
+        <h2>Producto final</h2>
+        <p><strong>Descripción:</strong> Huevo de dinosaurio animado con un servomotor que realiza pequeños empujes internos, una apertura más amplia y un cierre.</p>
+        <p><strong>Entrega:</strong></p>
         <ul>
-          <li>Foto del huevo armado con el servo instalado.</li>
-          <li>Captura del código cargado en Arduino IDE.</li>
-          <li>Video corto donde se observe el movimiento de empuje, apertura y cierre.</li>
-          <li>Registro de los ángulos finales usados en el mecanismo.</li>
+          <li>Enlace de Drive con video del huevo armado y la secuencia de empuje, apertura y cierre.</li>
+          <li>Enlace de Tinkercad del circuito y código, si se realizó en simulador.</li>
+          <li>Documento o texto en Drive con los ángulos finales usados en el mecanismo.</li>
+          <li>Los enlaces deben permitir acceso a cualquier persona que los tenga.</li>
         </ul>
+        <p><strong>Evaluación:</strong> El huevo completa la secuencia solicitada en el orden correcto, usa ángulos seguros, mantiene firme el mecanismo y diferencia con claridad los empujes de la apertura principal.</p>
         <div class="worksheet-field">
-          <label><input name="evidence_1" type="checkbox" /> Agregué foto del mecanismo</label>
+          <label><input name="evidence_1" type="checkbox" /> Agregué en Drive el video del mecanismo</label>
         </div>
         <div class="worksheet-field">
-          <label><input name="evidence_2" type="checkbox" /> Agregué captura del código</label>
+          <label><input name="evidence_2" type="checkbox" /> Agregué el enlace de Tinkercad o la explicación del código</label>
         </div>
         <div class="worksheet-field">
           <label><input name="evidence_3" type="checkbox" /> Agregué video del movimiento</label>
@@ -185,6 +237,16 @@ void loop() {
           <textarea class="worksheet-textarea" id="development-6" name="development_6"></textarea>
         </div>
       </section>
+
+      <section class="card">
+        <h2>Enviar proyecto</h2>
+        <p>Antes de enviar, verifica que los siete objetivos estén completos y que al menos un enlace de Tinkercad o Drive funcione sin solicitar permiso.</p>
+        <div class="button-row">
+          <button class="action-button action-button--secondary" data-email-login type="button">Entrar con Google</button>
+          <button class="action-button" data-worksheet-action="email" type="button" disabled>Enviar proyecto</button>
+        </div>
+        <p class="email-submit-status" data-email-status aria-live="polite">Inicia sesión con Google para habilitar el envío.</p>
+      </section>
     </div>
   </main>
 
@@ -202,6 +264,6 @@ void loop() {
     Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
   </footer>
 
-  <script src="scripts.js?v=20260605b"></script>
+  <script src="scripts.js?v=20260608e"></script>
 </body>
 </html>
