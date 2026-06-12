@@ -520,6 +520,70 @@ th {
   background: #fffaf0;
 }
 
+.mission-context {
+  border-color: #8dbbd7;
+  background:
+    radial-gradient(circle at top left, rgba(14, 116, 144, 0.1), transparent 18rem),
+    #fff;
+}
+
+.mission-context__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.mission-context__header h2 {
+  margin-bottom: 0;
+}
+
+.mission-context__eyebrow {
+  color: #075985;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.mission-context__read {
+  flex: 0 0 auto;
+  background: #075985;
+}
+
+.mission-context__content {
+  margin-top: 1rem;
+}
+
+.mission-context__reading {
+  padding: 1rem;
+  border-left: 6px solid #0e7490;
+  border-radius: 12px;
+  background: #f0f9ff;
+  font-size: 1.03rem;
+}
+
+.mission-context__reading p:first-child {
+  margin-top: 0;
+}
+
+.mission-context__reading p:last-child {
+  margin-bottom: 0;
+}
+
+.mission-context__questions {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #b8d5e7;
+  border-radius: 12px;
+  background: #f8fcff;
+}
+
+.mission-context__questions h3 {
+  margin-top: 0;
+  color: #075985;
+}
+
 .objective-mission {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -1483,6 +1547,15 @@ figcaption {
     flex-direction: column;
   }
 
+  .mission-context__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mission-context__read {
+    width: 100%;
+  }
+
   .mission-explanation-grid {
     grid-template-columns: 1fr;
   }
@@ -1557,7 +1630,8 @@ figcaption {
   .button-row,
   .image-lightbox,
   .code-block__toolbar,
-  .code-line-guide {
+  .code-line-guide,
+  .mission-context__read {
     display: none !important;
   }
 

@@ -1613,6 +1613,21 @@ const SPECIAL_PROJECT_PEDAGOGY = {
     importance: "Esta parte comunica al jugador si está lejos, acercándose o entrando en peligro. Sin ella, el contenedor no reaccionaría y no daría pistas sobre lo que sucede.",
     codeReaction: "la distancia medida cambie el color del aro y el sonido del buzzer",
     role: "sistema de alarma y proximidad",
+    context: {
+      paragraphs: [
+        "En muchos videojuegos y películas, una zona protegida cambia de color o produce sonidos cuando alguien se acerca. Esas señales permiten saber si todo está tranquilo o si existe peligro, incluso antes de ver directamente el problema.",
+        "El contenedor del Escape Room funcionará de forma parecida. Un sensor ultrasónico será como una regla invisible: enviará una señal, esperará su regreso y calculará qué tan cerca está el jugador. Después, las luces y los sonidos comunicarán reposo, actividad, alerta o peligro.",
+        "Esta pieza será útil para proteger una pista, advertir que un objeto no debe tocarse todavía o indicar que el jugador entró en una zona importante de la misión."
+      ],
+      choice: {
+        question: "Según la lectura, ¿con qué se compara el sensor ultrasónico?",
+        options: ["Con una regla invisible", "Con una pantalla", "Con una cerradura"],
+        answer: "Con una regla invisible"
+      },
+      trueFalse: "Las luces y los sonidos permiten comunicar un estado sin explicar todo con palabras.",
+      fill: "Completa: el contenedor podrá comunicar reposo, actividad, alerta o ______.",
+      open: "¿En qué parte de tu Escape Room colocarías el contenedor y qué debería comunicar al jugador?"
+    },
     deliverables: [
       "La hoja completa con los siete objetivos marcados.",
       "El enlace de Tinkercad del circuito y código, si utilizaste simulador.",
@@ -1643,6 +1658,21 @@ const SPECIAL_PROJECT_PEDAGOGY = {
     importance: "El movimiento de los ojos crea suspenso y ayuda a contar que el dinosaurio despertó o detectó algo. Sin esta parte, la cabeza permanecería inmóvil y perdería gran parte de su efecto.",
     codeReaction: "los dos ojos se abran, se cierren y cambien al modo de alerta",
     role: "animación de la criatura",
+    context: {
+      paragraphs: [
+        "Los personajes de películas, videojuegos y parques temáticos parecen vivos cuando realizan movimientos pequeños y creíbles. Un parpadeo, una mirada o una pausa pueden comunicar calma, sorpresa o peligro sin utilizar palabras.",
+        "La cabeza de dinosaurio usará dos servomotores para mover sus ojos o párpados. Los ángulos indicarán hasta dónde se moverá cada pieza y las pausas decidirán el ritmo. Si todas las pausas fueran idénticas, el movimiento parecería una máquina repetitiva.",
+        "Dentro del Escape Room, los ojos podrán despertar cuando avance la historia o cambiar a un modo de alerta cuando el jugador active una pista."
+      ],
+      choice: {
+        question: "¿Qué ayuda a que un parpadeo parezca más natural?",
+        options: ["Variar algunas pausas", "Mover un solo cable", "Usar siempre el mismo ángulo para todo"],
+        answer: "Variar algunas pausas"
+      },
+      trueFalse: "Los ángulos indican posiciones y las pausas ayudan a controlar el ritmo.",
+      fill: "Completa: los movimientos pequeños pueden comunicar emociones sin utilizar ______.",
+      open: "¿En qué momento de la aventura deberían cambiar los ojos al modo de alerta?"
+    },
     deliverables: [
       "La hoja completa con los siete objetivos marcados.",
       "Una tabla con los ángulos seguros de cada ojo.",
@@ -1673,6 +1703,21 @@ const SPECIAL_PROJECT_PEDAGOGY = {
     importance: "Esta parte convierte la presencia del jugador en una reacción visible. Sin el sensor y la secuencia de reinicio, el brazo tendría que activarse manualmente o podría moverse sin control.",
     codeReaction: "el brazo reaccione una sola vez cuando alguien se acerque y vuelva a prepararse al alejarse",
     role: "reacción mecánica de sorpresa",
+    context: {
+      paragraphs: [
+        "Las puertas automáticas, las barreras de estacionamiento y algunas figuras de parques temáticos reaccionan cuando detectan que una persona se acerca. Primero reciben información de un sensor y después realizan un movimiento.",
+        "El brazo de dinosaurio seguirá esa misma idea: permanecerá quieto, detectará cercanía y realizará una reacción con movimiento, luz y sonido. También necesitará una regla de reinicio para no repetir la acción sin control mientras alguien permanece frente al sensor.",
+        "En el Escape Room, el brazo puede sorprender al jugador o advertirle que llegó a una zona especial. El movimiento debe verse claramente, pero siempre mantenerse fuera de su alcance."
+      ],
+      choice: {
+        question: "¿Por qué el brazo necesita una regla de reinicio?",
+        options: ["Para evitar activaciones continuas", "Para cambiar el tamaño del Arduino", "Para apagar la computadora"],
+        answer: "Para evitar activaciones continuas"
+      },
+      trueFalse: "Una reacción sorprendente también debe respetar límites de seguridad.",
+      fill: "Completa: primero el sensor detecta cercanía y después el brazo realiza un ______.",
+      open: "¿Cómo lograrías que el brazo sorprenda al jugador sin ponerlo en riesgo?"
+    },
     deliverables: [
       "La hoja completa con los siete objetivos marcados.",
       "El boceto del brazo y tres reglas de seguridad.",
@@ -1703,6 +1748,21 @@ const SPECIAL_PROJECT_PEDAGOGY = {
     importance: "El orden y la intensidad de los movimientos permiten que el jugador entienda la eclosión. Sin una secuencia planeada, la tapa solo se movería sin contar una historia clara.",
     codeReaction: "el huevo realice empujes pequeños, una apertura fuerte y un cierre en el orden correcto",
     role: "secuencia animada de eclosión",
+    context: {
+      paragraphs: [
+        "Una animación cuenta una historia al ordenar movimientos y pausas. En un videojuego, un cofre puede temblar antes de abrirse; en una película, un huevo puede moverse varias veces antes de romperse. El orden permite anticipar que algo importante está por ocurrir.",
+        "El huevo de dinosaurio utilizará un servomotor para crear esa historia. Hará empujes pequeños, una apertura más amplia, una pausa y un cierre. Los ángulos definirán las posiciones y los tiempos decidirán si la escena se siente lenta, rápida o emocionante.",
+        "Dentro del Escape Room, la eclosión puede revelar una pista, marcar el inicio de una nueva etapa o aumentar el misterio de la aventura."
+      ],
+      choice: {
+        question: "¿Qué permite que los movimientos del huevo cuenten una historia?",
+        options: ["Su orden y sus pausas", "El color del cable USB", "El nombre del archivo"],
+        answer: "Su orden y sus pausas"
+      },
+      trueFalse: "La apertura principal debe distinguirse de los empujes pequeños.",
+      fill: "Completa: los ángulos controlan posiciones y los tiempos controlan el ______.",
+      open: "¿Qué pista podría revelar el huevo cuando termine de abrirse?"
+    },
     deliverables: [
       "La hoja completa con los siete objetivos marcados.",
       "Las viñetas, la tabla de movimientos y el boceto del mecanismo.",
@@ -1733,6 +1793,21 @@ const SPECIAL_PROJECT_PEDAGOGY = {
     importance: "El radar permite saber no solo si hay algo cerca, sino también en qué dirección se encuentra. Sin el barrido, el sensor observaría únicamente un punto fijo.",
     codeReaction: "el sensor recorra varios ángulos, mida distancias y active alertas",
     role: "detector y pista de localización",
+    context: {
+      paragraphs: [
+        "En algunos videojuegos aparece un mapa que indica en qué dirección se encuentra un objeto. Los murciélagos también pueden calcular distancias mediante sonidos que rebotan. Un radar combina ideas parecidas para explorar un área y localizar objetos.",
+        "Nuestro radar moverá un sensor ultrasónico con un servomotor. El ángulo indicará hacia dónde está mirando y la distancia mostrará qué tan lejos se encuentra el objeto. Con un solo dato no sería posible ubicarlo correctamente.",
+        "En el Escape Room, el radar puede funcionar como sistema de seguridad, detector de una pieza escondida o pista que ayude al jugador a buscar en la dirección correcta."
+      ],
+      choice: {
+        question: "¿Qué información indica hacia dónde está mirando el radar?",
+        options: ["El ángulo", "El color del LED", "El volumen del buzzer"],
+        answer: "El ángulo"
+      },
+      trueFalse: "Para localizar mejor un objeto se necesitan dirección y distancia.",
+      fill: "Completa: el servomotor cambia la dirección y el sensor mide la ______.",
+      open: "¿Qué objeto o pista podría buscar el jugador con ayuda del radar?"
+    },
     deliverables: [
       "La hoja completa con los siete objetivos marcados.",
       "El dibujo de ángulos, el diagrama de flujo y el boceto de la base.",
@@ -2112,6 +2187,112 @@ function createSpecialProjectOverview(project) {
   return block;
 }
 
+function createMissionContext(project) {
+  const contentId = `mission-context-content-${project.order}`;
+  const radioName = `mission_context_${project.order}_choice`;
+  const readingText = project.context.paragraphs.join(" ");
+  const block = document.createElement("section");
+  block.className = "card mission-context";
+  block.innerHTML = `
+    <div class="mission-context__header">
+      <div>
+        <span class="mission-context__eyebrow">Lee antes de construir</span>
+        <h2>Contexto de la misión</h2>
+      </div>
+      <button
+        class="action-button mission-context__read"
+        type="button"
+        aria-controls="${contentId}"
+      >🔊 Leer contexto de la misión</button>
+    </div>
+
+    <div class="mission-context__content" id="${contentId}">
+      <div class="mission-context__reading">
+        ${project.context.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}
+      </div>
+
+      <div class="mission-context__questions">
+        <h3>Comprensión de la lectura</h3>
+        <p>Responde utilizando solamente la información de la lectura y tus propias ideas.</p>
+
+        <fieldset class="understanding-question">
+          <legend>1. ${project.context.choice.question}</legend>
+          ${project.context.choice.options.map((option) => `
+            <label>
+              <input type="radio" name="${radioName}" value="${option}" />
+              ${option}
+            </label>
+          `).join("")}
+        </fieldset>
+
+        <div class="worksheet-field">
+          <label for="mission-context-${project.order}-true-false">2. Verdadero o falso: ${project.context.trueFalse}</label>
+          <select class="worksheet-select" id="mission-context-${project.order}-true-false" name="mission_context_${project.order}_true_false">
+            <option value="">Selecciona una respuesta</option>
+            <option value="verdadero">Verdadero</option>
+            <option value="falso">Falso</option>
+          </select>
+        </div>
+
+        <div class="worksheet-field">
+          <label for="mission-context-${project.order}-fill">3. ${project.context.fill}</label>
+          <input class="worksheet-input" id="mission-context-${project.order}-fill" name="mission_context_${project.order}_fill" type="text" />
+        </div>
+
+        <div class="worksheet-field">
+          <label for="mission-context-${project.order}-open">4. ${project.context.open}</label>
+          <textarea class="worksheet-textarea" id="mission-context-${project.order}-open" name="mission_context_${project.order}_open" placeholder="Explica tu idea en 2 o 3 oraciones."></textarea>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const button = block.querySelector(".mission-context__read");
+  const speech = window.speechSynthesis;
+  let utterance = null;
+
+  if (!speech || typeof SpeechSynthesisUtterance === "undefined") {
+    button.disabled = true;
+    button.textContent = "Audio no disponible";
+    return block;
+  }
+
+  const resetButton = () => {
+    utterance = null;
+    button.textContent = "🔊 Leer contexto de la misión";
+    button.setAttribute("aria-pressed", "false");
+  };
+
+  button.setAttribute("aria-pressed", "false");
+  button.addEventListener("click", () => {
+    if (utterance) {
+      speech.cancel();
+      resetButton();
+      return;
+    }
+
+    speech.cancel();
+    utterance = new SpeechSynthesisUtterance(readingText);
+    utterance.lang = "es-MX";
+    utterance.rate = 0.9;
+
+    const spanishVoice = speech.getVoices().find((voice) =>
+      voice.lang.toLowerCase().startsWith("es")
+    );
+    if (spanishVoice) {
+      utterance.voice = spanishVoice;
+    }
+
+    utterance.addEventListener("end", resetButton, { once: true });
+    utterance.addEventListener("error", resetButton, { once: true });
+    button.textContent = "⏹ Detener lectura";
+    button.setAttribute("aria-pressed", "true");
+    speech.speak(utterance);
+  });
+
+  return block;
+}
+
 function createObjectiveMission(objectiveNumber, project) {
   const phase = SPECIAL_PROJECT_PHASE_GUIDE[objectiveNumber - 1];
   const block = document.createElement("div");
@@ -2146,6 +2327,10 @@ function createBeforeProgramming(objectiveNumber, project, isFinalCode = false) 
       <label for="${suffix}-prediction-3">3. ¿Cómo debería reaccionar el juego cuando ${project.codeReaction}?</label>
       <textarea class="worksheet-textarea worksheet-textarea--compact" id="${suffix}-prediction-3" name="${suffix}-prediction-3" placeholder="Explica qué debe notar el jugador del Escape Room."></textarea>
     </div>
+    <div class="worksheet-field">
+      <label for="${suffix}-prediction-4">4. ¿Qué pasaría dentro del Escape Room si esta función no existiera o dejara de funcionar?</label>
+      <textarea class="worksheet-textarea worksheet-textarea--compact" id="${suffix}-prediction-4" name="${suffix}-prediction-4" placeholder="Describe qué dejaría de observar o hacer el jugador."></textarea>
+    </div>
   `;
   return block;
 }
@@ -2165,7 +2350,7 @@ function createNewCodeGuide(objectiveNumber, codeStep, previousCodeStep, project
   block.className = "new-code-guide";
 
   const heading = document.createElement("h3");
-  heading.textContent = "¿Qué parte del código es nueva?";
+  heading.textContent = "Lo nuevo que aprenderás hoy";
   block.appendChild(heading);
 
   const previous = document.createElement("p");
@@ -2249,6 +2434,11 @@ function createUnderstandingCheck(project) {
       <label for="understanding-${project.order}-explain">5. Explica con tus propias palabras cómo esta práctica ayuda al Escape Room final.</label>
       <textarea class="worksheet-textarea" id="understanding-${project.order}-explain" name="understanding_${project.order}_explain" placeholder="Menciona qué hará la pieza y qué observará el jugador."></textarea>
     </div>
+
+    <div class="worksheet-field">
+      <label for="understanding-${project.order}-situation">6. Situación de aplicación: durante la presentación, el ${project.role} no reacciona. ¿Qué notaría el jugador y qué revisarías primero?</label>
+      <textarea class="worksheet-textarea" id="understanding-${project.order}-situation" name="understanding_${project.order}_situation" placeholder="Explica el efecto en la aventura y escribe una revisión concreta."></textarea>
+    </div>
   `;
   return block;
 }
@@ -2300,7 +2490,9 @@ function setupSpecialProjectLearningSequence() {
   );
 
   if (guideCard) {
-    guideCard.insertAdjacentElement("afterend", createSpecialProjectOverview(project));
+    const overview = createSpecialProjectOverview(project);
+    guideCard.insertAdjacentElement("afterend", overview);
+    overview.insertAdjacentElement("afterend", createMissionContext(project));
   }
 
   const progressCard = document.createElement("section");
@@ -2549,7 +2741,7 @@ function createCodeLineGuide(codeText, label, project) {
   details.className = "code-line-guide";
 
   const summary = document.createElement("summary");
-  summary.textContent = `Explicación línea por línea: ${label}`;
+  summary.textContent = `Entendiendo el código: explicación línea por línea de ${label}`;
   details.appendChild(summary);
 
   const introduction = document.createElement("p");
