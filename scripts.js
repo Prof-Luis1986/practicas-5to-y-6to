@@ -51,7 +51,7 @@ function setupCopyableCodeBlocks() {
 
   document.querySelectorAll("pre").forEach((pre) => {
     const code = pre.querySelector("code");
-    if (!code || pre.parentElement?.classList.contains("code-block")) return;
+    if (!code || pre.dataset.noCopy === "true" || pre.parentElement?.classList.contains("code-block")) return;
 
     const wrapper = document.createElement("div");
     wrapper.className = "code-block";
@@ -1603,6 +1603,197 @@ const SPECIAL_PROJECT_OBJECTIVE_REQUIREMENTS = {
   ]
 };
 
+const SPECIAL_PROJECT_PEDAGOGY = {
+  "proyecto-especial-contenedor": {
+    order: 1,
+    title: "Contenedor",
+    learn: "Aprenderás a convertir una distancia en una señal fácil de entender mediante colores, movimientos de luz y sonidos.",
+    build: "Construirás un contenedor interactivo con cuatro estados: reposo, actividad, alerta y peligro.",
+    future: "En el Escape Room servirá como una alarma que reacciona cuando el jugador se acerca a una zona protegida.",
+    importance: "Esta parte comunica al jugador si está lejos, acercándose o entrando en peligro. Sin ella, el contenedor no reaccionaría y no daría pistas sobre lo que sucede.",
+    codeReaction: "la distancia medida cambie el color del aro y el sonido del buzzer",
+    role: "sistema de alarma y proximidad",
+    deliverables: [
+      "La hoja completa con los siete objetivos marcados.",
+      "El enlace de Tinkercad del circuito y código, si utilizaste simulador.",
+      "Un enlace de Drive con un video donde se observen los cuatro estados.",
+      "Una explicación de qué distancia activa reposo, actividad, alerta y peligro.",
+      "Las tablas de pruebas, problemas encontrados y mejoras realizadas."
+    ],
+    checks: {
+      choice: {
+        question: "¿Qué componente le informa al programa qué tan cerca está el jugador?",
+        options: ["El sensor ultrasónico", "El aro NeoPixel", "El buzzer"],
+        answer: "El sensor ultrasónico"
+      },
+      trueFalse: "El aro NeoPixel y el buzzer ayudan a que el jugador comprenda el nivel de peligro.",
+      fill: "Completa: primero el sensor mide la ______ y después el programa selecciona un estado.",
+      match: [
+        ["Sensor ultrasónico", "Mide la distancia"],
+        ["Aro NeoPixel y buzzer", "Comunican el nivel de peligro"]
+      ]
+    }
+  },
+  "proyecto-especial-cabeza-dinosaurio": {
+    order: 2,
+    title: "Cabeza dinosaurio",
+    learn: "Aprenderás a controlar dos servomotores y a usar tiempos distintos para crear movimientos que parezcan naturales.",
+    build: "Construirás ojos o párpados que parpadean y cambian a un modo de alerta.",
+    future: "En el Escape Room hará que el dinosaurio parezca vivo y reaccione durante la aventura.",
+    importance: "El movimiento de los ojos crea suspenso y ayuda a contar que el dinosaurio despertó o detectó algo. Sin esta parte, la cabeza permanecería inmóvil y perdería gran parte de su efecto.",
+    codeReaction: "los dos ojos se abran, se cierren y cambien al modo de alerta",
+    role: "animación de la criatura",
+    deliverables: [
+      "La hoja completa con los siete objetivos marcados.",
+      "Una tabla con los ángulos seguros de cada ojo.",
+      "El enlace de Tinkercad, si la prueba se realizó en simulador.",
+      "Un enlace de Drive con un video del parpadeo natural y del modo de alerta.",
+      "El boceto del mecanismo y una lista de los ajustes finales."
+    ],
+    checks: {
+      choice: {
+        question: "¿Por qué se prueban los servos uno por uno antes de mover los dos ojos?",
+        options: ["Para encontrar ángulos seguros", "Para cambiar el color de los ojos", "Para medir distancias"],
+        answer: "Para encontrar ángulos seguros"
+      },
+      trueFalse: "Un parpadeo natural siempre debe repetirse con exactamente la misma pausa.",
+      fill: "Completa: los valores de apertura y cierre deben ajustarse al ______ construido.",
+      match: [
+        ["Servomotores", "Mueven los ojos o párpados"],
+        ["Ángulos y pausas", "Definen la posición y el ritmo"]
+      ]
+    }
+  },
+  "proyecto-especial-brazo-dinosaurio": {
+    order: 3,
+    title: "Brazo dinosaurio",
+    learn: "Aprenderás a usar un sensor para activar una reacción mecánica de manera controlada y segura.",
+    build: "Construirás un brazo que se mueve, enciende una luz y produce un sonido cuando alguien se acerca.",
+    future: "En el Escape Room funcionará como una sorpresa o advertencia que se activa por proximidad.",
+    importance: "Esta parte convierte la presencia del jugador en una reacción visible. Sin el sensor y la secuencia de reinicio, el brazo tendría que activarse manualmente o podría moverse sin control.",
+    codeReaction: "el brazo reaccione una sola vez cuando alguien se acerque y vuelva a prepararse al alejarse",
+    role: "reacción mecánica de sorpresa",
+    deliverables: [
+      "La hoja completa con los siete objetivos marcados.",
+      "El boceto del brazo y tres reglas de seguridad.",
+      "El enlace de Tinkercad, si utilizaste simulador.",
+      "Un enlace de Drive con tres activaciones completas del brazo.",
+      "Las distancias, ángulos, tiempos y mejoras finales registrados."
+    ],
+    checks: {
+      choice: {
+        question: "¿Qué debe ocurrir para que el brazo quede listo después de activarse?",
+        options: ["El jugador debe alejarse", "El LED debe cambiar de color", "El Arduino debe desconectarse"],
+        answer: "El jugador debe alejarse"
+      },
+      trueFalse: "La zona de movimiento debe quedar fuera del alcance de los jugadores.",
+      fill: "Completa: el sensor detecta la cercanía y el ______ mueve el brazo.",
+      match: [
+        ["Sensor ultrasónico", "Detecta que alguien se acercó"],
+        ["Servomotor", "Mueve el brazo"]
+      ]
+    }
+  },
+  "proyecto-especial-huevo-dinosaurio": {
+    order: 4,
+    title: "Huevo dinosaurio",
+    learn: "Aprenderás a contar una pequeña historia usando posiciones, movimientos y pausas de un servomotor.",
+    build: "Construirás una secuencia de empujes, apertura y cierre para simular que algo intenta salir del huevo.",
+    future: "En el Escape Room será un efecto animado que aumentará el misterio de la aventura.",
+    importance: "El orden y la intensidad de los movimientos permiten que el jugador entienda la eclosión. Sin una secuencia planeada, la tapa solo se movería sin contar una historia clara.",
+    codeReaction: "el huevo realice empujes pequeños, una apertura fuerte y un cierre en el orden correcto",
+    role: "secuencia animada de eclosión",
+    deliverables: [
+      "La hoja completa con los siete objetivos marcados.",
+      "Las viñetas, la tabla de movimientos y el boceto del mecanismo.",
+      "El enlace de Tinkercad, si utilizaste simulador.",
+      "Un enlace de Drive con un video del ciclo completo.",
+      "El registro de cinco ciclos, problemas y correcciones."
+    ],
+    checks: {
+      choice: {
+        question: "¿Qué movimiento debe comunicar el momento principal de la eclosión?",
+        options: ["La apertura amplia", "El regreso a cero", "Una pausa sin movimiento"],
+        answer: "La apertura amplia"
+      },
+      trueFalse: "Conviene probar primero con una pieza ligera antes de colocar la tapa final.",
+      fill: "Completa: los ángulos indican posiciones y los ______ indican cuánto espera el programa.",
+      match: [
+        ["Ángulo", "Indica una posición del mecanismo"],
+        ["Pausa", "Controla el ritmo de la historia"]
+      ]
+    }
+  },
+  "proyecto-especial-radar": {
+    order: 5,
+    title: "Radar",
+    learn: "Aprenderás a combinar dirección y distancia para localizar objetos en diferentes partes de un área.",
+    build: "Construirás un radar que barre de un lado a otro y produce alertas visuales y sonoras.",
+    future: "En el Escape Room funcionará como detector, sistema de seguridad o pista para localizar un objeto.",
+    importance: "El radar permite saber no solo si hay algo cerca, sino también en qué dirección se encuentra. Sin el barrido, el sensor observaría únicamente un punto fijo.",
+    codeReaction: "el sensor recorra varios ángulos, mida distancias y active alertas",
+    role: "detector y pista de localización",
+    deliverables: [
+      "La hoja completa con los siete objetivos marcados.",
+      "El dibujo de ángulos, el diagrama de flujo y el boceto de la base.",
+      "El enlace de Tinkercad, si utilizaste simulador.",
+      "Un enlace de Drive con el video del barrido y el monitor serial.",
+      "El mapa de pruebas con ángulos, distancias y una mejora aplicada."
+    ],
+    checks: {
+      choice: {
+        question: "¿Qué dos datos necesita el radar para ubicar mejor un objeto?",
+        options: ["Ángulo y distancia", "Color y sonido", "Tiempo y temperatura"],
+        answer: "Ángulo y distancia"
+      },
+      trueFalse: "El sensor debe medir inmediatamente, antes de que el servo llegue a la nueva posición.",
+      fill: "Completa: el servo cambia la dirección y el sensor mide la ______.",
+      match: [
+        ["Servomotor", "Cambia el ángulo del sensor"],
+        ["Sensor ultrasónico", "Mide la distancia al objeto"]
+      ]
+    }
+  }
+};
+
+const SPECIAL_PROJECT_PHASE_GUIDE = [
+  {
+    title: "Investigar",
+    purpose: "Primero observarás ejemplos y descubrirás qué comportamiento debe imitar el proyecto.",
+    contribution: "Esta investigación te ayuda a decidir cómo debe verse o sentirse el efecto."
+  },
+  {
+    title: "Planear",
+    purpose: "Ordenarás las acciones antes de conectar o programar.",
+    contribution: "El plan será el mapa que seguirás para no construir al azar."
+  },
+  {
+    title: "Diseñar",
+    purpose: "Dibujarás componentes, conexiones y partes móviles.",
+    contribution: "El diseño muestra dónde irá cada pieza dentro del Escape Room."
+  },
+  {
+    title: "Probar por partes",
+    purpose: "Comprobarás cada componente por separado.",
+    contribution: "Así podrás encontrar errores pequeños antes de unir todo el sistema."
+  },
+  {
+    title: "Construir el comportamiento",
+    purpose: "Crearás la acción principal con movimientos, luces o sonidos.",
+    contribution: "Aquí aparece por primera vez el efecto que verá el jugador."
+  },
+  {
+    title: "Integrar",
+    purpose: "Unirás entrada, decisión y respuesta en un solo sistema.",
+    contribution: "La pieza comenzará a reaccionar automáticamente como parte del Escape Room."
+  },
+  {
+    title: "Mejorar",
+    purpose: "Repetirás pruebas y corregirás seguridad, claridad y estabilidad.",
+    contribution: "La pieza quedará lista para usarse varias veces durante la presentación."
+  }
+];
+
 function createObjectiveRequirements(requirements) {
   const block = document.createElement("div");
   block.className = "objective-requirements";
@@ -1822,12 +2013,275 @@ function createObjectiveDeliveryForm(card, objectiveNumber) {
   return block;
 }
 
+function createSpecialProjectOverview(project) {
+  const percentage = project.order * 20;
+  const completedBlocks = "█".repeat(project.order * 2);
+  const pendingBlocks = "░".repeat(10 - project.order * 2);
+  const projectRoute = Object.values(SPECIAL_PROJECT_PEDAGOGY).sort((a, b) => a.order - b.order);
+  const previousProjects = projectRoute.filter((item) => item.order < project.order);
+  const futureProjects = projectRoute.filter((item) => item.order > project.order);
+  const previousSummary = previousProjects.length
+    ? `Ya construiste ${previousProjects.map((item) => `<strong>${item.title}</strong> (${item.role})`).join(", ")}.`
+    : "Esta es la primera pieza física del Escape Room. Ya existe el plan general de la aventura y ahora comenzarás a construir sus mecanismos interactivos.";
+  const block = document.createElement("section");
+  block.className = "card escape-mission-overview";
+  block.innerHTML = `
+    <div class="escape-project-progress">
+      <div>
+        <span class="escape-project-progress__eyebrow">Proyecto Escape Room</span>
+        <strong>${completedBlocks}${pendingBlocks} ${percentage}% del recorrido</strong>
+      </div>
+      <span class="escape-project-progress__badge">Misión ${project.order} de 5</span>
+    </div>
+    <p class="escape-project-progress__explanation">
+      Esta práctica construye el <strong>${project.role}</strong>. Al terminarla, habrás completado una parte importante del Escape Room final.
+    </p>
+
+    <nav class="escape-project-route" aria-label="Ruta de construcción del Escape Room">
+      <h2>Ruta del proyecto Escape Room</h2>
+      <ol>
+        ${projectRoute.map((item) => {
+          const state = item.order < project.order ? "completed" : item.order === project.order ? "current" : "pending";
+          const icon = state === "completed" ? "✓" : state === "current" ? "▶" : "○";
+          const status = state === "completed" ? "Construido" : state === "current" ? "Estamos aquí" : "Próximamente";
+          return `
+            <li class="escape-project-route__item escape-project-route__item--${state}">
+              <span aria-hidden="true">${icon}</span>
+              <div>
+                <strong>${item.title}</strong>
+                <small>${status}: ${item.role}</small>
+              </div>
+            </li>
+          `;
+        }).join("")}
+      </ol>
+    </nav>
+
+    <div class="project-connection-grid">
+      <article class="project-connection-card">
+        <h2>¿Qué construimos anteriormente?</h2>
+        <p>${previousSummary}</p>
+        ${futureProjects.length ? `<p>Estas piezas seguirán funcionando y la nueva se agregará junto a ellas.</p>` : `<p>Con la práctica de hoy unirás la última pieza planeada de esta ruta.</p>`}
+      </article>
+      <article class="project-connection-card">
+        <h2>¿Qué agregaremos hoy?</h2>
+        <p>${project.build}</p>
+        <p>${project.learn}</p>
+      </article>
+      <article class="project-connection-card">
+        <h2>¿Cómo se conecta con nuestro Escape Room?</h2>
+        <p>${project.future}</p>
+        <p>Esta pieza se integra con las demás para que el jugador encuentre señales, reacciones y efectos durante una sola aventura.</p>
+      </article>
+    </div>
+
+    <div class="before-after-project">
+      <h2>Antes y después</h2>
+      <div class="before-after-project__grid">
+        <div>
+          <h3>Antes de esta práctica</h3>
+          <ul>
+            ${previousProjects.length
+              ? previousProjects.map((item) => `<li>${item.title}: ${item.role}</li>`).join("")
+              : "<li>Plan general del Escape Room.</li><li>Espacios y misión de la aventura definidos.</li>"}
+          </ul>
+        </div>
+        <div>
+          <h3>Después de esta práctica</h3>
+          <ul>
+            ${previousProjects.map((item) => `<li>${item.title}: ${item.role}</li>`).join("")}
+            <li><strong>${project.title}: ${project.role}</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mission-explanation-grid">
+      <article class="mission-explanation mission-explanation--goal">
+        <h2>¿Qué vamos a lograr hoy?</h2>
+        <p><strong>Aprenderás:</strong> ${project.learn}</p>
+        <p><strong>Construirás:</strong> ${project.build}</p>
+        <p><strong>Servirá más adelante:</strong> ${project.future}</p>
+      </article>
+      <article class="mission-explanation mission-explanation--importance">
+        <h2>¿Por qué es importante?</h2>
+        <p>${project.importance}</p>
+      </article>
+    </div>
+  `;
+  return block;
+}
+
+function createObjectiveMission(objectiveNumber, project) {
+  const phase = SPECIAL_PROJECT_PHASE_GUIDE[objectiveNumber - 1];
+  const block = document.createElement("div");
+  block.className = "objective-mission";
+  block.innerHTML = `
+    <span class="objective-mission__number">Misión ${objectiveNumber} de 7</span>
+    <div>
+      <h3>En palabras sencillas: ${phase.title}</h3>
+      <p><strong>Lo que harás:</strong> ${phase.purpose}</p>
+      <p><strong>Cómo ayuda al proyecto final:</strong> ${phase.contribution}</p>
+    </div>
+  `;
+  return block;
+}
+
+function createBeforeProgramming(objectiveNumber, project, isFinalCode = false) {
+  const suffix = isFinalCode ? "final" : `objective-${objectiveNumber}`;
+  const block = document.createElement("div");
+  block.className = "before-programming";
+  block.innerHTML = `
+    <h3>Antes de programar</h3>
+    <p>No copies el código todavía. Primero imagina lo que debe ocurrir y responde con tus propias palabras.</p>
+    <div class="worksheet-field">
+      <label for="${suffix}-prediction-1">1. ¿Qué crees que hará esta parte del programa?</label>
+      <textarea class="worksheet-textarea worksheet-textarea--compact" id="${suffix}-prediction-1" name="${suffix}-prediction-1" placeholder="Describe la acción que esperas observar."></textarea>
+    </div>
+    <div class="worksheet-field">
+      <label for="${suffix}-prediction-2">2. ¿Qué información recibe el programa y qué respuesta debe producir?</label>
+      <textarea class="worksheet-textarea worksheet-textarea--compact" id="${suffix}-prediction-2" name="${suffix}-prediction-2" placeholder="Ejemplo: recibe una distancia y responde con una luz."></textarea>
+    </div>
+    <div class="worksheet-field">
+      <label for="${suffix}-prediction-3">3. ¿Cómo debería reaccionar el juego cuando ${project.codeReaction}?</label>
+      <textarea class="worksheet-textarea worksheet-textarea--compact" id="${suffix}-prediction-3" name="${suffix}-prediction-3" placeholder="Explica qué debe notar el jugador del Escape Room."></textarea>
+    </div>
+  `;
+  return block;
+}
+
+function createNewCodeGuide(objectiveNumber, codeStep, previousCodeStep, project) {
+  const previousLines = new Set(
+    (previousCodeStep?.code || "")
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean)
+  );
+  const newLines = codeStep.code
+    .split("\n")
+    .filter((line) => line.trim() && !previousLines.has(line.trim()));
+
+  const block = document.createElement("div");
+  block.className = "new-code-guide";
+
+  const heading = document.createElement("h3");
+  heading.textContent = "¿Qué parte del código es nueva?";
+  block.appendChild(heading);
+
+  const previous = document.createElement("p");
+  previous.innerHTML = objectiveNumber === 1
+    ? "<strong>Antes:</strong> todavía no había un programa de prueba para esta pieza."
+    : `<strong>Código que ya conoces:</strong> la prueba anterior agregó “${previousCodeStep.title}”. No necesitas olvidarla; hoy construirás sobre esa idea.`;
+  block.appendChild(previous);
+
+  const today = document.createElement("p");
+  today.innerHTML = `<strong>Lo nuevo de hoy:</strong> ${codeStep.title}. Estas instrucciones agregan una capacidad visible: ${project.codeReaction}.`;
+  block.appendChild(today);
+
+  const warning = document.createElement("p");
+  warning.className = "worksheet-note";
+  warning.textContent = "Estas líneas sirven para comparar el crecimiento del programa. No las copies solas: utiliza el bloque completo que aparece después.";
+  block.appendChild(warning);
+
+  const details = document.createElement("details");
+  details.className = "new-code-guide__details";
+  const summary = document.createElement("summary");
+  summary.textContent = `Ver ${newLines.length} líneas nuevas o diferentes`;
+  details.appendChild(summary);
+
+  const pre = document.createElement("pre");
+  pre.dataset.noCopy = "true";
+  const code = document.createElement("code");
+  code.textContent = newLines.join("\n");
+  pre.appendChild(code);
+  details.appendChild(pre);
+  block.appendChild(details);
+
+  return block;
+}
+
+function createUnderstandingCheck(project) {
+  const block = document.createElement("section");
+  block.className = "card understanding-check";
+  const optionName = `understanding_${project.order}_choice`;
+  block.innerHTML = `
+    <h2>Comprueba que entendiste</h2>
+    <p>Responde sin copiar el código. Esta actividad te ayuda a comprobar si puedes explicar la misión.</p>
+
+    <fieldset class="understanding-question">
+      <legend>1. ${project.checks.choice.question}</legend>
+      ${project.checks.choice.options.map((option) => `
+        <label>
+          <input type="radio" name="${optionName}" value="${option}" />
+          ${option}
+        </label>
+      `).join("")}
+    </fieldset>
+
+    <div class="worksheet-field">
+      <label for="understanding-${project.order}-true-false">2. Verdadero o falso: ${project.checks.trueFalse}</label>
+      <select class="worksheet-select" id="understanding-${project.order}-true-false" name="understanding_${project.order}_true_false">
+        <option value="">Selecciona una respuesta</option>
+        <option value="verdadero">Verdadero</option>
+        <option value="falso">Falso</option>
+      </select>
+    </div>
+
+    <div class="worksheet-field">
+      <label for="understanding-${project.order}-fill">3. ${project.checks.fill}</label>
+      <input class="worksheet-input" id="understanding-${project.order}-fill" name="understanding_${project.order}_fill" type="text" />
+    </div>
+
+    <div class="understanding-match">
+      <h3>4. Relaciona cada elemento con su función</h3>
+      ${project.checks.match.map(([concept, answer], index) => `
+        <div class="worksheet-field">
+          <label for="understanding-${project.order}-match-${index + 1}">${concept}</label>
+          <select class="worksheet-select" id="understanding-${project.order}-match-${index + 1}" name="understanding_${project.order}_match_${index + 1}">
+            <option value="">Elige una función</option>
+            ${project.checks.match.map(([, option]) => `<option value="${option}">${option}</option>`).join("")}
+          </select>
+        </div>
+      `).join("")}
+    </div>
+
+    <div class="worksheet-field">
+      <label for="understanding-${project.order}-explain">5. Explica con tus propias palabras cómo esta práctica ayuda al Escape Room final.</label>
+      <textarea class="worksheet-textarea" id="understanding-${project.order}-explain" name="understanding_${project.order}_explain" placeholder="Menciona qué hará la pieza y qué observará el jugador."></textarea>
+    </div>
+  `;
+  return block;
+}
+
+function createDeliveryChecklist(project) {
+  const block = document.createElement("section");
+  block.className = "card final-delivery-guide";
+  block.innerHTML = `
+    <h2>¿Qué debo entregar?</h2>
+    <p>Antes de enviar, revisa uno por uno estos elementos. El profesor comprobará que las evidencias abran, que el mecanismo funcione y que puedas explicar lo que hiciste.</p>
+    <ul class="final-delivery-guide__list">
+      ${project.deliverables.map((item) => `<li>${item}</li>`).join("")}
+    </ul>
+    <div class="final-delivery-guide__review">
+      <h3>El profesor revisará</h3>
+      <ul>
+        <li>Que los enlaces permitan ver el contenido sin solicitar acceso.</li>
+        <li>Que las capturas o videos muestren la prueba completa y no solamente el resultado final.</li>
+        <li>Que registres valores reales, errores encontrados y correcciones.</li>
+        <li>Que puedas explicar cómo esta pieza se conecta con el Escape Room.</li>
+      </ul>
+    </div>
+  `;
+  return block;
+}
+
 function setupSpecialProjectLearningSequence() {
   const worksheetKey = document.body.dataset.worksheetKey;
   const questionSets = SPECIAL_PROJECT_QUESTIONS[worksheetKey];
   const codeSteps = SPECIAL_PROJECT_CODE_STEPS[worksheetKey];
   const objectiveRequirements = SPECIAL_PROJECT_OBJECTIVE_REQUIREMENTS[worksheetKey];
-  if (!questionSets || !codeSteps || !objectiveRequirements) return;
+  const project = SPECIAL_PROJECT_PEDAGOGY[worksheetKey];
+  if (!questionSets || !codeSteps || !objectiveRequirements || !project) return;
 
   const objectiveCards = Array.from(document.querySelectorAll(".card")).filter((card) =>
     /^Objetivo\s+[1-7]:/.test(card.querySelector("h2")?.textContent.trim() || "")
@@ -1841,13 +2295,20 @@ function setupSpecialProjectLearningSequence() {
   const identifiedCard = Array.from(document.querySelectorAll(".card")).find(
     (card) => card.querySelector("h2")?.textContent.trim() === "Producto final identificado"
   );
+  const guideCard = Array.from(document.querySelectorAll(".card")).find(
+    (card) => card.querySelector("h2")?.textContent.trim() === "Guía de trabajo"
+  );
+
+  if (guideCard) {
+    guideCard.insertAdjacentElement("afterend", createSpecialProjectOverview(project));
+  }
 
   const progressCard = document.createElement("section");
   progressCard.className = "card learning-progress";
   progressCard.setAttribute("aria-labelledby", "learning-progress-title");
   progressCard.innerHTML = `
     <div class="learning-progress__heading">
-      <h2 id="learning-progress-title">Avance del proyecto</h2>
+      <h2 id="learning-progress-title">Avance dentro de esta práctica</h2>
       <strong class="learning-progress__percentage" data-learning-percentage>0%</strong>
     </div>
     <div
@@ -1873,6 +2334,16 @@ function setupSpecialProjectLearningSequence() {
     const objectiveNumber = index + 1;
     const questions = questionSets[index];
     const codeStep = codeSteps[index];
+    const previousCodeStep = codeSteps[index - 1];
+    const firstDescription = Array.from(card.querySelectorAll("p")).find(
+      (paragraph) => paragraph.querySelector("strong")?.textContent.trim() === "Descripción:"
+    );
+    const mission = createObjectiveMission(objectiveNumber, project);
+    if (firstDescription) {
+      firstDescription.insertAdjacentElement("beforebegin", mission);
+    } else {
+      card.querySelector("h2")?.insertAdjacentElement("afterend", mission);
+    }
     card.appendChild(createObjectiveRequirements(objectiveRequirements[index]));
     card.appendChild(createStudentInstructions(card, objectiveNumber, codeStep));
     card.appendChild(createObjectiveDeliveryForm(card, objectiveNumber));
@@ -1893,6 +2364,8 @@ function setupSpecialProjectLearningSequence() {
         <li>Realiza la prueba por lo menos dos veces. Cambia únicamente el valor que se indique y compara los resultados.</li>
         <li>No agregues el siguiente bloque de código hasta que esta prueba funcione.</li>
       </ol>
+      <div data-before-programming></div>
+      <div data-new-code-guide></div>
       <pre><code></code></pre>
       <p><strong>Resultado esperado:</strong> ${codeStep.expected}</p>
       <div class="worksheet-field objective-tinkercad-link">
@@ -1919,6 +2392,12 @@ function setupSpecialProjectLearningSequence() {
       </div>
     `;
     codeTestBlock.querySelector("code").textContent = codeStep.code;
+    codeTestBlock.querySelector("[data-new-code-guide]").replaceWith(
+      createNewCodeGuide(objectiveNumber, codeStep, previousCodeStep, project)
+    );
+    codeTestBlock.querySelector("[data-before-programming]").replaceWith(
+      createBeforeProgramming(objectiveNumber, project)
+    );
     card.appendChild(codeTestBlock);
 
     const reflectionBlock = document.createElement("div");
@@ -1963,6 +2442,14 @@ function setupSpecialProjectLearningSequence() {
     finalReflectionHeading.textContent = "Reflexión final integradora";
   }
 
+  const sendCard = Array.from(document.querySelectorAll(".card")).find(
+    (card) => card.querySelector("h2")?.textContent.trim() === "Enviar proyecto"
+  );
+  if (sendCard) {
+    sendCard.insertAdjacentElement("beforebegin", createDeliveryChecklist(project));
+    sendCard.previousElementSibling.insertAdjacentElement("beforebegin", createUnderstandingCheck(project));
+  }
+
   const progressElement = progressCard.querySelector("[data-learning-progress]");
   const progressFill = progressCard.querySelector("[data-learning-progress-fill]");
   const percentageLabel = progressCard.querySelector("[data-learning-percentage]");
@@ -1991,6 +2478,128 @@ function setupSpecialProjectLearningSequence() {
   document.addEventListener("worksheet-data-applied", updateProgress);
   document.addEventListener("worksheet-reset", updateProgress);
   window.setTimeout(updateProgress, 0);
+}
+
+function explainCodeLine(line) {
+  const trimmed = line.trim();
+  const withoutComment = trimmed.replace(/\/\/.*$/, "").trim();
+
+  if (!trimmed) return "Esta línea separa visualmente las partes del programa para que sea más fácil leerlo.";
+  if (trimmed.startsWith("//")) return `Es un comentario para humanos: ${trimmed.replace(/^\/\/+\s*/, "")}. Arduino no ejecuta esta línea.`;
+  if (/^#include\s*</.test(trimmed)) return "Carga una biblioteca: una caja de herramientas con instrucciones ya preparadas para controlar un componente.";
+  if (/^#define\s+/.test(trimmed)) return "Crea un nombre fijo para un pin o una cantidad. Así el programa usa una palabra clara en lugar de repetir un número.";
+  if (/^(const\s+)?(int|long|float|unsigned long|bool|char)\s+/.test(trimmed)) {
+    if (trimmed.includes("=")) return "Crea una variable o dato con nombre y le asigna un valor inicial que el programa usará después.";
+    return "Reserva un espacio con nombre para guardar un dato que el programa necesitará.";
+  }
+  if (/^Servo\s+\w+/.test(trimmed)) return "Crea un objeto para controlar un servomotor, como si le pusiera un nombre propio.";
+  if (/^Adafruit_NeoPixel\s+\w+/.test(trimmed)) return "Prepara el control del aro de luces e indica cuántos LEDs tiene, qué pin usa y cómo recibe los colores.";
+  if (/^void setup\s*\(/.test(trimmed)) return "Inicia setup: esta parte se ejecuta una sola vez cuando Arduino se enciende o reinicia.";
+  if (/^void loop\s*\(/.test(trimmed)) return "Inicia loop: todo lo que esté dentro se repetirá una y otra vez mientras Arduino esté encendido.";
+  if (/^(void|int|long|bool)\s+\w+\s*\([^;]*\)\s*\{?$/.test(trimmed)) {
+    const functionName = trimmed.match(/^(?:void|int|long|bool)\s+(\w+)/)?.[1] || "esta función";
+    return `Crea la función ${functionName}: un grupo de instrucciones con una tarea específica que puede utilizarse varias veces.`;
+  }
+  if (/^if\s*\(/.test(trimmed)) return "Hace una pregunta. Las instrucciones de este bloque solo se ejecutan cuando la condición es verdadera.";
+  if (/^}\s*else if\s*\(/.test(trimmed) || /^else if\s*\(/.test(trimmed)) return "Si la condición anterior no se cumplió, prueba una condición diferente.";
+  if (/^}\s*else\s*\{?$/.test(trimmed) || /^else\s*\{?$/.test(trimmed)) return "Si ninguna condición anterior se cumplió, ejecuta esta última opción.";
+  if (/^for\s*\(/.test(trimmed)) return "Inicia una repetición controlada. Cambia un contador paso a paso hasta completar todos los movimientos o elementos.";
+  if (/^while\s*\(/.test(trimmed)) return "Repite las instrucciones mientras la condición continúe siendo verdadera.";
+  if (/^switch\s*\(/.test(trimmed)) return "Compara un valor con varias opciones para elegir cuál grupo de instrucciones ejecutar.";
+  if (/^case\s+/.test(trimmed)) return "Marca una de las opciones posibles dentro de una selección.";
+  if (/^break;/.test(trimmed)) return "Termina esta opción para evitar que el programa continúe con la siguiente.";
+  if (/^return\b/.test(trimmed)) return "Termina la función y devuelve el resultado calculado a la parte del programa que lo solicitó.";
+  if (/^Serial\.begin/.test(trimmed)) return "Abre la comunicación con el monitor serial para poder observar mensajes y mediciones en la computadora.";
+  if (/^Serial\.(print|println)/.test(trimmed)) return "Muestra un texto o valor en el monitor serial. Sirve para observar qué está pensando o midiendo el programa.";
+  if (/pinMode\s*\(/.test(trimmed)) return "Indica si ese pin enviará una señal de salida o recibirá información de entrada.";
+  if (/digitalWrite\s*\(/.test(trimmed)) return "Enciende o apaga una señal digital en el pin indicado.";
+  if (/digitalRead\s*\(/.test(trimmed)) return "Lee si un pin digital se encuentra encendido o apagado.";
+  if (/analogWrite\s*\(/.test(trimmed)) return "Envía una señal regulada para controlar intensidad o velocidad.";
+  if (/pulseIn\s*\(/.test(trimmed)) return "Mide cuánto dura el eco del sensor. Ese tiempo permitirá calcular la distancia.";
+  if (/delayMicroseconds\s*\(/.test(trimmed)) return "Hace una pausa extremadamente corta, medida en microsegundos, para formar la señal del sensor.";
+  if (/delay\s*\(/.test(trimmed)) return "Detiene el programa durante el tiempo indicado en milisegundos. Mil milisegundos equivalen a un segundo.";
+  if (/millis\s*\(/.test(trimmed)) return "Consulta cuántos milisegundos han pasado desde que Arduino comenzó a funcionar, sin reiniciar el reloj.";
+  if (/tone\s*\(/.test(trimmed)) return "Pide al buzzer producir un sonido con la frecuencia y, cuando aparece, la duración indicadas.";
+  if (/noTone\s*\(/.test(trimmed)) return "Detiene el sonido del buzzer.";
+  if (/\.attach\s*\(/.test(trimmed)) return "Conecta el nombre del servo con el pin donde está conectado físicamente.";
+  if (/\.write\s*\(/.test(trimmed)) return "Ordena al servomotor moverse hacia el ángulo indicado.";
+  if (/\.begin\s*\(/.test(trimmed)) return "Inicia el componente para que quede preparado antes de utilizarlo.";
+  if (/\.setBrightness\s*\(/.test(trimmed)) return "Ajusta el brillo del aro de LEDs.";
+  if (/\.setPixelColor\s*\(/.test(trimmed)) return "Asigna un color a uno de los LEDs del aro.";
+  if (/\.Color\s*\(/.test(trimmed)) return "Combina cantidades de rojo, verde y azul para formar un color.";
+  if (/\.show\s*\(/.test(trimmed)) return "Envía al aro los cambios de color preparados para que aparezcan en los LEDs.";
+  if (/\.clear\s*\(/.test(trimmed)) return "Borra los colores guardados del aro antes de preparar un nuevo efecto.";
+  if (/randomSeed\s*\(/.test(trimmed)) return "Prepara números aleatorios para que los tiempos o movimientos no se repitan siempre igual.";
+  if (/random\s*\(/.test(trimmed)) return "Elige un número al azar dentro del rango indicado.";
+  if (/^(true|false);?$/.test(withoutComment)) return "Representa una respuesta lógica: verdadero funciona como encendido y falso como apagado.";
+  if (/=\s*(true|false)\s*;/.test(withoutComment)) return "Guarda un estado lógico que funciona como interruptor: verdadero es activado y falso es desactivado.";
+  if (/^[A-Za-z_]\w*\s*(\+\+|--|\+=|-=)/.test(withoutComment)) return "Actualiza un contador o valor para avanzar al siguiente paso de una repetición.";
+  if (/^[A-Za-z_]\w*\s*=/.test(withoutComment)) return "Guarda un nuevo valor en la variable indicada.";
+  if (/^\w+\s*\([^;]*\);$/.test(withoutComment)) return "Llama a una función para ejecutar ahora la tarea que lleva ese nombre.";
+  if (trimmed === "{") return "Abre un bloque de instrucciones que pertenecen a la función, condición o repetición anterior.";
+  if (trimmed === "}" || trimmed === "};") return "Cierra el bloque de instrucciones que comenzó antes.";
+  if (/^}\s*while\s*\(/.test(trimmed)) return "Cierra el bloque y decide si debe repetirse otra vez según la condición.";
+  if (/[{}]/.test(trimmed)) return "Esta línea abre o cierra un grupo de instrucciones que deben mantenerse juntas.";
+  if (/^[A-Za-z_]\w*\s*;?$/.test(withoutComment)) return "Usa el dato, estado o instrucción que tiene ese nombre.";
+  return "Ejecuta esta instrucción usando los valores escritos. Observa su nombre y los datos entre paréntesis para identificar su tarea.";
+}
+
+function createCodeLineGuide(codeText, label, project) {
+  const details = document.createElement("details");
+  details.className = "code-line-guide";
+
+  const summary = document.createElement("summary");
+  summary.textContent = `Explicación línea por línea: ${label}`;
+  details.appendChild(summary);
+
+  const introduction = document.createElement("p");
+  introduction.className = "code-line-guide__intro";
+  introduction.textContent = `Abre esta guía mientras lees el código. No necesitas memorizarlo: busca qué tarea realiza cada línea y cómo ayuda a que ${project.codeReaction}.`;
+  details.appendChild(introduction);
+
+  const list = document.createElement("ol");
+  list.className = "code-line-guide__list";
+
+  codeText.split("\n").forEach((line, index) => {
+    if (!line.trim()) return;
+    const item = document.createElement("li");
+    item.value = index + 1;
+
+    const code = document.createElement("code");
+    code.textContent = line.trim();
+
+    const explanation = document.createElement("span");
+    explanation.textContent = explainCodeLine(line);
+
+    item.append(code, explanation);
+    list.appendChild(item);
+  });
+
+  details.appendChild(list);
+  return details;
+}
+
+function setupSpecialProjectCodeGuides() {
+  const worksheetKey = document.body.dataset.worksheetKey;
+  const project = SPECIAL_PROJECT_PEDAGOGY[worksheetKey];
+  if (!project) return;
+
+  const completeCodeHeading = Array.from(document.querySelectorAll(".card h2")).find(
+    (heading) => heading.textContent.trim() === "Código completo"
+  );
+  const completeCodePre = completeCodeHeading?.closest(".card")?.querySelector("pre");
+  if (completeCodePre && !completeCodePre.previousElementSibling?.classList.contains("before-programming")) {
+    completeCodePre.insertAdjacentElement("beforebegin", createBeforeProgramming(0, project, true));
+  }
+
+  document.querySelectorAll(".objective-code-test pre, .card > pre").forEach((pre, index) => {
+    if (pre.nextElementSibling?.classList.contains("code-line-guide")) return;
+    const cardTitle = pre.closest(".card")?.querySelector("h2")?.textContent.trim();
+    const stepTitle = pre.closest(".objective-code-test")?.querySelector("p strong")?.parentElement?.textContent.trim();
+    const label = stepTitle || cardTitle || `bloque ${index + 1}`;
+    const codeText = pre.querySelector("code")?.textContent || "";
+    pre.insertAdjacentElement("afterend", createCodeLineGuide(codeText, label, project));
+  });
 }
 
 function setupImageLightbox() {
@@ -2269,7 +2878,7 @@ const FIREBASE_CONFIG = {
 let firebaseServicesPromise;
 
 function getWorksheetFieldsDefault() {
-  return Array.from(document.querySelectorAll(".worksheet-input, .worksheet-textarea, .worksheet-select, input[type=\"checkbox\"]"));
+  return Array.from(document.querySelectorAll(".worksheet-input, .worksheet-textarea, .worksheet-select, input[type=\"checkbox\"], input[type=\"radio\"]"));
 }
 
 function collectWorksheetData(fields) {
@@ -2277,6 +2886,10 @@ function collectWorksheetData(fields) {
 
   fields.forEach((field) => {
     if (!field.name) return;
+    if (field.type === "radio") {
+      if (field.checked) data[field.name] = field.value;
+      return;
+    }
     data[field.name] = field.type === "checkbox" ? field.checked : field.value;
   });
 
@@ -2593,11 +3206,13 @@ function setupWorksheetEmailSubmission() {
       }
     }
 
-    const answers = fields.map((field) => ({
+    const answers = fields
+      .filter((field) => field.type !== "radio" || field.checked)
+      .map((field) => ({
       name: field.name,
       label: getFieldLabel(field),
       value: field.type === "checkbox" ? field.checked : field.value
-    }));
+      }));
     const objectiveFields = Array.from(document.querySelectorAll("[data-objective-completed]"));
     const progressPercentage = objectiveFields.length
       ? Math.round((objectiveFields.filter((field) => field.checked).length / objectiveFields.length) * 100)
@@ -2653,6 +3268,8 @@ function applyWorksheetData(fields, data) {
     if (!field.name) return;
     if (field.type === "checkbox" && typeof data[field.name] === "boolean") {
       field.checked = data[field.name];
+    } else if (field.type === "radio" && typeof data[field.name] === "string") {
+      field.checked = field.value === data[field.name];
     } else if (typeof data[field.name] === "string") {
       field.value = data[field.name];
     }
@@ -3082,7 +3699,7 @@ function createWorksheetPersistence(options) {
 
   resetButton?.addEventListener("click", async () => {
     getFieldsSafe().forEach((field) => {
-      if (field.type === "checkbox") {
+      if (field.type === "checkbox" || field.type === "radio") {
         field.checked = false;
       } else {
         field.value = "";
@@ -3130,6 +3747,7 @@ function setupWorksheetStorage() {
 document.addEventListener("DOMContentLoaded", () => {
   setupSpecialProjectLearningSequence();
   setupSpecialProjectMaterials();
+  setupSpecialProjectCodeGuides();
   setupCodeHighlighting();
   setupCopyableCodeBlocks();
   setupProjectSubmissionFields();

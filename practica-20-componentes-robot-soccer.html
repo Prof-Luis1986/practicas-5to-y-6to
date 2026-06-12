@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 20 - Componentes del Robot Soccer</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body.robot-soccer-page {
+      --soccer-blue: #075985;
+      --soccer-cyan: #06b6d4;
+      --soccer-green: #16a34a;
+      --soccer-lime: #a3e635;
+      --soccer-yellow: #facc15;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(6, 182, 212, 0.18), transparent 24rem),
+        radial-gradient(circle at 88% 20%, rgba(163, 230, 53, 0.18), transparent 22rem),
+        #eef6f7;
+    }
+
+    .robot-soccer-page .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(3, 105, 161, 0.96), rgba(15, 118, 110, 0.94)),
+        repeating-linear-gradient(90deg, transparent 0 54px, rgba(255, 255, 255, 0.08) 54px 56px);
+    }
+
+    .robot-soccer-page .hero::after {
+      content: "⚽";
+      position: absolute;
+      right: clamp(1rem, 7vw, 7rem);
+      bottom: -1.1rem;
+      font-size: clamp(4rem, 11vw, 8rem);
+      opacity: 0.16;
+      transform: rotate(-12deg);
+    }
+
+    .robot-soccer-page h2 {
+      color: var(--soccer-blue);
+    }
+
+    .robot-soccer-page h3 {
+      color: #0f766e;
+    }
+
+    .soccer-card {
+      border-top: 5px solid var(--soccer-cyan);
+    }
+
+    .intro-scoreboard,
+    .project-route,
+    .component-grid,
+    .deliverable-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .intro-scoreboard {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      margin-top: 1rem;
+    }
+
+    .score-item {
+      padding: 1rem;
+      border-radius: 16px;
+      background: #062f46;
+      color: #fff;
+      text-align: center;
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.12);
+    }
+
+    .score-item strong {
+      display: block;
+      color: var(--soccer-lime);
+      font-size: 1.05rem;
+    }
+
+    .project-route {
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 1rem;
+    }
+
+    .route-step {
+      padding: 1rem;
+      border: 2px solid #bae6fd;
+      border-radius: 16px;
+      background: #f0f9ff;
+    }
+
+    .route-step.is-current {
+      border-color: var(--soccer-green);
+      background: #f0fdf4;
+      box-shadow: 0 6px 18px rgba(22, 163, 74, 0.12);
+    }
+
+    .route-number,
+    .component-number {
+      display: inline-grid;
+      width: 2rem;
+      height: 2rem;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--soccer-blue);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .video-frame {
+      max-width: 520px;
+      margin: 1rem auto;
+      overflow: hidden;
+      border: 5px solid #082f49;
+      border-radius: 20px;
+      background: #000;
+      box-shadow: 0 16px 34px rgba(8, 47, 73, 0.25);
+    }
+
+    .video-frame video {
+      display: block;
+      width: 100%;
+      max-height: 620px;
+      background: #000;
+    }
+
+    .component-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .component-card {
+      overflow: hidden;
+      border: 1px solid #bae6fd;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fff, #f8fdff);
+      box-shadow: 0 8px 22px rgba(7, 89, 133, 0.1);
+    }
+
+    .component-image {
+      display: grid;
+      height: 250px;
+      place-items: center;
+      overflow: hidden;
+      background:
+        linear-gradient(45deg, #e0f2fe 25%, transparent 25%),
+        linear-gradient(-45deg, #e0f2fe 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e0f2fe 75%),
+        linear-gradient(-45deg, transparent 75%, #e0f2fe 75%),
+        #f8fdff;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+      background-size: 20px 20px;
+    }
+
+    .component-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 0.7rem;
+    }
+
+    .component-body {
+      padding: 1.1rem;
+    }
+
+    .component-heading {
+      display: flex;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    .component-heading h3 {
+      margin: 0;
+    }
+
+    .component-role {
+      padding: 0.75rem;
+      border-left: 5px solid var(--soccer-yellow);
+      border-radius: 8px;
+      background: #fffbeb;
+    }
+
+    .match-table select,
+    .worksheet-select {
+      width: 100%;
+      min-width: 210px;
+      padding: 0.65rem;
+      border: 1px solid #c8d6dd;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .prediction-table textarea,
+    .research-table textarea {
+      min-width: 230px;
+      min-height: 90px;
+    }
+
+    .challenge-banner {
+      padding: 1rem;
+      border: 2px dashed var(--soccer-green);
+      border-radius: 16px;
+      background: #f0fdf4;
+    }
+
+    .sketch-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .sketch-toolbar label {
+      font-weight: 700;
+      color: var(--soccer-blue);
+    }
+
+    .sketch-board {
+      width: 100%;
+      height: 390px;
+      border: 3px solid #0e7490;
+      border-radius: 16px;
+      background:
+        linear-gradient(rgba(14, 116, 144, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14, 116, 144, 0.08) 1px, transparent 1px),
+        #fff;
+      background-size: 24px 24px;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    .deliverable-grid {
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    }
+
+    .deliverable {
+      padding: 1rem;
+      border-radius: 16px;
+      background: #ecfeff;
+      border: 1px solid #a5f3fc;
+    }
+
+    .no-build-warning {
+      border-color: #facc15;
+      background: linear-gradient(135deg, #fffdf2, #fef9c3);
+    }
+
+    .read-aloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin: 0.9rem 0;
+    }
+
+    .read-aloud__status {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .history-source {
+      margin-top: 1rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid #d7e1e7;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 760px) {
+      .project-route,
+      .component-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .component-image {
+        height: 220px;
+      }
+
+      .sketch-board {
+        height: 310px;
+      }
+    }
+
+    @media print {
+      .sketch-toolbar,
+      .read-aloud {
+        display: none;
+      }
+
+      .video-frame {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body class="locked-content robot-soccer-page" data-worksheet-key="practica-20-componentes-robot-soccer" data-disable-project-links="true" data-allow-page-copy="true">
+  <header class="hero">
+    <p class="tag">Fase IV · Proyecto Robot Soccer · Parte 1</p>
+    <h1>Práctica 20: Conociendo los componentes del Robot Soccer – Parte 1</h1>
+    <p class="subtitle">Explora el cerebro, el control de movimiento y los motores del robot antes de construirlo.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#fase-iv">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card soccer-card">
+        <h2>Ficha de juego</h2>
+        <p><strong>Objetivo:</strong> Conocer, investigar y explicar la función de los componentes principales que se utilizarán posteriormente en el Robot Soccer.</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre del alumno</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <div class="intro-scoreboard" aria-label="Datos de la práctica">
+          <div class="score-item"><strong>Modo</strong>Exploración</div>
+          <div class="score-item"><strong>Equipo</strong>4 componentes</div>
+          <div class="score-item"><strong>Meta</strong>Comprender antes de construir</div>
+        </div>
+
+        <p class="worksheet-note">Tus respuestas se guardan automáticamente en este dispositivo. Al terminar, genera el PDF para entregar tu página respondida.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card soccer-card" id="robot-soccer-history">
+        <h2>Una breve historia del Robot Soccer</h2>
+        <div class="read-aloud">
+          <button class="action-button" id="read-history" type="button" aria-pressed="false">Escuchar la historia</button>
+          <p class="read-aloud__status" id="read-history-status" aria-live="polite">Presiona el botón para escuchar esta información.</p>
+        </div>
+        <div id="history-reading-text">
+          <p>El fútbol de robots es una competencia en la que varios robots juegan en una cancha para localizar la pelota, desplazarse, colaborar y tratar de marcar goles. Además de ser entretenido, funciona como un laboratorio donde se prueban nuevas ideas de robótica.</p>
+          <p>Sus antecedentes modernos comenzaron a principios de la década de 1990. En 1992, el profesor Allan Mackworth escribió sobre el reto de construir robots capaces de jugar fútbol. Ese mismo año, investigadores japoneses propusieron usar este desafío para impulsar avances en inteligencia artificial.</p>
+          <p>En junio de 1993, investigadores como Minoru Asada, Yasuo Kuniyoshi y Hiroaki Kitano decidieron crear una competencia llamada inicialmente <strong>Robot J-League</strong>. Como equipos de otros países se interesaron, el proyecto pasó a llamarse <strong>Robot World Cup Initiative</strong>, nombre que después se abrevió como <strong>RoboCup</strong> o Robocopa.</p>
+          <p>En 1996 se realizó una competencia de preparación en Osaka, Japón. La primera Robocopa oficial tuvo lugar en 1997 en Nagoya, Japón, y reunió a <strong>38 equipos de 11 países</strong>. También se planteó una gran meta para el año 2050: crear un equipo de robots autónomos capaz de vencer al equipo humano campeón mundial.</p>
+          <p>Con el tiempo surgieron distintas ligas con robots de ruedas, robots humanoides y equipos simulados por computadora. Estas competencias permiten investigar temas como visión artificial, movimiento, localización, navegación y coordinación entre robots.</p>
+          <p>Por eso, el Robot Soccer combina <strong>programación, electrónica, mecánica, estrategia y trabajo en equipo</strong>. En las competencias de robótica educativa, cada partido ayuda a observar resultados, resolver problemas y mejorar el robot.</p>
+        </div>
+        <p class="history-source"><strong>Fuente:</strong> José Guillermo Guarnizo M., César Leonardo Trujillo R. y Nelson Leonardo Díaz A., <a href="Dialnet-FutbolDeRobots-5327078.pdf" target="_blank" rel="noopener noreferrer"><em>Fútbol de robots: orígenes, federaciones, ligas y horizontes de investigación</em></a>.</p>
+        <div class="worksheet-field">
+          <label for="history-reflection">Según la lectura, ¿cómo comenzó el Robot Soccer y cuál es la gran meta propuesta para el año 2050?</label>
+          <textarea class="worksheet-textarea" id="history-reflection" name="history_reflection" placeholder="Menciona qué ocurrió entre 1992 y 1993, y explica con tus palabras la meta para 2050."></textarea>
+        </div>
+      </section>
+
+      <section class="card soccer-card">
+        <h2>La ruta del proyecto</h2>
+        <p>Antes de construir cualquier robot, es importante reconocer sus partes y comprender qué trabajo realiza cada una. Así podremos tomar mejores decisiones y evitar conexiones o usos incorrectos más adelante.</p>
+        <div class="project-route">
+          <article class="route-step is-current">
+            <span class="route-number">1</span>
+            <h3>Conocer</h3>
+            <p><strong>Esta práctica:</strong> observar, investigar y comprender los componentes.</p>
+          </article>
+          <article class="route-step">
+            <span class="route-number">2</span>
+            <h3>Armar</h3>
+            <p><strong>Parte 2:</strong> realizar el armado físico del Robot Soccer.</p>
+          </article>
+          <article class="route-step">
+            <span class="route-number">3</span>
+            <h3>Programar</h3>
+            <p><strong>Parte 3:</strong> codificar y probar los movimientos del robot.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="card soccer-card">
+        <h2>Video de inspiración</h2>
+        <p>Observa con atención cómo cambian de dirección, avanzan, retroceden y reaccionan los robots durante el juego.</p>
+        <div class="video-frame">
+          <video controls preload="metadata">
+            <source src="Soccer%20Bot%20Competition%202023%20%7C%20Robot%20Soccer%20Game%20%23soccerbot%20%23robotics.mp4" type="video/mp4" />
+            Tu navegador no puede reproducir este video.
+          </video>
+        </div>
+        <div class="worksheet-field">
+          <label for="video-movements">¿Qué movimientos observaste en los robots durante el partido?</label>
+          <textarea class="worksheet-textarea" id="video-movements" name="video_movements" placeholder="Describe los movimientos y cuándo los utilizaron."></textarea>
+        </div>
+      </section>
+
+      <section class="card soccer-card">
+        <h2>Conoce a los jugadores del equipo electrónico</h2>
+        <p>Cada componente tiene una misión distinta. Examina sus imágenes, lee la información y responde directamente en cada tarjeta.</p>
+
+        <div class="component-grid">
+          <article class="component-card">
+            <div class="component-image">
+              <img src="UNO.jpg" alt="Placa Arduino UNO con cable USB" />
+            </div>
+            <div class="component-body">
+              <div class="component-heading">
+                <span class="component-number">1</span>
+                <h3>Arduino UNO</h3>
+              </div>
+              <p><strong>¿Para qué sirve?</strong> Es una tarjeta electrónica programable que recibe información y envía órdenes a otros componentes.</p>
+              <p class="component-role"><strong>En el Robot Soccer:</strong> será el cerebro que decidirá cuándo y cómo deben moverse los motores.</p>
+              <div class="worksheet-field">
+                <label for="arduino-question">Si el Arduino fuera una parte del cuerpo humano, ¿cuál sería y por qué?</label>
+                <textarea class="worksheet-textarea" id="arduino-question" name="arduino_question"></textarea>
+              </div>
+            </div>
+          </article>
+
+          <article class="component-card">
+            <div class="component-image">
+              <img src="PuenteH.webp" alt="Módulo puente H para controlar motores" />
+            </div>
+            <div class="component-body">
+              <div class="component-heading">
+                <span class="component-number">2</span>
+                <h3>Puente H</h3>
+              </div>
+              <p><strong>¿Para qué sirve?</strong> Permite controlar el sentido de giro y la velocidad de motores de corriente directa.</p>
+              <p class="component-role"><strong>En el Robot Soccer:</strong> hará posible avanzar, retroceder y girar sin exigir al Arduino la energía que necesitan los motores.</p>
+              <div class="worksheet-field">
+                <label for="bridge-question">¿Por qué el robot necesita cambiar el sentido de giro de sus motores?</label>
+                <textarea class="worksheet-textarea" id="bridge-question" name="bridge_question"></textarea>
+              </div>
+            </div>
+          </article>
+
+          <article class="component-card">
+            <div class="component-image">
+              <img src="Shield.webp" alt="Shield V5 de expansión para Arduino UNO" />
+            </div>
+            <div class="component-body">
+              <div class="component-heading">
+                <span class="component-number">3</span>
+                <h3>Shield V5 para Arduino</h3>
+              </div>
+              <p><strong>¿Para qué sirve?</strong> Expande y organiza los pines del Arduino para conectar módulos de forma más clara y ordenada.</p>
+              <p class="component-role"><strong>En el Robot Soccer:</strong> facilitará la conexión de los dispositivos y ayudará a identificar mejor cada grupo de pines.</p>
+              <div class="worksheet-field">
+                <label for="shield-question">¿Qué ventaja tiene organizar las conexiones de un robot?</label>
+                <textarea class="worksheet-textarea" id="shield-question" name="shield_question"></textarea>
+              </div>
+            </div>
+          </article>
+
+          <article class="component-card">
+            <div class="component-image">
+              <img src="MotorReductor.webp" alt="Motorreductor amarillo para robot móvil" />
+            </div>
+            <div class="component-body">
+              <div class="component-heading">
+                <span class="component-number">4</span>
+                <h3>2 motorreductores amarillos</h3>
+              </div>
+              <p><strong>¿Para qué sirven?</strong> Transforman la energía eléctrica en movimiento. Su caja reductora disminuye la velocidad y aumenta la fuerza disponible.</p>
+              <p class="component-role"><strong>En el Robot Soccer:</strong> moverán las ruedas y permitirán que cada lado del robot avance o cambie de dirección.</p>
+              <div class="worksheet-field">
+                <label for="motor-question">¿Por qué conviene utilizar dos motorreductores en lugar de uno?</label>
+                <textarea class="worksheet-textarea" id="motor-question" name="motor_question"></textarea>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="card soccer-card">
+        <h2>Actividad 1. Relaciona componente y función</h2>
+        <p>Selecciona la función que corresponde a cada componente. Cada opción debe utilizarse una sola vez.</p>
+        <table class="match-table">
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Selecciona su función</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Arduino UNO</td>
+              <td>
+                <select class="worksheet-select" name="match_arduino" aria-label="Función del Arduino UNO">
+                  <option value="">Elige una función</option>
+                  <option>Organiza y expande conexiones</option>
+                  <option>Procesa información y envía órdenes</option>
+                  <option>Produce movimiento y fuerza</option>
+                  <option>Controla dirección y velocidad de motores</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Puente H</td>
+              <td>
+                <select class="worksheet-select" name="match_bridge" aria-label="Función del puente H">
+                  <option value="">Elige una función</option>
+                  <option>Organiza y expande conexiones</option>
+                  <option>Procesa información y envía órdenes</option>
+                  <option>Produce movimiento y fuerza</option>
+                  <option>Controla dirección y velocidad de motores</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Shield V5</td>
+              <td>
+                <select class="worksheet-select" name="match_shield" aria-label="Función del Shield V5">
+                  <option value="">Elige una función</option>
+                  <option>Organiza y expande conexiones</option>
+                  <option>Procesa información y envía órdenes</option>
+                  <option>Produce movimiento y fuerza</option>
+                  <option>Controla dirección y velocidad de motores</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Motorreductores</td>
+              <td>
+                <select class="worksheet-select" name="match_motors" aria-label="Función de los motorreductores">
+                  <option value="">Elige una función</option>
+                  <option>Organiza y expande conexiones</option>
+                  <option>Procesa información y envía órdenes</option>
+                  <option>Produce movimiento y fuerza</option>
+                  <option>Controla dirección y velocidad de motores</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card soccer-card">
+        <h2>Actividad 2. Predice qué pasaría</h2>
+        <p>Imagina que el robot está completo, pero uno de los componentes falta. Escribe tu predicción y explica por qué.</p>
+        <table class="prediction-table">
+          <thead>
+            <tr>
+              <th>Componente que falta</th>
+              <th>¿Qué crees que pasaría?</th>
+              <th>¿Por qué?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Arduino UNO</td>
+              <td><textarea class="worksheet-textarea" name="prediction_arduino"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="prediction_arduino_reason"></textarea></td>
+            </tr>
+            <tr>
+              <td>Puente H</td>
+              <td><textarea class="worksheet-textarea" name="prediction_bridge"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="prediction_bridge_reason"></textarea></td>
+            </tr>
+            <tr>
+              <td>Shield V5</td>
+              <td><textarea class="worksheet-textarea" name="prediction_shield"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="prediction_shield_reason"></textarea></td>
+            </tr>
+            <tr>
+              <td>Un motorreductor</td>
+              <td><textarea class="worksheet-textarea" name="prediction_motor"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="prediction_motor_reason"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card soccer-card">
+        <h2>Actividad 3. Investigación técnica</h2>
+        <p>Consulta libros, sitios educativos o recursos indicados por tu profesor. Resume la información con tus propias palabras.</p>
+        <table class="research-table">
+          <thead>
+            <tr>
+              <th>Tema a investigar</th>
+              <th>Lo que descubrí</th>
+              <th>Fuente consultada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>¿Qué es un Arduino?</td>
+              <td><textarea class="worksheet-textarea" name="research_arduino"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="source_arduino"></textarea></td>
+            </tr>
+            <tr>
+              <td>¿Qué es un puente H?</td>
+              <td><textarea class="worksheet-textarea" name="research_bridge"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="source_bridge"></textarea></td>
+            </tr>
+            <tr>
+              <td>¿Qué función tiene un motorreductor?</td>
+              <td><textarea class="worksheet-textarea" name="research_motor"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="source_motor"></textarea></td>
+            </tr>
+            <tr>
+              <td>¿Para qué sirve un shield de expansión?</td>
+              <td><textarea class="worksheet-textarea" name="research_shield"></textarea></td>
+              <td><textarea class="worksheet-textarea" name="source_shield"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="worksheet-field">
+          <label for="research-comparison">¿Qué diferencia principal encontraste entre el Arduino, el puente H y el Shield V5?</label>
+          <textarea class="worksheet-textarea" id="research-comparison" name="research_comparison"></textarea>
+        </div>
+      </section>
+
+      <section class="card soccer-card">
+        <h2>Actividad 4. Explica el equipo completo</h2>
+        <p>Completa la tabla con una explicación breve y un ejemplo sencillo. Evita copiar las definiciones anteriores.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Explicación con mis palabras</th>
+              <th>Se parece a...</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Arduino UNO</td>
+              <td><input class="worksheet-input" name="summary_arduino" type="text" /></td>
+              <td><input class="worksheet-input" name="analogy_arduino" type="text" /></td>
+            </tr>
+            <tr>
+              <td>Puente H</td>
+              <td><input class="worksheet-input" name="summary_bridge" type="text" /></td>
+              <td><input class="worksheet-input" name="analogy_bridge" type="text" /></td>
+            </tr>
+            <tr>
+              <td>Shield V5</td>
+              <td><input class="worksheet-input" name="summary_shield" type="text" /></td>
+              <td><input class="worksheet-input" name="analogy_shield" type="text" /></td>
+            </tr>
+            <tr>
+              <td>Motorreductores</td>
+              <td><input class="worksheet-input" name="summary_motors" type="text" /></td>
+              <td><input class="worksheet-input" name="analogy_motors" type="text" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card soccer-card">
+        <h2>Actividad 5. Imagina tu Robot Soccer</h2>
+        <p>Dibuja un esquema sencillo. Puedes representar la forma del robot y señalar dónde imaginas que estarán el Arduino, el puente H, el Shield V5 y los dos motorreductores. Este dibujo es una idea inicial, no una instrucción de armado.</p>
+        <div class="sketch-toolbar">
+          <label for="sketch-color">Color del lápiz</label>
+          <input id="sketch-color" type="color" value="#075985" />
+          <label for="sketch-size">Grosor</label>
+          <input id="sketch-size" type="range" min="2" max="14" value="4" />
+          <button class="action-button action-button--secondary" id="clear-sketch" type="button">Borrar dibujo</button>
+        </div>
+        <canvas class="sketch-board" id="robot-sketch" aria-label="Lienzo para dibujar una idea del Robot Soccer"></canvas>
+        <div class="worksheet-field">
+          <label for="sketch-explanation">Explica tu dibujo y la ubicación que elegiste para los componentes.</label>
+          <textarea class="worksheet-textarea" id="sketch-explanation" name="sketch_explanation"></textarea>
+        </div>
+      </section>
+
+      <section class="card soccer-card">
+        <h2>Reflexión final</h2>
+        <div class="challenge-banner">
+          <strong>Reto de entrenador:</strong> No basta con nombrar un componente. Explica qué aporta al equipo y qué problema resolverá durante un partido.
+        </div>
+        <div class="worksheet-field">
+          <label for="most-important">¿Qué componente consideras más importante y por qué?</label>
+          <textarea class="worksheet-textarea" id="most-important" name="most_important"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="component-teamwork">¿Cómo crees que trabajan juntos los cuatro componentes?</label>
+          <textarea class="worksheet-textarea" id="component-teamwork" name="component_teamwork"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="new-question">Después de esta práctica, ¿qué nueva pregunta tienes sobre el Robot Soccer?</label>
+          <textarea class="worksheet-textarea" id="new-question" name="new_question"></textarea>
+        </div>
+      </section>
+
+      <section class="card soccer-card">
+        <h2>Producto final de la práctica</h2>
+        <div class="deliverable-grid">
+          <div class="deliverable"><strong>1. Página respondida</strong><br />Todas las actividades completas y guardadas en PDF.</div>
+          <div class="deliverable"><strong>2. Explicaciones</strong><br />Una explicación breve de cada componente con tus palabras.</div>
+          <div class="deliverable"><strong>3. Dibujo o esquema</strong><br />Una idea sencilla de cómo imaginas tu Robot Soccer.</div>
+          <div class="deliverable"><strong>4. Conclusión personal</strong><br />El componente más importante para ti y la razón.</div>
+        </div>
+      </section>
+
+      <section class="card no-build-warning">
+        <h2>Alto antes del siguiente tiempo</h2>
+        <p><strong>En esta Parte 1 no se arma ni se programa el robot.</strong> La Parte 2 estará dedicada al armado físico y la Parte 3 a la codificación. Hoy la misión es observar, investigar y comprender.</p>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js?v=20260605b"></script>
+  <script>
+    (() => {
+      const button = document.getElementById("read-history");
+      const status = document.getElementById("read-history-status");
+      const textContainer = document.getElementById("history-reading-text");
+      const speechSupported = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+
+      if (!speechSupported) {
+        button.disabled = true;
+        status.textContent = "La lectura en voz alta no está disponible en este navegador.";
+        return;
+      }
+
+      function setReadingState(reading) {
+        button.textContent = reading ? "Detener lectura" : "Escuchar la historia";
+        button.setAttribute("aria-pressed", String(reading));
+        status.textContent = reading
+          ? "Leyendo la historia en voz alta..."
+          : "Presiona el botón para escuchar esta información.";
+      }
+
+      function selectSpanishVoice() {
+        return window.speechSynthesis.getVoices().find((voice) =>
+          voice.lang.toLowerCase().startsWith("es")
+        );
+      }
+
+      button.addEventListener("click", () => {
+        if (window.speechSynthesis.speaking) {
+          window.speechSynthesis.cancel();
+          setReadingState(false);
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(textContainer.innerText);
+        utterance.lang = "es-MX";
+        utterance.rate = 0.92;
+        utterance.pitch = 1;
+        utterance.voice = selectSpanishVoice() || null;
+        utterance.onend = () => setReadingState(false);
+        utterance.onerror = () => {
+          setReadingState(false);
+          status.textContent = "No fue posible reproducir la lectura. Intenta nuevamente.";
+        };
+
+        setReadingState(true);
+        window.speechSynthesis.speak(utterance);
+      });
+
+      window.addEventListener("beforeunload", () => window.speechSynthesis.cancel());
+    })();
+
+    (() => {
+      const canvas = document.getElementById("robot-sketch");
+      const colorInput = document.getElementById("sketch-color");
+      const sizeInput = document.getElementById("sketch-size");
+      const clearButton = document.getElementById("clear-sketch");
+      const storageKey = "practica-20-componentes-robot-soccer-sketch";
+      const context = canvas.getContext("2d");
+      let drawing = false;
+
+      function setCanvasSize(preserveCurrent = true) {
+        const savedDrawing = preserveCurrent ? canvas.toDataURL() : "";
+        const scale = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = Math.round(rect.width * scale);
+        canvas.height = Math.round(rect.height * scale);
+        context.setTransform(scale, 0, 0, scale, 0, 0);
+        context.lineCap = "round";
+        context.lineJoin = "round";
+        restoreDrawing(savedDrawing);
+      }
+
+      function restoreDrawing(source) {
+        const stored = source && source.length > 100 ? source : localStorage.getItem(storageKey);
+        if (!stored) return;
+        const image = new Image();
+        image.onload = () => {
+          const scale = window.devicePixelRatio || 1;
+          context.drawImage(image, 0, 0, canvas.width / scale, canvas.height / scale);
+        };
+        image.src = stored;
+      }
+
+      function pointFromEvent(event) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+          x: event.clientX - rect.left,
+          y: event.clientY - rect.top
+        };
+      }
+
+      function startDrawing(event) {
+        drawing = true;
+        const point = pointFromEvent(event);
+        context.beginPath();
+        context.moveTo(point.x, point.y);
+        canvas.setPointerCapture(event.pointerId);
+      }
+
+      function draw(event) {
+        if (!drawing) return;
+        const point = pointFromEvent(event);
+        context.strokeStyle = colorInput.value;
+        context.lineWidth = Number(sizeInput.value);
+        context.lineTo(point.x, point.y);
+        context.stroke();
+      }
+
+      function stopDrawing() {
+        if (!drawing) return;
+        drawing = false;
+        context.closePath();
+        localStorage.setItem(storageKey, canvas.toDataURL("image/png"));
+      }
+
+      canvas.addEventListener("pointerdown", startDrawing);
+      canvas.addEventListener("pointermove", draw);
+      canvas.addEventListener("pointerup", stopDrawing);
+      canvas.addEventListener("pointercancel", stopDrawing);
+      canvas.addEventListener("pointerleave", stopDrawing);
+
+      clearButton.addEventListener("click", () => {
+        if (!window.confirm("¿Quieres borrar todo el dibujo?")) return;
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        localStorage.removeItem(storageKey);
+      });
+
+      document.addEventListener("worksheet-reset", () => {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        localStorage.removeItem(storageKey);
+      });
+
+      window.addEventListener("resize", () => setCanvasSize(true));
+      setCanvasSize(false);
+    })();
+  </script>
+</body>
+</html>
