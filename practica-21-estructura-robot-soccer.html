@@ -184,7 +184,7 @@
     }
 
     .view-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .view-card {
@@ -197,24 +197,38 @@
 
     .view-image {
       display: grid;
-      height: 390px;
       place-items: center;
       overflow: hidden;
-      background:
-        linear-gradient(45deg, #e0f2fe 25%, transparent 25%),
-        linear-gradient(-45deg, #e0f2fe 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #e0f2fe 75%),
-        linear-gradient(-45deg, transparent 75%, #e0f2fe 75%),
-        #f8fdff;
-      background-position: 0 0, 0 12px, 12px -12px, -12px 0;
-      background-size: 24px 24px;
+      padding: 1rem;
+      background: #e8f1f5;
     }
 
     .view-image img {
+      display: block;
       width: 100%;
-      height: 100%;
+      height: auto;
+      max-height: 760px;
       object-fit: contain;
-      padding: 0.65rem;
+      border-radius: 14px;
+      box-shadow: 0 10px 28px rgba(8, 47, 73, 0.18);
+    }
+
+    .view-image-link {
+      display: block;
+      width: min(100%, 720px);
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .view-image-action {
+      display: block;
+      width: fit-content;
+      margin: 0.75rem auto 0;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: var(--soccer-navy);
+      color: #fff;
+      font-weight: 800;
     }
 
     .view-body {
@@ -433,10 +447,6 @@
         grid-template-columns: 1fr;
       }
 
-      .view-image {
-        height: 330px;
-      }
-
       .sketch-board {
         height: 340px;
       }
@@ -492,8 +502,8 @@
         break-inside: avoid;
       }
 
-      .view-image {
-        height: 260px;
+      .view-image img {
+        max-height: 420px;
       }
     }
   </style>
@@ -670,7 +680,7 @@
 
         <div class="view-grid">
           <article class="view-card">
-            <div class="view-image"><img src="Vista Frontal.jpg" alt="Vista frontal del Robot Soccer armado" /></div>
+            <div class="view-image"><a class="view-image-link" href="Vista Frontal.jpg" target="_blank" rel="noopener"><img src="Vista Frontal.jpg" alt="Vista frontal del Robot Soccer armado" /><span class="view-image-action">Ver imagen completa</span></a></div>
             <div class="view-body">
               <div class="view-heading"><span class="view-number">1</span><h3>Vista frontal</h3></div>
               <div class="view-question"><label for="front-q1">¿Qué observas en la parte frontal?</label><textarea class="worksheet-textarea" id="front-q1" name="front_q1"></textarea></div>
@@ -680,7 +690,7 @@
           </article>
 
           <article class="view-card">
-            <div class="view-image"><img src="Vista Posterior.jpg" alt="Vista posterior del Robot Soccer armado" /></div>
+            <div class="view-image"><a class="view-image-link" href="Vista Posterior.jpg" target="_blank" rel="noopener"><img src="Vista Posterior.jpg" alt="Vista posterior del Robot Soccer armado" /><span class="view-image-action">Ver imagen completa</span></a></div>
             <div class="view-body">
               <div class="view-heading"><span class="view-number">2</span><h3>Vista posterior</h3></div>
               <div class="view-question"><label for="back-q1">¿Qué observas en la parte posterior?</label><textarea class="worksheet-textarea" id="back-q1" name="back_q1"></textarea></div>
@@ -690,7 +700,7 @@
           </article>
 
           <article class="view-card">
-            <div class="view-image"><img src="Vista Superior.jpg" alt="Vista superior del Robot Soccer armado" /></div>
+            <div class="view-image"><a class="view-image-link" href="Vista Superior.jpg" target="_blank" rel="noopener"><img src="Vista Superior.jpg" alt="Vista superior del Robot Soccer armado" /><span class="view-image-action">Ver imagen completa</span></a></div>
             <div class="view-body">
               <div class="view-heading"><span class="view-number">3</span><h3>Vista superior</h3></div>
               <div class="view-question"><label for="top-q1">¿Dónde está el Arduino?</label><textarea class="worksheet-textarea" id="top-q1" name="top_q1"></textarea></div>
@@ -701,7 +711,7 @@
           </article>
 
           <article class="view-card">
-            <div class="view-image"><img src="vista superior 2.jpg" alt="Segunda vista superior del Robot Soccer y sus conexiones" /></div>
+            <div class="view-image"><a class="view-image-link" href="vista superior 2.jpg" target="_blank" rel="noopener"><img src="vista superior 2.jpg" alt="Segunda vista superior del Robot Soccer y sus conexiones" /><span class="view-image-action">Ver imagen completa</span></a></div>
             <div class="view-body">
               <div class="view-heading"><span class="view-number">4</span><h3>Vista superior 2</h3></div>
               <div class="view-question"><label for="top2-q1">¿Qué conexiones observas?</label><textarea class="worksheet-textarea" id="top2-q1" name="top2_q1"></textarea></div>
@@ -711,7 +721,7 @@
           </article>
 
           <article class="view-card">
-            <div class="view-image"><img src="Vista Lateral.jpg" alt="Vista lateral del Robot Soccer armado" /></div>
+            <div class="view-image"><a class="view-image-link" href="Vista Lateral.jpg" target="_blank" rel="noopener"><img src="Vista Lateral.jpg" alt="Vista lateral del Robot Soccer armado" /><span class="view-image-action">Ver imagen completa</span></a></div>
             <div class="view-body">
               <div class="view-heading"><span class="view-number">5</span><h3>Vista lateral</h3></div>
               <div class="view-question"><label for="side-q1">¿Qué componentes puedes identificar desde este ángulo?</label><textarea class="worksheet-textarea" id="side-q1" name="side_q1"></textarea></div>
@@ -721,7 +731,7 @@
           </article>
 
           <article class="view-card">
-            <div class="view-image"><img src="Vista Inferior.jpg" alt="Vista inferior del Robot Soccer armado" /></div>
+            <div class="view-image"><a class="view-image-link" href="Vista Inferior.jpg" target="_blank" rel="noopener"><img src="Vista Inferior.jpg" alt="Vista inferior del Robot Soccer armado" /><span class="view-image-action">Ver imagen completa</span></a></div>
             <div class="view-body">
               <div class="view-heading"><span class="view-number">6</span><h3>Vista inferior</h3></div>
               <div class="view-question"><label for="bottom-q1">¿Cuántos motores identificas?</label><textarea class="worksheet-textarea" id="bottom-q1" name="bottom_q1"></textarea></div>
@@ -731,7 +741,7 @@
           </article>
 
           <article class="view-card">
-            <div class="view-image"><img src="Control.jpg" alt="Control remoto del Robot Soccer" /></div>
+            <div class="view-image"><a class="view-image-link" href="Control.jpg" target="_blank" rel="noopener"><img src="Control.jpg" alt="Control remoto del Robot Soccer" /><span class="view-image-action">Ver imagen completa</span></a></div>
             <div class="view-body">
               <div class="view-heading"><span class="view-number">7</span><h3>Control remoto</h3></div>
               <div class="view-question"><label for="control-q1">¿Para qué sirve este dispositivo?</label><textarea class="worksheet-textarea" id="control-q1" name="control_q1"></textarea></div>
@@ -741,7 +751,7 @@
           </article>
 
           <article class="view-card">
-            <div class="view-image"><img src="Receptor infrarrojo IR.jpg" alt="Receptor infrarrojo IR del Robot Soccer" /></div>
+            <div class="view-image"><a class="view-image-link" href="Receptor infrarrojo IR.jpg" target="_blank" rel="noopener"><img src="Receptor infrarrojo IR.jpg" alt="Receptor infrarrojo IR del Robot Soccer" /><span class="view-image-action">Ver imagen completa</span></a></div>
             <div class="view-body">
               <div class="view-heading"><span class="view-number">8</span><h3>Receptor infrarrojo IR</h3></div>
               <div class="view-question"><label for="ir-q1">¿Qué función tiene este componente?</label><textarea class="worksheet-textarea" id="ir-q1" name="ir_q1"></textarea></div>
