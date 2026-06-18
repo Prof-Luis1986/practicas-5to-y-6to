@@ -1,0 +1,1331 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 20.1 - Marcador Inteligente para Robot Soccer</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body.scoreboard-page {
+      --score-blue: #075985;
+      --score-cyan: #06b6d4;
+      --score-green: #16a34a;
+      --score-lime: #a3e635;
+      --score-yellow: #facc15;
+      --score-navy: #082f49;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(6, 182, 212, 0.18), transparent 24rem),
+        radial-gradient(circle at 88% 18%, rgba(163, 230, 53, 0.18), transparent 22rem),
+        #eef6f7;
+    }
+
+    .scoreboard-page .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(3, 105, 161, 0.97), rgba(15, 118, 110, 0.95)),
+        repeating-linear-gradient(90deg, transparent 0 54px, rgba(255, 255, 255, 0.08) 54px 56px);
+    }
+
+    .scoreboard-page .hero::after {
+      content: "GOOL";
+      position: absolute;
+      right: clamp(1rem, 6vw, 6rem);
+      bottom: -0.5rem;
+      color: rgba(255, 255, 255, 0.16);
+      font-size: clamp(3.4rem, 10vw, 7.4rem);
+      font-weight: 900;
+      letter-spacing: 0;
+      transform: rotate(-8deg);
+    }
+
+    .scoreboard-page h2 {
+      color: var(--score-blue);
+    }
+
+    .scoreboard-page h3 {
+      color: #0f766e;
+    }
+
+    .score-card {
+      border-top: 5px solid var(--score-cyan);
+    }
+
+    .game-dashboard,
+    .project-route,
+    .concept-grid,
+    .component-grid,
+    .assembly-grid,
+    .deliverable-grid,
+    .code-explain-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .game-dashboard {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      margin-top: 1rem;
+    }
+
+    .dashboard-item {
+      padding: 1rem;
+      border-radius: 16px;
+      background: var(--score-navy);
+      color: #fff;
+      text-align: center;
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.12);
+    }
+
+    .dashboard-item strong {
+      display: block;
+      color: var(--score-lime);
+      font-size: 1.05rem;
+    }
+
+    .project-route {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 1rem;
+    }
+
+    .route-step {
+      padding: 1rem;
+      border: 2px solid #bae6fd;
+      border-radius: 16px;
+      background: #f0f9ff;
+    }
+
+    .route-step.is-complete {
+      border-color: #86efac;
+      background: #f0fdf4;
+    }
+
+    .route-step.is-current {
+      border-color: var(--score-yellow);
+      background: #fffbeb;
+      box-shadow: 0 8px 20px rgba(250, 204, 21, 0.18);
+    }
+
+    .route-number,
+    .component-number,
+    .assembly-number {
+      display: inline-grid;
+      width: 2.1rem;
+      height: 2.1rem;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--score-blue);
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .read-aloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin: 0.9rem 0;
+    }
+
+    .read-aloud__status {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .reading-panel {
+      padding: 1rem;
+      border: 2px dashed var(--score-cyan);
+      border-radius: 18px;
+      background: #ecfeff;
+    }
+
+    .concept-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 1rem;
+    }
+
+    .concept-card,
+    .code-note,
+    .deliverable {
+      padding: 1rem;
+      border: 1px solid #a5f3fc;
+      border-radius: 16px;
+      background: #ecfeff;
+    }
+
+    .image-panel {
+      overflow: hidden;
+      border: 1px solid #bae6fd;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fff, #f8fdff);
+      box-shadow: 0 8px 22px rgba(7, 89, 133, 0.1);
+    }
+
+    .image-panel__media {
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+      background:
+        linear-gradient(45deg, #e0f2fe 25%, transparent 25%),
+        linear-gradient(-45deg, #e0f2fe 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e0f2fe 75%),
+        linear-gradient(-45deg, transparent 75%, #e0f2fe 75%),
+        #f8fdff;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+      background-size: 20px 20px;
+    }
+
+    .image-panel__media img {
+      display: block;
+      width: 100%;
+      max-height: 560px;
+      object-fit: contain;
+      border-radius: 14px;
+    }
+
+    .image-panel__body {
+      padding: 1.1rem;
+    }
+
+    .question-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+
+    .quiz-block {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid #bae6fd;
+      border-radius: 16px;
+      background: #f8fdff;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 0.55rem;
+      margin-top: 0.7rem;
+    }
+
+    .quiz-options label {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      padding: 0.65rem;
+      border: 1px solid #d7e1e7;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .quiz-options input {
+      accent-color: var(--score-green);
+    }
+
+    .quiz-feedback {
+      min-height: 1.5rem;
+      margin-top: 0.7rem;
+      font-weight: 800;
+    }
+
+    .quiz-feedback.is-correct {
+      color: #15803d;
+    }
+
+    .quiz-feedback.is-incorrect {
+      color: #b91c1c;
+    }
+
+    .component-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .component-card {
+      overflow: hidden;
+      border: 1px solid #bae6fd;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fff, #f8fdff);
+      box-shadow: 0 8px 22px rgba(7, 89, 133, 0.1);
+    }
+
+    .component-image {
+      display: grid;
+      height: 245px;
+      place-items: center;
+      overflow: hidden;
+      background: #f0f9ff;
+    }
+
+    .component-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 0.7rem;
+    }
+
+    .component-body {
+      padding: 1.1rem;
+    }
+
+    .component-heading {
+      display: flex;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    .component-heading h3 {
+      margin: 0;
+    }
+
+    .component-role {
+      padding: 0.75rem;
+      border-left: 5px solid var(--score-yellow);
+      border-radius: 8px;
+      background: #fffbeb;
+    }
+
+    .relation-table select,
+    .test-table input,
+    .test-table select,
+    .prediction-select {
+      width: 100%;
+      min-width: 160px;
+      padding: 0.62rem;
+      border: 1px solid #c8d6dd;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .assembly-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .assembly-step {
+      padding: 1rem;
+      border: 1px solid #bae6fd;
+      border-radius: 16px;
+      background: #f8fdff;
+    }
+
+    .assembly-step h3 {
+      display: flex;
+      gap: 0.65rem;
+      align-items: center;
+      margin-top: 0;
+    }
+
+    .code-explain-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-top: 1rem;
+    }
+
+    .deliverable-grid {
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    }
+
+    .improvement-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 0.75rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    .improvement-list li {
+      padding: 0.85rem;
+      border-radius: 14px;
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      font-weight: 700;
+    }
+
+    @media (max-width: 820px) {
+      .project-route,
+      .concept-grid,
+      .component-grid,
+      .assembly-grid,
+      .question-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .scoreboard-page .hero h1,
+      .scoreboard-page .hero .subtitle,
+      .scoreboard-page .hero .tag {
+        overflow-wrap: anywhere;
+      }
+
+      .worksheet-meta,
+      .game-dashboard,
+      .deliverable-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .component-image {
+        height: 215px;
+      }
+    }
+
+    @media print {
+      .read-aloud,
+      #check-reading,
+      #check-components {
+        display: none;
+      }
+
+      .component-card,
+      .image-panel,
+      .assembly-step {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body class="locked-content scoreboard-page" data-worksheet-key="practica-20-1-marcador-inteligente-robot-soccer" data-disable-project-links="true" data-allow-page-copy="true" data-allow-code-copy="true">
+  <header class="hero">
+    <p class="tag">Fase IV · Proyecto Robot Soccer · Práctica 20.1</p>
+    <h1>Práctica 20.1: Marcador Inteligente para Robot Soccer</h1>
+    <p class="subtitle">Detecta goles con un sensor ultrasónico, muestra el resultado en pantalla y celebra cada anotación con sonido.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#fase-iv">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card score-card">
+        <h2>Ficha del partido tecnológico</h2>
+        <p><strong>Objetivo:</strong> Construir un marcador inteligente con Arduino, una pantalla LCD I2C u OLED, un sensor ultrasónico HC-SR04 y un buzzer para registrar goles de Robot Soccer de forma automática.</p>
+
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre del alumno</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+
+        <div class="game-dashboard" aria-label="Datos de la práctica">
+          <div class="dashboard-item"><strong>Entrada</strong>Balón detectado</div>
+          <div class="dashboard-item"><strong>Proceso</strong>Arduino decide</div>
+          <div class="dashboard-item"><strong>Salida</strong>Pantalla y buzzer</div>
+        </div>
+
+        <p class="worksheet-note">Tus respuestas se guardan automáticamente en este dispositivo. Al terminar, genera el PDF para entregar tu práctica respondida.</p>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card score-card">
+        <h2>Introducción</h2>
+        <p>En la Práctica 20 conociste los componentes que permiten que un Robot Soccer se mueva, reciba energía y pueda ser controlado. Ahora vamos a mirar otra parte del partido: el marcador.</p>
+        <p>Imagina que tu robot anota un gol. ¿Quién lo cuenta? ¿Cómo sabe el marcador que el balón realmente entró a la portería? En esta práctica construiremos un sistema capaz de detectar goles automáticamente usando distancia, programación y sonido.</p>
+        <div class="image-panel">
+          <div class="image-panel__media">
+            <img src="Marcador.png" alt="Marcador electrónico para un partido de Robot Soccer" />
+          </div>
+          <div class="image-panel__body">
+            <p><strong>Observa la idea principal:</strong> el sistema no solo muestra números. También debe detectar un evento real, decidir si cuenta como gol y actualizar el resultado.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card score-card">
+        <h2>Ruta del proyecto Robot Soccer</h2>
+        <p>Esta misión se conecta directamente con la práctica anterior: ya reconociste piezas del robot y ahora agregarás tecnología para registrar lo que ocurre durante el juego.</p>
+        <div class="project-route">
+          <article class="route-step is-complete">
+            <span class="route-number">20</span>
+            <h3>Conocer componentes</h3>
+            <p>Identificaste Arduino, control de motores y partes clave del Robot Soccer.</p>
+          </article>
+          <article class="route-step is-current">
+            <span class="route-number">20.1</span>
+            <h3>Registrar goles</h3>
+            <p>Usarás sensor, pantalla y buzzer para construir un marcador automático.</p>
+          </article>
+          <article class="route-step">
+            <span class="route-number">21</span>
+            <h3>Analizar estructura</h3>
+            <p>Observarás cómo se organiza físicamente el Robot Soccer terminado.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="card score-card">
+        <h2>Lectura contextual: ¿por qué importa el marcador?</h2>
+        <div class="read-aloud">
+          <button class="action-button" id="read-context" type="button" aria-pressed="false">Escuchar la lectura</button>
+          <p class="read-aloud__status" id="read-context-status" aria-live="polite">Presiona el botón para escuchar esta información.</p>
+        </div>
+        <div class="reading-panel" id="context-reading-text">
+          <p>En un partido de fútbol, el marcador es muy importante porque muestra quién va ganando, quién necesita empatar y cuánto cambia la estrategia de cada equipo. No es solo un número en una pantalla: ayuda a entender el momento del juego.</p>
+          <p>Cuando un equipo anota primero, normalmente aumentan sus posibilidades de ganar. Por eso, el primer gol puede cambiar la actitud de todos. El equipo que va ganando puede defender más y cuidar su ventaja. El equipo que va perdiendo suele atacar con más fuerza para buscar el empate.</p>
+          <p>Los jugadores también modifican su esfuerzo según el resultado. Si falta poco tiempo y necesitan empatar, corren más, arriesgan más y cambian su forma de jugar. Un solo gol puede transformar por completo una estrategia.</p>
+          <p>Actualmente, la tecnología deportiva permite registrar goles, mostrar resultados, llevar estadísticas y compartir información en tiempo real. En Robot Soccer podemos aplicar la misma idea: un sensor detecta el paso del balón, Arduino interpreta la señal y el marcador actualiza el resultado para que todos sepan qué ocurrió.</p>
+        </div>
+        <div class="image-panel" style="margin-top: 1rem;">
+          <div class="image-panel__media">
+            <img src="OLED.jpg" alt="Pantalla electrónica pequeña como ejemplo de visualización de información" />
+          </div>
+          <div class="image-panel__body">
+            <p><strong>Pantallas y datos:</strong> en muchos proyectos electrónicos existen pantallas pequeñas para mostrar información. En esta práctica se puede usar LCD I2C u OLED para visualizar el marcador; lo importante es que los datos del partido sean claros.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card score-card">
+        <h2>Comprensión lectora</h2>
+        <p>Responde con atención. Algunas preguntas se revisan automáticamente y otras requieren tus propias ideas.</p>
+
+        <div class="quiz-block">
+          <h3>1. Opción múltiple</h3>
+          <p>¿Por qué el marcador influye en la forma de jugar?</p>
+          <div class="quiz-options">
+            <label><input type="radio" name="reading_q1" value="strategy" /> Porque el resultado cambia la estrategia y el esfuerzo de los equipos.</label>
+            <label><input type="radio" name="reading_q1" value="color" /> Porque cambia el color del uniforme.</label>
+            <label><input type="radio" name="reading_q1" value="field" /> Porque hace más grande la cancha.</label>
+          </div>
+        </div>
+
+        <div class="quiz-block">
+          <h3>2. Verdadero o falso</h3>
+          <label for="reading-q2">El equipo que va perdiendo suele intentar atacar más.</label>
+          <select class="worksheet-select prediction-select" id="reading-q2" name="reading_q2">
+            <option value="">Elige una respuesta</option>
+            <option value="true">Verdadero</option>
+            <option value="false">Falso</option>
+          </select>
+        </div>
+
+        <div class="quiz-block">
+          <h3>3. Relaciona conceptos</h3>
+          <table class="relation-table">
+            <thead><tr><th>Situación</th><th>Respuesta probable</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Equipo que va ganando</td>
+                <td><select name="reading_match_winning"><option value="">Elige</option><option value="defend">Defender más</option><option value="ignore">Ignorar el marcador</option><option value="reset">Reiniciar el partido</option></select></td>
+              </tr>
+              <tr>
+                <td>Equipo que va perdiendo</td>
+                <td><select name="reading_match_losing"><option value="">Elige</option><option value="attack">Atacar más</option><option value="stop">Dejar de jugar</option><option value="hide">Apagar el marcador</option></select></td>
+              </tr>
+              <tr>
+                <td>Tecnología deportiva</td>
+                <td><select name="reading_match_technology"><option value="">Elige</option><option value="data">Registrar goles y estadísticas</option><option value="paint">Pintar la cancha</option><option value="battery">Cargar baterías sin cables</option></select></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="question-grid">
+          <div class="worksheet-field">
+            <label for="reading-open-1">4. ¿Por qué un gol puede cambiar completamente una estrategia?</label>
+            <textarea class="worksheet-textarea" id="reading-open-1" name="reading_open_1"></textarea>
+          </div>
+          <div class="worksheet-field">
+            <label for="reading-open-2">5. ¿Cómo se relaciona esta lectura con Robot Soccer?</label>
+            <textarea class="worksheet-textarea" id="reading-open-2" name="reading_open_2"></textarea>
+          </div>
+          <div class="worksheet-field">
+            <label for="reading-open-3">6. Escribe un ejemplo de información que podría compartir un marcador inteligente.</label>
+            <textarea class="worksheet-textarea" id="reading-open-3" name="reading_open_3"></textarea>
+          </div>
+          <div class="worksheet-field">
+            <label for="reading-open-4">7. ¿Qué pasaría si los equipos no confiaran en el marcador?</label>
+            <textarea class="worksheet-textarea" id="reading-open-4" name="reading_open_4"></textarea>
+          </div>
+        </div>
+
+        <div class="quiz-block">
+          <h3>8. Opción múltiple</h3>
+          <p>En nuestro sistema, ¿qué componente interpretará la señal del sensor?</p>
+          <div class="quiz-options">
+            <label><input type="radio" name="reading_q8" value="arduino" /> Arduino</label>
+            <label><input type="radio" name="reading_q8" value="ball" /> La pelota</label>
+            <label><input type="radio" name="reading_q8" value="cable" /> Un cable suelto</label>
+          </div>
+        </div>
+
+        <button class="action-button" id="check-reading" type="button">Revisar respuestas automáticas</button>
+        <p class="quiz-feedback" id="reading-feedback" aria-live="polite"></p>
+      </section>
+
+      <section class="card score-card">
+        <h2>Observa y analiza</h2>
+        <p>Observa de nuevo el marcador. Piensa en lo que ve un jugador, un árbitro y un aficionado durante un partido.</p>
+        <div class="image-panel">
+          <div class="image-panel__media">
+            <img src="Marcador.png" alt="Marcador con información de un partido" />
+          </div>
+          <div class="image-panel__body question-grid">
+            <div class="worksheet-field">
+              <label for="observe-1">¿Qué información muestra un marcador?</label>
+              <textarea class="worksheet-textarea" id="observe-1" name="observe_1"></textarea>
+            </div>
+            <div class="worksheet-field">
+              <label for="observe-2">¿Por qué es importante para jugadores y aficionados?</label>
+              <textarea class="worksheet-textarea" id="observe-2" name="observe_2"></textarea>
+            </div>
+            <div class="worksheet-field">
+              <label for="observe-3">¿Cómo crees que sabe el marcador cuándo se anotó un gol?</label>
+              <textarea class="worksheet-textarea" id="observe-3" name="observe_3"></textarea>
+            </div>
+            <div class="worksheet-field">
+              <label for="observe-4">¿Qué ocurriría si no existiera un marcador durante un partido?</label>
+              <textarea class="worksheet-textarea" id="observe-4" name="observe_4"></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card score-card">
+        <h2>Situación problema</h2>
+        <p>Durante un torneo de Robot Soccer los goles se anotan manualmente. Algunas veces los árbitros se distraen y los equipos discuten porque no están seguros del marcador.</p>
+        <p><strong>Reto:</strong> ¿Cómo podríamos solucionar este problema utilizando tecnología?</p>
+        <div class="worksheet-field">
+          <label for="problem-ideas">Antes de conocer la solución, escribe por lo menos dos ideas de tu equipo.</label>
+          <textarea class="worksheet-textarea" id="problem-ideas" name="problem_ideas" placeholder="Idea 1... Idea 2..."></textarea>
+        </div>
+      </section>
+
+      <section class="card score-card">
+        <h2>Predicción</h2>
+        <p>Antes de revisar los componentes, responde:</p>
+        <div class="worksheet-field">
+          <label for="prediction-choice">¿Cómo crees que una máquina puede detectar que un balón entró a una portería?</label>
+          <select class="worksheet-select prediction-select" id="prediction-choice" name="prediction_choice">
+            <option value="">Elige la idea que te parezca más probable</option>
+            <option>Midiendo si algo pasa frente a un sensor de distancia</option>
+            <option>Escuchando el grito de los jugadores</option>
+            <option>Esperando que alguien presione siempre un botón</option>
+            <option>Contando el tiempo del partido sin mirar la portería</option>
+          </select>
+        </div>
+        <div class="worksheet-field">
+          <label for="prediction-explain">Explica por qué elegiste esa opción.</label>
+          <textarea class="worksheet-textarea" id="prediction-explain" name="prediction_explain"></textarea>
+        </div>
+      </section>
+
+      <section class="card score-card">
+        <h2>Exploración de componentes</h2>
+        <p>Cada componente tiene una función dentro del marcador. Observa las imágenes y relaciona su trabajo con una parte del partido.</p>
+        <div class="component-grid">
+          <article class="component-card">
+            <div class="component-image">
+              <img src="LCD.webp" alt="Pantalla LCD I2C" />
+            </div>
+            <div class="component-body">
+              <div class="component-heading">
+                <span class="component-number">1</span>
+                <h3>Pantalla LCD I2C u OLED</h3>
+              </div>
+              <p><strong>Qué es:</strong> una pantalla pequeña que muestra letras y números.</p>
+              <p><strong>Para qué sirve:</strong> permite ver el marcador sin usar la computadora.</p>
+              <p><strong>Vida diaria:</strong> aparece en relojes, aparatos de medición, impresoras y algunos electrodomésticos.</p>
+              <p class="component-role"><strong>En el marcador:</strong> mostrará el número de goles registrados y el tiempo del partido. El código base usa LCD I2C; una pantalla OLED puede cumplir la misma función con su librería correspondiente.</p>
+              <div class="image-panel__media">
+                <img src="OLED.jpg" alt="Pantalla OLED como alternativa para mostrar el marcador" />
+              </div>
+            </div>
+          </article>
+
+          <article class="component-card">
+            <div class="component-image">
+              <img src="Ultrasonico.webp" alt="Sensor ultrasónico HC-SR04" />
+            </div>
+            <div class="component-body">
+              <div class="component-heading">
+                <span class="component-number">2</span>
+                <h3>Sensor ultrasónico HC-SR04</h3>
+              </div>
+              <p><strong>Qué es:</strong> un sensor que mide distancia usando ondas de sonido.</p>
+              <p><strong>Cómo funciona:</strong> envía un pulso, espera el eco y calcula qué tan lejos está un objeto.</p>
+              <p><strong>En la portería:</strong> detectará cuando el balón pase frente al sensor.</p>
+              <p class="component-role"><strong>En el marcador:</strong> será el detector de gol.</p>
+            </div>
+          </article>
+
+          <article class="component-card">
+            <div class="component-image">
+              <img src="Buzzer.webp" alt="Buzzer para Arduino" />
+            </div>
+            <div class="component-body">
+              <div class="component-heading">
+                <span class="component-number">3</span>
+                <h3>Buzzer</h3>
+              </div>
+              <p><strong>Qué es:</strong> un componente que genera sonidos simples.</p>
+              <p><strong>Cómo suena:</strong> Arduino lo enciende con una frecuencia para producir tonos.</p>
+              <p><strong>En el partido:</strong> puede avisar que hubo gol sin mirar la pantalla.</p>
+              <p class="component-role"><strong>En el marcador:</strong> celebrará cada anotación.</p>
+            </div>
+          </article>
+
+          <article class="component-card">
+            <div class="component-image">
+              <img src="UNO.jpg" alt="Arduino UNO" />
+            </div>
+            <div class="component-body">
+              <div class="component-heading">
+                <span class="component-number">4</span>
+                <h3>Arduino UNO</h3>
+              </div>
+              <p><strong>Qué es:</strong> una tarjeta programable que lee señales y controla salidas.</p>
+              <p><strong>Para qué sirve:</strong> toma decisiones siguiendo el código que cargamos.</p>
+              <p><strong>En el sistema:</strong> recibe la distancia, decide si cuenta como gol, actualiza la pantalla y activa el buzzer.</p>
+              <p class="component-role"><strong>En el marcador:</strong> actúa como el cerebro.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="card score-card">
+        <h2>Actividad interactiva: componente y función</h2>
+        <p>Selecciona la función correcta. Cada componente tiene una misión principal.</p>
+        <table class="relation-table">
+          <thead><tr><th>Componente</th><th>Función en el marcador</th></tr></thead>
+          <tbody>
+            <tr><td>LCD I2C u OLED</td><td><select name="component_lcd"><option value="">Elige</option><option value="show">Mostrar información</option><option value="detect">Detectar el balón</option><option value="sound">Emitir sonido</option><option value="control">Controlar el sistema</option></select></td></tr>
+            <tr><td>Sensor ultrasónico</td><td><select name="component_sensor"><option value="">Elige</option><option value="show">Mostrar información</option><option value="detect">Detectar el balón</option><option value="sound">Emitir sonido</option><option value="control">Controlar el sistema</option></select></td></tr>
+            <tr><td>Buzzer</td><td><select name="component_buzzer"><option value="">Elige</option><option value="show">Mostrar información</option><option value="detect">Detectar el balón</option><option value="sound">Emitir sonido</option><option value="control">Controlar el sistema</option></select></td></tr>
+            <tr><td>Arduino</td><td><select name="component_arduino"><option value="">Elige</option><option value="show">Mostrar información</option><option value="detect">Detectar el balón</option><option value="sound">Emitir sonido</option><option value="control">Controlar el sistema</option></select></td></tr>
+          </tbody>
+        </table>
+        <button class="action-button" id="check-components" type="button">Revisar relación</button>
+        <p class="quiz-feedback" id="components-feedback" aria-live="polite"></p>
+      </section>
+
+      <section class="card score-card">
+        <h2>Armado paso a paso</h2>
+        <p>El objetivo no es memorizar cables, sino comprender qué información o energía viaja por cada conexión.</p>
+        <p class="worksheet-note"><strong>Simulación:</strong> puedes simular el marcador con LCD en Tinkercad o Wokwi. Si vas a usar pantalla OLED, realiza la simulación en <strong>Wokwi</strong>, porque ahí puedes trabajar mejor con el módulo OLED SSD1306 y sus librerías.</p>
+        <div class="assembly-grid">
+          <article class="assembly-step">
+            <h3><span class="assembly-number">1</span>Conexión de la pantalla</h3>
+            <p>Si usas <strong>LCD I2C</strong>, conecta <strong>VCC</strong> a 5V y <strong>GND</strong> a tierra. Conecta <strong>SDA</strong> a A4 y <strong>SCL</strong> a A5 en Arduino UNO. Si usas <strong>OLED I2C</strong>, también utilizarás SDA y SCL, pero el código necesita la librería de OLED indicada por el profesor.</p>
+            <div class="image-panel__media"><img src="LCD.webp" alt="Pantalla LCD usada para mostrar el marcador" /></div>
+            <div class="image-panel__media"><img src="OLED.jpg" alt="Pantalla OLED alternativa para el marcador" /></div>
+          </article>
+          <article class="assembly-step">
+            <h3><span class="assembly-number">2</span>Conexión del sensor ultrasónico</h3>
+            <p>Conecta <strong>VCC</strong> a 5V y <strong>GND</strong> a tierra. El pin <strong>TRIG</strong> enviará el pulso de sonido y el pin <strong>ECHO</strong> recibirá la respuesta para calcular distancia.</p>
+            <div class="image-panel__media"><img src="Ultrasonico.webp" alt="Sensor ultrasónico para detectar el paso del balón" /></div>
+          </article>
+          <article class="assembly-step">
+            <h3><span class="assembly-number">3</span>Conexión del buzzer</h3>
+            <p>Conecta la terminal positiva del buzzer al pin digital 8 y la terminal negativa a GND. Arduino activará tonos cortos cuando se registre un gol.</p>
+            <div class="image-panel__media"><img src="Buzzer.webp" alt="Buzzer que reproduce sonido de gol" /></div>
+          </article>
+          <article class="assembly-step">
+            <h3><span class="assembly-number">4</span>Organización del circuito</h3>
+            <p>Coloca el sensor mirando hacia la entrada de la portería. La pantalla debe quedar visible para los jugadores y el buzzer en un lugar donde pueda escucharse sin estorbar el balón.</p>
+            <div class="image-panel__media"><img src="Marcador.png" alt="Organización general del marcador inteligente" /></div>
+            <div class="image-panel__media"><img src="Marcador_oled.png" alt="Diagrama del marcador inteligente con pantalla OLED" /></div>
+          </article>
+        </div>
+
+        <div class="worksheet-field">
+          <label for="assembly-explain">Explica con tus palabras por qué la posición del sensor es importante.</label>
+          <textarea class="worksheet-textarea" id="assembly-explain" name="assembly_explain"></textarea>
+        </div>
+      </section>
+
+      <section class="card score-card">
+        <h2>Programación</h2>
+        <p>Elige el código según la pantalla que utilizarás. La versión con LCD I2C puede probarse en Tinkercad o Wokwi. La versión con OLED debe simularse en Wokwi.</p>
+        <h3>Opción A: código para LCD I2C</h3>
+        <p>Este código detecta cuando un objeto se acerca al sensor, cuenta un gol una sola vez, actualiza la LCD I2C, muestra el cronómetro y escribe mensajes en el Monitor Serie.</p>
+        <pre><code class="language-arduino">#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
+
+// Cambia 0x27 por 0x3F si tu LCD no muestra texto
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+const int trigPin = 9;
+const int echoPin = 10;
+const int buzzer = 8;
+
+const int distanciaGol = 15;
+
+int goles = 0;
+bool golDetectado = false;
+
+long duracion;
+float distancia;
+
+unsigned long inicioPartido;
+unsigned long tiempoActual;
+
+int minutos;
+int segundos;
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzer, OUTPUT);
+
+  lcd.init();
+  lcd.backlight();
+
+  inicioPartido = millis();
+
+  lcd.setCursor(0, 0);
+  lcd.print("ROBOT SOCCER");
+  lcd.setCursor(0, 1);
+  lcd.print("INICIANDO...");
+
+  Serial.println("=== MARCADOR INICIADO ===");
+  Serial.println("LCD lista");
+  Serial.println("Ultrasonico listo");
+  Serial.println("Buzzer listo");
+  Serial.println("Cronometro listo");
+
+  delay(2000);
+  lcd.clear();
+}
+
+void loop() {
+  distancia = medirDistancia();
+  actualizarTiempo();
+  mostrarMarcador();
+
+  Serial.print("Distancia: ");
+  Serial.print(distancia);
+  Serial.print(" cm | Goles: ");
+  Serial.print(goles);
+  Serial.print(" | Tiempo: ");
+  imprimirTiempoSerial();
+  Serial.println();
+
+  if (distancia > 0 && distancia &lt; distanciaGol && !golDetectado) {
+    goles++;
+    golDetectado = true;
+
+    Serial.println("*** GOOOOL! ***");
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("GOOOOL!!!");
+    lcd.setCursor(0, 1);
+    lcd.print("GOLES: ");
+    lcd.print(goles);
+
+    sonidoEstadio();
+
+    delay(1500);
+    lcd.clear();
+  }
+
+  if (distancia >= distanciaGol) {
+    golDetectado = false;
+  }
+
+  delay(200);
+}
+
+float medirDistancia() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duracion = pulseIn(echoPin, HIGH, 30000);
+
+  if (duracion == 0) {
+    return -1;
+  }
+
+  return duracion * 0.0343 / 2;
+}
+
+void actualizarTiempo() {
+  tiempoActual = millis() - inicioPartido;
+
+  int totalSegundos = tiempoActual / 1000;
+  minutos = totalSegundos / 60;
+  segundos = totalSegundos % 60;
+}
+
+void mostrarMarcador() {
+  lcd.setCursor(0, 0);
+  lcd.print("GOLES: ");
+  lcd.print(goles);
+  lcd.print("        ");
+
+  lcd.setCursor(0, 1);
+  lcd.print("TIEMPO: ");
+
+  if (minutos &lt; 10) lcd.print("0");
+  lcd.print(minutos);
+
+  lcd.print(":");
+
+  if (segundos &lt; 10) lcd.print("0");
+  lcd.print(segundos);
+
+  lcd.print("   ");
+}
+
+void sonidoEstadio() {
+  tone(buzzer, 1000);
+  delay(200);
+
+  tone(buzzer, 1500);
+  delay(200);
+
+  tone(buzzer, 2000);
+  delay(300);
+
+  noTone(buzzer);
+}
+
+void imprimirTiempoSerial() {
+  if (minutos &lt; 10) Serial.print("0");
+  Serial.print(minutos);
+
+  Serial.print(":");
+
+  if (segundos &lt; 10) Serial.print("0");
+  Serial.print(segundos);
+}</code></pre>
+
+        <div class="code-explain-grid">
+          <div class="code-note"><strong>Librerías y pantalla:</strong> permiten comunicarse con la LCD I2C.</div>
+          <div class="code-note"><strong>Pines:</strong> TRIG va al pin 9, ECHO al pin 10 y el buzzer al pin 8.</div>
+          <div class="code-note"><strong>Medición:</strong> el sensor calcula distancia usando el tiempo que tarda el eco.</div>
+          <div class="code-note"><strong>Antirrebote de gol:</strong> la variable <code>golDetectado</code> evita contar muchos goles mientras el balón sigue frente al sensor.</div>
+          <div class="code-note"><strong>Cronómetro:</strong> <code>millis()</code> calcula los minutos y segundos desde que inicia el partido.</div>
+          <div class="code-note"><strong>Salidas:</strong> la LCD muestra goles y tiempo, el buzzer suena y el Monitor Serie ayuda a depurar.</div>
+        </div>
+
+        <h3>Opción B: código para OLED en Wokwi</h3>
+        <p>Usa esta versión cuando tu marcador tenga pantalla OLED SSD1306. Para simularla, crea el circuito en Wokwi y agrega las librerías <code>Adafruit_GFX</code> y <code>Adafruit_SSD1306</code>.</p>
+        <div class="image-panel" style="margin-bottom: 1rem;">
+          <div class="image-panel__media">
+            <img src="Marcador_oled.png" alt="Diagrama de simulación del marcador con pantalla OLED en Wokwi" />
+          </div>
+          <div class="image-panel__body">
+            <p><strong>Diagrama OLED:</strong> conserva el sensor ultrasónico en los pines 9 y 10, el buzzer en el pin 8 y conecta la pantalla OLED por I2C usando SDA y SCL.</p>
+          </div>
+        </div>
+        <pre><code class="language-arduino">#include &lt;Wire.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+Adafruit_SSD1306 display(
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  &amp;Wire,
+  -1
+);
+
+const int trigPin = 9;
+const int echoPin = 10;
+const int buzzer = 8;
+
+const int distanciaGol = 15;
+
+int goles = 0;
+bool golDetectado = false;
+
+unsigned long inicioPartido;
+
+long duracion;
+float distancia;
+
+void setup() {
+
+  Serial.begin(9600);
+
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzer, OUTPUT);
+
+  if (!display.begin(
+        SSD1306_SWITCHCAPVCC,
+        0x3C)) {
+
+    Serial.println("OLED no encontrada");
+
+    while (true);
+  }
+
+  display.clearDisplay();
+
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+
+  display.setCursor(0, 0);
+  display.println("SOCCER");
+
+  display.setTextSize(1);
+  display.println("Iniciando...");
+
+  display.display();
+
+  delay(2000);
+
+  inicioPartido = millis();
+}
+
+void loop() {
+
+  distancia = medirDistancia();
+
+  mostrarMarcador();
+
+  if (distancia > 0 &amp;&amp;
+      distancia &lt; distanciaGol &amp;&amp;
+      !golDetectado) {
+
+    goles++;
+    golDetectado = true;
+
+    Serial.print("GOOOL -&gt; ");
+    Serial.println(goles);
+
+    celebrarGol();
+  }
+
+  if (distancia >= distanciaGol) {
+    golDetectado = false;
+  }
+
+  delay(100);
+}
+
+float medirDistancia() {
+
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+
+  digitalWrite(trigPin, LOW);
+
+  duracion = pulseIn(
+    echoPin,
+    HIGH,
+    30000
+  );
+
+  if (duracion == 0) return -1;
+
+  return duracion * 0.0343 / 2;
+}
+
+void mostrarMarcador() {
+
+  unsigned long tiempo =
+    (millis() - inicioPartido) / 1000;
+
+  int minutos = tiempo / 60;
+  int segundos = tiempo % 60;
+
+  display.clearDisplay();
+
+  display.setTextSize(2);
+  display.setCursor(0, 0);
+  display.print("G:");
+  display.print(goles);
+
+  display.setTextSize(2);
+  display.setCursor(0, 25);
+
+  if (minutos &lt; 10)
+    display.print("0");
+
+  display.print(minutos);
+
+  display.print(":");
+
+  if (segundos &lt; 10)
+    display.print("0");
+
+  display.print(segundos);
+
+  display.display();
+}
+
+void celebrarGol() {
+
+  display.clearDisplay();
+
+  display.setTextSize(2);
+  display.setCursor(5, 10);
+  display.println("GOOOL!");
+
+  display.setTextSize(1);
+  display.setCursor(10, 40);
+  display.print("Total: ");
+  display.print(goles);
+
+  display.display();
+
+  tone(buzzer, 1000);
+  delay(200);
+
+  tone(buzzer, 1500);
+  delay(200);
+
+  tone(buzzer, 2000);
+  delay(300);
+
+  noTone(buzzer);
+
+  delay(1500);
+}</code></pre>
+
+        <div class="code-explain-grid">
+          <div class="code-note"><strong>OLED:</strong> la pantalla usa la dirección I2C <code>0x3C</code> y resolución de 128 x 64 píxeles.</div>
+          <div class="code-note"><strong>Wokwi:</strong> esta simulación debe realizarse en Wokwi para poder usar la pantalla OLED SSD1306.</div>
+          <div class="code-note"><strong>Marcador:</strong> muestra goles con <code>G:</code> y el cronómetro en formato minutos:segundos.</div>
+          <div class="code-note"><strong>Gol:</strong> al detectar el balón, muestra GOOOL, aumenta el total y reproduce el sonido.</div>
+        </div>
+
+        <div class="worksheet-field">
+          <label for="code-understanding">¿Por qué el programa necesita esperar a que el balón se aleje antes de contar otro gol? ¿Qué cambiaría entre usar LCD y usar OLED?</label>
+          <textarea class="worksheet-textarea" id="code-understanding" name="code_understanding"></textarea>
+        </div>
+      </section>
+
+      <section class="card score-card">
+        <h2>Pruebas del marcador</h2>
+        <p>Registra tus pruebas. Cambia la distancia del balón y verifica si el sistema cuenta correctamente.</p>
+        <table class="test-table">
+          <thead>
+            <tr>
+              <th>Prueba</th>
+              <th>Distancia detectada</th>
+              <th>Goles en pantalla</th>
+              <th>Resultado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><input class="worksheet-input" name="test_1_distance" type="text" placeholder="cm" /></td>
+              <td><input class="worksheet-input" name="test_1_goals" type="text" /></td>
+              <td><select name="test_1_result"><option value="">Elige</option><option>Funcionó</option><option>No contó</option><option>Contó de más</option><option>Lectura inestable</option></select></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><input class="worksheet-input" name="test_2_distance" type="text" placeholder="cm" /></td>
+              <td><input class="worksheet-input" name="test_2_goals" type="text" /></td>
+              <td><select name="test_2_result"><option value="">Elige</option><option>Funcionó</option><option>No contó</option><option>Contó de más</option><option>Lectura inestable</option></select></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><input class="worksheet-input" name="test_3_distance" type="text" placeholder="cm" /></td>
+              <td><input class="worksheet-input" name="test_3_goals" type="text" /></td>
+              <td><select name="test_3_result"><option value="">Elige</option><option>Funcionó</option><option>No contó</option><option>Contó de más</option><option>Lectura inestable</option></select></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><input class="worksheet-input" name="test_4_distance" type="text" placeholder="cm" /></td>
+              <td><input class="worksheet-input" name="test_4_goals" type="text" /></td>
+              <td><select name="test_4_result"><option value="">Elige</option><option>Funcionó</option><option>No contó</option><option>Contó de más</option><option>Lectura inestable</option></select></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="worksheet-field">
+          <label for="test-conclusion">Después de probar, ¿qué distancia funcionó mejor como límite de gol?</label>
+          <textarea class="worksheet-textarea" id="test-conclusion" name="test_conclusion"></textarea>
+        </div>
+      </section>
+
+      <section class="card score-card">
+        <h2>Reto de mejora</h2>
+        <p>El marcador actual cuenta goles para una portería. Propón una mejora para hacerlo más completo.</p>
+        <ul class="improvement-list">
+          <li>Marcador para dos equipos</li>
+          <li>Declarar un ganador</li>
+          <li>Reiniciar automáticamente el partido</li>
+          <li>Cambiar sonidos</li>
+          <li>Agregar mensajes personalizados</li>
+        </ul>
+        <div class="worksheet-field">
+          <label for="improvement-idea">Elige una mejora y explica cómo la agregarías.</label>
+          <textarea class="worksheet-textarea" id="improvement-idea" name="improvement_idea"></textarea>
+        </div>
+      </section>
+
+      <section class="card score-card">
+        <h2>Reflexión final</h2>
+        <p>En Robot Soccer, la tecnología no solo mueve robots. También puede detectar eventos, registrar información, apoyar decisiones y mejorar la experiencia de juego.</p>
+        <div class="worksheet-field">
+          <label for="final-reflection">¿Qué aprendiste sobre sensores, automatización y tecnología deportiva al construir este marcador?</label>
+          <textarea class="worksheet-textarea" id="final-reflection" name="final_reflection"></textarea>
+        </div>
+      </section>
+
+      <section class="card score-card">
+        <h2>Producto final de la práctica</h2>
+        <div class="deliverable-grid">
+          <div class="deliverable"><strong>1. Página respondida</strong><br />Lectura, análisis, predicción y reflexión completas.</div>
+          <div class="deliverable"><strong>2. Circuito armado</strong><br />Pantalla LCD u OLED, sensor, buzzer y Arduino conectados de forma ordenada.</div>
+          <div class="deliverable"><strong>3. Código cargado</strong><br />Marcador funcionando con mensajes en Monitor Serie.</div>
+          <div class="deliverable"><strong>4. Tabla de pruebas</strong><br />Distancias, goles registrados y resultados observados.</div>
+        </div>
+      </section>
+
+      <section class="card print-only">
+        <h2>Firma de revisión</h2>
+        <p>Profesor: ____________________________________</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
+  </footer>
+
+  <script src="scripts.js?v=20260618"></script>
+  <script>
+    (() => {
+      const button = document.getElementById("read-context");
+      const status = document.getElementById("read-context-status");
+      const textContainer = document.getElementById("context-reading-text");
+      const speechSupported = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+
+      if (!speechSupported) {
+        button.disabled = true;
+        status.textContent = "La lectura en voz alta no está disponible en este navegador.";
+        return;
+      }
+
+      function setReadingState(reading) {
+        button.textContent = reading ? "Detener lectura" : "Escuchar la lectura";
+        button.setAttribute("aria-pressed", String(reading));
+        status.textContent = reading
+          ? "Leyendo el contexto en voz alta..."
+          : "Presiona el botón para escuchar esta información.";
+      }
+
+      function selectSpanishVoice() {
+        return window.speechSynthesis.getVoices().find((voice) =>
+          voice.lang.toLowerCase().startsWith("es")
+        );
+      }
+
+      button.addEventListener("click", () => {
+        if (window.speechSynthesis.speaking) {
+          window.speechSynthesis.cancel();
+          setReadingState(false);
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(textContainer.innerText);
+        utterance.lang = "es-MX";
+        utterance.rate = 0.92;
+        utterance.pitch = 1;
+        utterance.voice = selectSpanishVoice() || null;
+        utterance.onend = () => setReadingState(false);
+        utterance.onerror = () => {
+          setReadingState(false);
+          status.textContent = "No fue posible reproducir la lectura. Intenta nuevamente.";
+        };
+
+        setReadingState(true);
+        window.speechSynthesis.speak(utterance);
+      });
+
+      window.addEventListener("beforeunload", () => window.speechSynthesis.cancel());
+    })();
+
+    (() => {
+      const button = document.getElementById("check-reading");
+      const feedback = document.getElementById("reading-feedback");
+      const matchAnswers = {
+        reading_match_winning: "defend",
+        reading_match_losing: "attack",
+        reading_match_technology: "data"
+      };
+
+      button.addEventListener("click", () => {
+        let score = 0;
+        const total = 6;
+        const q1 = document.querySelector('input[name="reading_q1"]:checked');
+        const q8 = document.querySelector('input[name="reading_q8"]:checked');
+        if (q1?.value === "strategy") score += 1;
+        if (document.getElementById("reading-q2").value === "true") score += 1;
+        Object.entries(matchAnswers).forEach(([name, answer]) => {
+          if (document.querySelector(`[name="${name}"]`).value === answer) score += 1;
+        });
+        if (q8?.value === "arduino") score += 1;
+
+        const complete = q1 &&
+          q8 &&
+          document.getElementById("reading-q2").value &&
+          Object.keys(matchAnswers).every((name) => document.querySelector(`[name="${name}"]`).value);
+
+        feedback.className = "quiz-feedback";
+        if (!complete) {
+          feedback.textContent = "Completa las preguntas automáticas antes de revisar.";
+          feedback.classList.add("is-incorrect");
+        } else if (score === total) {
+          feedback.textContent = `Correcto. Obtuviste ${score} de ${total} respuestas automáticas.`;
+          feedback.classList.add("is-correct");
+        } else {
+          feedback.textContent = `Obtuviste ${score} de ${total}. Vuelve a leer el contexto y ajusta tus respuestas.`;
+          feedback.classList.add("is-incorrect");
+        }
+      });
+    })();
+
+    (() => {
+      const button = document.getElementById("check-components");
+      const feedback = document.getElementById("components-feedback");
+      const answers = {
+        component_lcd: "show",
+        component_sensor: "detect",
+        component_buzzer: "sound",
+        component_arduino: "control"
+      };
+
+      button.addEventListener("click", () => {
+        let score = 0;
+        Object.entries(answers).forEach(([name, answer]) => {
+          if (document.querySelector(`[name="${name}"]`).value === answer) score += 1;
+        });
+
+        const complete = Object.keys(answers).every((name) => document.querySelector(`[name="${name}"]`).value);
+        feedback.className = "quiz-feedback";
+        if (!complete) {
+          feedback.textContent = "Selecciona una función para cada componente.";
+          feedback.classList.add("is-incorrect");
+        } else if (score === 4) {
+          feedback.textContent = "Relación correcta. Cada componente tiene clara su misión.";
+          feedback.classList.add("is-correct");
+        } else {
+          feedback.textContent = `Tienes ${score} de 4. Revisa la función principal de cada componente.`;
+          feedback.classList.add("is-incorrect");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
