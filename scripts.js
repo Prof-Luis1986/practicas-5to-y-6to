@@ -3067,7 +3067,52 @@ const FIREBASE_CONFIG = {
   appId: "1:199136697239:web:72ac87697ef77343e602d2"
 };
 
+const WORKSHEET_EMAIL_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbw8XwulnlKUE1jy8JHRmPSHhB8TNS9_p5X9hORVkZEG4UDg_qpnHZYThKLzBz-5uhU88w/exec";
+
 let firebaseServicesPromise;
+
+function isPracticeWorksheetPage() {
+  const worksheetKey = document.body.dataset.worksheetKey || "";
+  const pageName = window.location.pathname.split("/").pop() || "";
+  const title = document.querySelector("h1")?.textContent.trim() || document.title;
+
+  return worksheetKey.startsWith("practica-")
+    || /^practica(?:-|_).*\.html$/i.test(pageName)
+    || /^práctica\b/i.test(title);
+}
+
+function setupPracticeEmailSubmissionUi() {
+  if (!isPracticeWorksheetPage()) return;
+
+  document.body.dataset.submissionType = "practica";
+  if (!document.body.dataset.emailWebappUrl) {
+    document.body.dataset.emailWebappUrl = WORKSHEET_EMAIL_WEBAPP_URL;
+  }
+
+  if (document.querySelector('[data-worksheet-action="email"]')) return;
+
+  const card = document.createElement("section");
+  card.className = "card worksheet-submit-card";
+  card.innerHTML = `
+    <h2>Enviar práctica</h2>
+    <p>Cuando termines, revisa tus respuestas e inicia sesión con Google para enviar la práctica al profesor.</p>
+    <div class="button-row">
+      <button class="action-button action-button--secondary" data-email-login type="button">Entrar con Google</button>
+      <button class="action-button" data-worksheet-action="email" type="button" disabled>Enviar práctica</button>
+    </div>
+    <p class="email-submit-status" data-email-status aria-live="polite">Inicia sesión con Google para habilitar el envío.</p>
+  `;
+
+  const container = document.querySelector(".page-shell .container");
+  if (!container) return;
+
+  const printOnlyCard = container.querySelector(".card.print-only");
+  if (printOnlyCard) {
+    printOnlyCard.insertAdjacentElement("beforebegin", card);
+  } else {
+    container.appendChild(card);
+  }
+}
 
 function getWorksheetFieldsDefault() {
   return Array.from(document.querySelectorAll(".worksheet-input, .worksheet-textarea, .worksheet-select, input[type=\"checkbox\"], input[type=\"radio\"]"));
@@ -3099,6 +3144,61 @@ function getEmailWebAppUrl(rawUrl) {
   return `https://script.google.com/macros/s/${rawUrl}/exec`;
 }
 
+function createGoogleAccountBadge() {
+  const badge = document.createElement("div");
+  badge.className = "google-account-badge";
+  badge.hidden = true;
+  badge.innerHTML = `
+    <img class="google-account-badge__avatar" data-google-account-avatar alt="" referrerpolicy="no-referrer" />
+    <span class="google-account-badge__fallback" data-google-account-fallback aria-hidden="true">G</span>
+    <span class="google-account-badge__details">
+      <strong data-google-account-name>Cuenta de Google</strong>
+      <span data-google-account-email></span>
+    </span>
+  `;
+  return badge;
+}
+
+function updateGoogleAccountBadge(badge, account) {
+  if (!badge) return;
+
+  const signedIn = Boolean(account?.signedIn);
+  const name = String(account?.name || "").trim();
+  const email = String(account?.email || "").trim();
+  const photoURL = String(account?.photoURL || "").trim();
+  const avatar = badge.querySelector("[data-google-account-avatar]");
+  const fallback = badge.querySelector("[data-google-account-fallback]");
+  const nameElement = badge.querySelector("[data-google-account-name]");
+  const emailElement = badge.querySelector("[data-google-account-email]");
+
+  badge.hidden = !signedIn;
+  if (!signedIn) {
+    avatar?.removeAttribute("src");
+    return;
+  }
+
+  if (nameElement) nameElement.textContent = name || "Cuenta de Google";
+  if (emailElement) emailElement.textContent = email;
+  if (fallback) {
+    fallback.textContent = (name || email || "G").charAt(0).toUpperCase();
+    fallback.hidden = Boolean(photoURL);
+  }
+
+  if (avatar) {
+    avatar.hidden = !photoURL;
+    if (photoURL) {
+      avatar.src = photoURL;
+      avatar.alt = name ? `Foto de perfil de ${name}` : "Foto de perfil de Google";
+      avatar.onerror = () => {
+        avatar.hidden = true;
+        if (fallback) fallback.hidden = false;
+      };
+    } else {
+      avatar.removeAttribute("src");
+    }
+  }
+}
+
 function createHiddenInput(name, value) {
   const input = document.createElement("input");
   input.type = "hidden";
@@ -3110,6 +3210,7 @@ function createHiddenInput(name, value) {
 function appendEmailSubmissionFields(target, payload) {
   const entries = [
     ["payload", JSON.stringify(payload)],
+    ["submission_type", payload.submissionType],
     ["worksheet_key", payload.worksheetKey],
     ["title", payload.title],
     ["student_name", payload.studentName],
@@ -3166,6 +3267,7 @@ function createEmailMessagePayload(payload) {
   const text = [
     payload.title,
     "",
+    `Tipo de entrega: ${payload.submissionType || "hoja de trabajo"}`,
     `Alumno: ${payload.studentName}`,
     `Grupo: ${payload.groupName || "(sin grupo)"}`,
     `Fecha: ${payload.deliveryDate || "(sin fecha)"}`,
@@ -3189,6 +3291,7 @@ function createEmailMessagePayload(payload) {
 
   const html = `
     <h1>${escapeHtml(payload.title)}</h1>
+    <p><strong>Tipo de entrega:</strong> ${escapeHtml(payload.submissionType || "hoja de trabajo")}</p>
     <p><strong>Alumno:</strong> ${escapeHtml(payload.studentName)}</p>
     <p><strong>Grupo:</strong> ${escapeHtml(payload.groupName || "(sin grupo)")}</p>
     <p><strong>Fecha:</strong> ${escapeHtml(payload.deliveryDate || "(sin fecha)")}</p>
@@ -3286,11 +3389,37 @@ function setupWorksheetEmailSubmission() {
 
   if (!webAppUrl || !emailButton) return;
 
+  const submissionCard = emailButton.closest(".card");
+  let accountBadge = submissionCard?.querySelector(".google-account-badge");
+  if (!accountBadge && submissionCard) {
+    accountBadge = createGoogleAccountBadge();
+    const buttonRow = emailButton.closest(".button-row");
+    if (buttonRow) {
+      buttonRow.insertAdjacentElement("beforebegin", accountBadge);
+    } else {
+      submissionCard.insertBefore(accountBadge, emailButton);
+    }
+  }
+
   let isSignedIn = document.body.dataset.googleSignedIn === "true";
   let isSending = false;
   let signedInEmail = "";
+  let signedInName = "";
+  let signedInPhotoURL = "";
   const isProjectSubmission = document.body.dataset.projectSubmission === "true";
-  const submissionName = isProjectSubmission ? "proyecto" : "examen";
+  const submissionType = document.body.dataset.submissionType || (isProjectSubmission ? "proyecto" : "examen");
+  const submissionName = submissionType === "practica"
+    ? "práctica"
+    : (isProjectSubmission ? "proyecto" : "examen");
+  const submissionLabel = submissionType === "practica"
+    ? "Práctica"
+    : (isProjectSubmission ? "Proyecto" : "Examen");
+  const submissionReference = submissionType === "practica"
+    ? "la práctica"
+    : `el ${submissionName}`;
+  const submissionSentMessage = submissionType === "practica"
+    ? "Práctica enviada"
+    : `${submissionLabel} enviado`;
 
   function setEmailStatus(message, mode) {
     if (!status) return;
@@ -3311,6 +3440,14 @@ function setupWorksheetEmailSubmission() {
   document.addEventListener("worksheet-auth-change", (event) => {
     isSignedIn = Boolean(event.detail?.signedIn);
     signedInEmail = event.detail?.email || "";
+    signedInName = event.detail?.name || "";
+    signedInPhotoURL = event.detail?.photoURL || "";
+    updateGoogleAccountBadge(accountBadge, {
+      signedIn: isSignedIn,
+      email: signedInEmail,
+      name: signedInName,
+      photoURL: signedInPhotoURL
+    });
     updateEmailButton();
 
     if (!isSignedIn) {
@@ -3328,6 +3465,9 @@ function setupWorksheetEmailSubmission() {
 
     isSignedIn = false;
     signedInEmail = "";
+    signedInName = "";
+    signedInPhotoURL = "";
+    updateGoogleAccountBadge(accountBadge, { signedIn: false });
     updateEmailButton();
     setEmailStatus(message, "error");
   });
@@ -3349,7 +3489,7 @@ function setupWorksheetEmailSubmission() {
     const studentName = String(values.student_name || "").trim();
 
     if (!studentName) {
-      setEmailStatus(`Escribe el nombre del alumno antes de enviar el ${submissionName}.`, "error");
+      setEmailStatus(`Escribe el nombre del alumno antes de enviar ${submissionReference}.`, "error");
       document.querySelector("[name=\"student_name\"]")?.focus();
       return;
     }
@@ -3411,7 +3551,10 @@ function setupWorksheetEmailSubmission() {
       : null;
 
     const payload = {
-      worksheetKey: document.body.dataset.worksheetKey || "",
+      submissionType,
+      worksheetKey: document.body.dataset.worksheetKey
+        || window.location.pathname.split("/").pop()?.replace(/\.html$/i, "")
+        || "",
       title: document.querySelector("h1")?.textContent.trim() || document.title,
       studentName,
       groupName: values.group_name || "",
@@ -3432,21 +3575,21 @@ function setupWorksheetEmailSubmission() {
 
     try {
       await submitEmailWithFetch(webAppUrl, payload);
-      setEmailStatus(`${isProjectSubmission ? "Proyecto" : "Examen"} enviado. Revisa tu correo para confirmar la recepción.`, "success");
+      setEmailStatus(`${submissionSentMessage}. Revisa tu correo para confirmar la recepción.`, "success");
     } catch (error) {
       if (error?.allowHiddenFormFallback === false) {
-        console.error("El servidor rechazo el envio del examen:", error);
-        setEmailStatus(`No se pudo enviar el ${submissionName}. Revisa permisos y despliegue del Apps Script.`, "error");
+        console.error(`El servidor rechazó el envío de ${submissionReference}:`, error);
+        setEmailStatus(`No se pudo enviar ${submissionReference}. Revisa permisos y despliegue del Apps Script.`, "error");
         return;
       }
 
       console.warn("No se pudo confirmar el envio con fetch; usando formulario oculto:", error);
       try {
         await submitEmailWithHiddenForm(webAppUrl, payload);
-        setEmailStatus(`${isProjectSubmission ? "Proyecto" : "Examen"} enviado. Si no llega la confirmación, revisa la configuración del Apps Script.`, "success");
+        setEmailStatus(`${submissionSentMessage}. Si no llega la confirmación, revisa la configuración del Apps Script.`, "success");
       } catch (fallbackError) {
-        console.error("No se pudo enviar el examen:", fallbackError);
-        setEmailStatus(`No se pudo enviar el ${submissionName}. Revisa conexión, permisos del Apps Script y vuelve a intentar.`, "error");
+        console.error(`No se pudo enviar ${submissionReference}:`, fallbackError);
+        setEmailStatus(`No se pudo enviar ${submissionReference}. Revisa conexión, permisos del Apps Script y vuelve a intentar.`, "error");
       }
     } finally {
       isSending = false;
@@ -3548,6 +3691,7 @@ function createCloudPanel(container) {
       <div>
         <h2>Guardar y continuar después</h2>
         <p class="cloud-panel__status" data-cloud-status>Guardando solo en este dispositivo.</p>
+        <div data-cloud-account></div>
       </div>
       <div class="button-row cloud-panel__actions">
         <button class="action-button" type="button" data-cloud-login>Entrar con Google</button>
@@ -3558,6 +3702,10 @@ function createCloudPanel(container) {
     <p class="cloud-panel__hint" data-cloud-hint>Inicia sesión con cualquier cuenta de Google para continuar tu práctica desde otro dispositivo.</p>
     <p class="cloud-panel__help">El botón <strong>Guardar practica en linea</strong> envía tus respuestas actuales a tu cuenta para que puedas continuar después en otro equipo.</p>
   `;
+
+  const accountSlot = panel.querySelector("[data-cloud-account]");
+  const accountBadge = createGoogleAccountBadge();
+  accountSlot?.replaceWith(accountBadge);
 
   const buttonRow = container.querySelector(".button-row");
   if (buttonRow) {
@@ -3570,6 +3718,7 @@ function createCloudPanel(container) {
     panel,
     status: panel.querySelector("[data-cloud-status]"),
     hint: panel.querySelector("[data-cloud-hint]"),
+    accountBadge,
     loginButton: panel.querySelector("[data-cloud-login]"),
     syncButton: panel.querySelector("[data-cloud-sync]"),
     logoutButton: panel.querySelector("[data-cloud-logout]")
@@ -3614,12 +3763,19 @@ function createWorksheetPersistence(options) {
       detail: {
         signedIn: Boolean(currentUser),
         email: currentUser?.email || "",
-        name: currentUser?.displayName || ""
+        name: currentUser?.displayName || "",
+        photoURL: currentUser?.photoURL || ""
       }
     }));
 
     if (!cloudUi) return;
 
+    updateGoogleAccountBadge(cloudUi.accountBadge, {
+      signedIn: Boolean(currentUser),
+      email: currentUser?.email || "",
+      name: currentUser?.displayName || "",
+      photoURL: currentUser?.photoURL || ""
+    });
     cloudUi.loginButton.hidden = Boolean(currentUser);
     cloudUi.logoutButton.hidden = !currentUser;
     cloudUi.syncButton.hidden = !currentUser;
@@ -3945,6 +4101,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupProjectSubmissionFields();
   setupImageLightbox();
   setupContentProtection();
+  setupPracticeEmailSubmissionUi();
   setupWorksheetStorage();
   setupWorksheetEmailSubmission();
 });

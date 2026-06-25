@@ -194,6 +194,68 @@ h1 {
   color: #9a3412;
 }
 
+.google-account-badge {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0.75rem 0 0;
+  padding: 0.55rem 0.8rem 0.55rem 0.55rem;
+  border: 1px solid #cfe0d7;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(15, 93, 69, 0.08);
+}
+
+.google-account-badge[hidden] {
+  display: none;
+}
+
+.google-account-badge__avatar,
+.google-account-badge__fallback {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border-radius: 50%;
+}
+
+.google-account-badge__avatar {
+  display: block;
+  object-fit: cover;
+}
+
+.google-account-badge__avatar[hidden],
+.google-account-badge__fallback[hidden] {
+  display: none;
+}
+
+.google-account-badge__fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f5d45;
+  color: #fff;
+  font-weight: 800;
+}
+
+.google-account-badge__details {
+  min-width: 0;
+  display: grid;
+  line-height: 1.25;
+}
+
+.google-account-badge__details strong,
+.google-account-badge__details span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.google-account-badge__details span {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
 .page-shell {
   width: min(1100px, 94%);
   margin: 0 auto 2rem;

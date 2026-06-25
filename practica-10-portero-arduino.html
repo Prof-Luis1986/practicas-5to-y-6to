@@ -10,7 +10,7 @@
   <header class="hero">
     <p class="tag">Fase III</p>
     <h1>Práctica 10: Portero con Arduino</h1>
-    <p class="subtitle">Proyecto de robótica escolar para controlar un portero automático con un servo motor y dos botones de dirección.</p>
+    <p class="subtitle">Proyecto de robótica escolar con dos opciones: control manual mediante botones o reacción automática mediante dos sensores ultrasónicos.</p>
   </header>
 
   <div class="topbar">
@@ -23,7 +23,7 @@
         <h2>Guía de trabajo</h2>
         <p><strong>Proyecto:</strong> Portero con Arduino</p>
         <p><strong>Asignatura:</strong> Tecnología / Robótica</p>
-        <p><strong>Componentes principales:</strong> Arduino UNO, servo motor, 2 PushButton, 2 resistencias de 10kΩ y protoboard.</p>
+        <p><strong>Opciones del proyecto:</strong> Versión 1 con dos botones o Versión 2 con dos sensores ultrasónicos.</p>
 
         <div class="worksheet-meta">
           <div class="worksheet-field">
@@ -45,6 +45,29 @@
           <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
           <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
         </div>
+      </section>
+
+      <section class="card challenge">
+        <h2>Elige una versión</h2>
+        <p>El alumno deberá construir y programar una de las siguientes opciones:</p>
+        <div class="worksheet-field">
+          <label for="project-version">Versión seleccionada</label>
+          <select class="worksheet-input" id="project-version" name="project_version">
+            <option value="">Selecciona una opción</option>
+            <option value="version-1">Versión 1: Portero controlado con botones</option>
+            <option value="version-2">Versión 2: Portero automático con dos ultrasónicos</option>
+          </select>
+        </div>
+        <ul>
+          <li><a href="#version-1">Ir a la Versión 1: botones</a></li>
+          <li><a href="#version-2">Ir a la Versión 2: sensores ultrasónicos</a></li>
+        </ul>
+      </section>
+
+      <section class="card" id="version-1">
+        <p class="tag">Opción 1</p>
+        <h2>Versión 1: Portero controlado con botones</h2>
+        <p>Esta versión permite mover manualmente al portero hacia la izquierda o hacia la derecha mediante dos PushButton.</p>
       </section>
 
       <section class="card">
@@ -206,21 +229,217 @@ void loop() {
         </table>
       </section>
 
+      <section class="card" id="version-2">
+        <p class="tag">Opción 2</p>
+        <h2>Versión 2: Portero automático con dos sensores ultrasónicos</h2>
+        <p>En esta opción, el alumno sustituirá los botones por dos sensores HC-SR04. Cada sensor vigila un lado de la portería y el servo mueve al portero automáticamente hacia el lado donde detecta el balón.</p>
+      </section>
+
       <section class="card">
-        <h2>8. Actividad práctica</h2>
+        <h2>1. Objetivo de la Versión 2</h2>
+        <p>Programar un sistema capaz de medir distancias con dos sensores ultrasónicos y controlar la posición de un servomotor de acuerdo con el lado en el que se detecte un objeto cercano.</p>
+      </section>
+
+      <section class="card">
+        <h2>2. Materiales de la Versión 2</h2>
+        <ul>
+          <li>Arduino UNO</li>
+          <li>Protoboard</li>
+          <li>2 sensores ultrasónicos HC-SR04</li>
+          <li>1 servomotor</li>
+          <li>Fuente de alimentación externa para el servomotor</li>
+          <li>Cables jumper</li>
+          <li>Cable USB</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>3. Funcionamiento de la Versión 2</h2>
         <ol>
-          <li>Armar el circuito en protoboard.</li>
+          <li>El servo inicia y permanece en la posición central de 90°.</li>
+          <li>El sensor izquierdo y el sensor derecho miden la distancia de forma alternada.</li>
+          <li>Si solamente el sensor izquierdo detecta un objeto a 25 cm o menos, el portero se mueve a 30°.</li>
+          <li>Si solamente el sensor derecho detecta un objeto a 25 cm o menos, el portero se mueve a 150°.</li>
+          <li>Si ambos sensores detectan un objeto, o ninguno lo detecta, el portero permanece en el centro.</li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>4. Conexiones de la Versión 2</h2>
+        <p><strong>Sensor ultrasónico izquierdo</strong></p>
+        <ul>
+          <li>VCC → 5V</li>
+          <li>GND → GND</li>
+          <li>TRIG → Pin digital 4</li>
+          <li>ECHO → Pin digital 5</li>
+        </ul>
+
+        <p><strong>Sensor ultrasónico derecho</strong></p>
+        <ul>
+          <li>VCC → 5V</li>
+          <li>GND → GND</li>
+          <li>TRIG → Pin digital 6</li>
+          <li>ECHO → Pin digital 7</li>
+        </ul>
+
+        <p><strong>Servomotor</strong></p>
+        <ul>
+          <li>Señal → Pin digital 9</li>
+          <li>VCC → 5V de una fuente externa</li>
+          <li>GND → GND de la fuente externa</li>
+          <li>El GND de la fuente externa debe conectarse también al GND del Arduino.</li>
+        </ul>
+
+        <figure>
+          <img src="Portero2.png" alt="Circuito del portero automático con Arduino, servomotor y dos sensores ultrasónicos" />
+          <figcaption>Diagrama de conexión de la Versión 2. Comprueba los pines 4, 5, 6, 7 y 9 antes de energizar el circuito.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>5. Código de la Versión 2</h2>
+        <pre><code>#include &lt;Servo.h&gt;
+
+Servo servo;
+
+//-------------------------
+// Pines del Servo
+//-------------------------
+const int pinServo = 9;
+
+//-------------------------
+// Ultrasonico Izquierdo
+//-------------------------
+const int trigIzq = 4;
+const int echoIzq = 5;
+
+//-------------------------
+// Ultrasonico Derecho
+//-------------------------
+const int trigDer = 6;
+const int echoDer = 7;
+
+//-------------------------
+// Posiciones del servo
+//-------------------------
+const int centro = 90;
+const int izquierda = 30;
+const int derecha = 150;
+
+// Distancia para detectar el balón
+const int distanciaActivacion = 25;
+
+void setup() {
+
+  servo.attach(pinServo);
+  servo.write(centro);
+
+  pinMode(trigIzq, OUTPUT);
+  pinMode(echoIzq, INPUT);
+
+  pinMode(trigDer, OUTPUT);
+  pinMode(echoDer, INPUT);
+
+  Serial.begin(9600);
+}
+
+//-------------------------------------------
+// Función para medir distancia
+//-------------------------------------------
+int medirDistancia(int trig, int echo) {
+
+  digitalWrite(trig, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig, LOW);
+
+  long tiempo = pulseIn(echo, HIGH, 30000);
+
+  if (tiempo == 0)
+    return 999;
+
+  int distancia = tiempo * 0.0343 / 2;
+
+  return distancia;
+}
+
+//-------------------------------------------
+
+void loop() {
+
+  int distanciaIzq = medirDistancia(trigIzq, echoIzq);
+  delay(20);
+  int distanciaDer = medirDistancia(trigDer, echoDer);
+
+  Serial.print("Izq: ");
+  Serial.print(distanciaIzq);
+  Serial.print(" cm   ");
+
+  Serial.print("Der: ");
+  Serial.print(distanciaDer);
+  Serial.println(" cm");
+
+  // Si detecta por la izquierda
+  if (distanciaIzq &lt;= distanciaActivacion &amp;&amp;
+      distanciaDer &gt; distanciaActivacion) {
+
+    servo.write(izquierda);
+  }
+
+  // Si detecta por la derecha
+  else if (distanciaDer &lt;= distanciaActivacion &amp;&amp;
+           distanciaIzq &gt; distanciaActivacion) {
+
+    servo.write(derecha);
+  }
+
+  // Si ambos detectan, quedarse al centro
+  else if (distanciaIzq &lt;= distanciaActivacion &amp;&amp;
+           distanciaDer &lt;= distanciaActivacion) {
+
+    servo.write(centro);
+  }
+
+  // Ninguno detecta
+  else {
+
+    servo.write(centro);
+  }
+
+  delay(50);
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>6. Explicación del código de la Versión 2</h2>
+        <ul>
+          <li><code>medirDistancia()</code> envía un pulso ultrasónico y calcula la distancia usando el tiempo que tarda en regresar el eco.</li>
+          <li><code>pulseIn(echo, HIGH, 30000)</code> espera el eco durante un máximo de 30 milisegundos.</li>
+          <li>Cuando no se recibe un eco, la función devuelve <code>999</code> para indicar que no hay un objeto cercano.</li>
+          <li><code>distanciaActivacion</code> establece en 25 cm la distancia máxima para reaccionar.</li>
+          <li>La pausa de 20 ms entre sensores ayuda a reducir interferencias entre sus pulsos.</li>
+          <li>El Monitor Serie muestra las dos distancias medidas y facilita la calibración del sistema.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Actividad práctica</h2>
+        <ol>
+          <li>Seleccionar la Versión 1 o la Versión 2.</li>
+          <li>Armar el circuito correspondiente en protoboard.</li>
           <li>Verificar conexiones.</li>
-          <li>Cargar el código en Arduino.</li>
+          <li>Cargar en Arduino el código de la versión seleccionada.</li>
           <li>Probar el funcionamiento del portero.</li>
         </ol>
       </section>
 
       <section class="card challenge">
-        <h2>9. Reto extra (opcional)</h2>
+        <h2>Reto extra (opcional)</h2>
         <ul>
-          <li>Modificar el programa para agregar una tercera posición.</li>
-          <li>Cambiar el tiempo de regreso automático para que vuelva al centro después de 1 segundo.</li>
+          <li>Versión 1: cambiar el tiempo de regreso automático para que vuelva al centro después de 1 segundo.</li>
+          <li>Versión 2: modificar la distancia de activación y comparar el comportamiento con 15, 25 y 40 cm.</li>
         </ul>
       </section>
 
@@ -228,7 +447,7 @@ void loop() {
         <h2>PRACTICARIO</h2>
 
         <h3>Datos del alumno</h3>
-        <p><strong>Proyecto:</strong> Portero Arduino</p>
+        <p><strong>Proyecto:</strong> Portero Arduino — Versión 1 o Versión 2</p>
 
         <h3>Parte 1 - Componentes</h3>
         <div class="worksheet-field">
@@ -236,7 +455,7 @@ void loop() {
           <textarea class="worksheet-textarea" id="q1" name="answer_1"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="q2">2. ¿Para qué sirve un PushButton?</label>
+          <label for="q2">2. Según la versión elegida, ¿para qué sirve un PushButton o un sensor ultrasónico?</label>
           <textarea class="worksheet-textarea" id="q2" name="answer_2"></textarea>
         </div>
         <div class="worksheet-field">
@@ -250,11 +469,11 @@ void loop() {
           <textarea class="worksheet-textarea" id="q4" name="answer_4"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="q5">5. ¿Cuántos botones utiliza el proyecto?</label>
+          <label for="q5">5. ¿Qué versión elegiste y qué componentes utiliza para detectar la dirección?</label>
           <textarea class="worksheet-textarea" id="q5" name="answer_5"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="q6">6. ¿Para qué sirven las resistencias de 10kΩ en el montaje del proyecto?</label>
+          <label for="q6">6. Escribe los pines de entrada utilizados en la versión que elegiste.</label>
           <textarea class="worksheet-textarea" id="q6" name="answer_6"></textarea>
         </div>
 
@@ -264,7 +483,7 @@ void loop() {
           <textarea class="worksheet-textarea" id="q7" name="answer_7"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="q8">8. ¿Qué función se utiliza para leer un botón?</label>
+          <label for="q8">8. ¿Qué función se utiliza para leer el botón o medir el pulso del sensor en tu versión?</label>
           <textarea class="worksheet-textarea" id="q8" name="answer_8"></textarea>
         </div>
         <div class="worksheet-field">
@@ -274,11 +493,11 @@ void loop() {
 
         <h3>Parte 4 - Análisis</h3>
         <div class="worksheet-field">
-          <label for="q10">10. ¿Qué sucede cuando se presiona el botón izquierdo?</label>
+          <label for="q10">10. ¿Qué condición hace que el portero se mueva hacia la izquierda?</label>
           <textarea class="worksheet-textarea" id="q10" name="answer_10"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="q11">11. ¿Qué sucede cuando se presiona el botón derecho?</label>
+          <label for="q11">11. ¿Qué condición hace que el portero se mueva hacia la derecha?</label>
           <textarea class="worksheet-textarea" id="q11" name="answer_11"></textarea>
         </div>
         <div class="worksheet-field">
@@ -303,7 +522,7 @@ void loop() {
 
       <section class="card">
         <h2>Observación docente</h2>
-        <p>Este proyecto fortalece el uso de entradas digitales, el control de actuadores y la comprensión de la relación entre programación y movimiento mecánico en robótica educativa. Para un funcionamiento más estable del servomotor, se recomienda alimentarlo con una fuente externa y compartir tierra con el Arduino.</p>
+        <p>Este proyecto permite trabajar con entradas digitales mediante botones o con medición de distancia mediante sensores ultrasónicos. Ambas opciones fortalecen el control de actuadores y la comprensión de la relación entre programación, detección y movimiento mecánico. Para un funcionamiento más estable del servomotor, se recomienda alimentarlo con una fuente externa y compartir tierra con el Arduino.</p>
       </section>
 
       <section class="card print-only">
@@ -327,6 +546,6 @@ void loop() {
     Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion
   </footer>
 
-  <script src="scripts.js?v=20260605b"></script>
+  <script src="scripts.js?v=20260625b"></script>
 </body>
 </html>
