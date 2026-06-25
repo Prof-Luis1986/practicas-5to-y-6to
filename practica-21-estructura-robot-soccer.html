@@ -939,95 +939,37 @@
       </section>
 
       <section class="card soccer-card">
-        <h2>Mapa final de conexiones de Jimmy</h2>
+        <h2>Mapa final de conexiones del Robot Soccer</h2>
         <p>Esta es la distribución de pines que quedó estable para el Robot Soccer. Realiza o revisa todo el cableado con la alimentación desconectada.</p>
 
         <div class="connection-grid">
           <article class="connection-card">
-            <h3>Puente H L298N</h3>
             <table>
-              <thead><tr><th>L298N</th><th>Arduino UNO</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Componente</th>
+                  <th>Pin / Salida</th>
+                  <th>Arduino UNO / L298N</th>
+                </tr>
+              </thead>
               <tbody>
-                <tr><td>ENA</td><td>D5</td></tr>
-                <tr><td>IN1</td><td>D7</td></tr>
-                <tr><td>IN2</td><td>D6</td></tr>
-                <tr><td>IN3</td><td>D4</td></tr>
-                <tr><td>IN4</td><td>D3</td></tr>
-                <tr><td>ENB</td><td>D9</td></tr>
-              </tbody>
-            </table>
-          </article>
-
-          <article class="connection-card">
-            <h3>Receptor infrarrojo IR</h3>
-            <table>
-              <thead><tr><th>Receptor IR</th><th>Arduino UNO</th></tr></thead>
-              <tbody>
-                <tr><td>OUT</td><td>D10</td></tr>
-                <tr><td>VCC</td><td>5V</td></tr>
-                <tr><td>GND</td><td>GND</td></tr>
-              </tbody>
-            </table>
-          </article>
-
-          <article class="connection-card">
-            <h3>Buzzer</h3>
-            <table>
-              <thead><tr><th>Buzzer</th><th>Arduino UNO</th></tr></thead>
-              <tbody>
-                <tr><td>+</td><td>D8</td></tr>
-                <tr><td>-</td><td>GND</td></tr>
-              </tbody>
-            </table>
-          </article>
-
-          <article class="connection-card">
-            <h3>Sensor ultrasónico HC-SR04</h3>
-            <table>
-              <thead><tr><th>HC-SR04</th><th>Arduino UNO</th></tr></thead>
-              <tbody>
-                <tr><td>TRIG</td><td>A2</td></tr>
-                <tr><td>ECHO</td><td>A3</td></tr>
-                <tr><td>VCC</td><td>5V</td></tr>
-                <tr><td>GND</td><td>GND</td></tr>
-              </tbody>
-            </table>
-            <p><small>Se conecta únicamente cuando la actividad utilice el sensor ultrasónico.</small></p>
-          </article>
-
-          <article class="connection-card">
-            <h3>Sensores TCRT5000 para sumo</h3>
-            <table>
-              <thead><tr><th>Sensor</th><th>Arduino UNO</th></tr></thead>
-              <tbody>
-                <tr><td>TCRT izquierdo</td><td>A0</td></tr>
-                <tr><td>TCRT derecho</td><td>A1</td></tr>
-                <tr><td>VCC</td><td>5V</td></tr>
-                <tr><td>GND</td><td>GND</td></tr>
-              </tbody>
-            </table>
-          </article>
-
-          <article class="connection-card">
-            <h3>Alimentación</h3>
-            <table>
-              <thead><tr><th>Origen</th><th>Destino</th></tr></thead>
-              <tbody>
-                <tr><td>Portapilas positivo</td><td>+12V del L298N</td></tr>
-                <tr><td>Portapilas negativo</td><td>GND del L298N</td></tr>
-                <tr><td>5V del L298N</td><td>5V del Shield Arduino</td></tr>
-                <tr><td>GND del L298N</td><td>GND del Shield Arduino</td></tr>
-              </tbody>
-            </table>
-          </article>
-
-          <article class="connection-card">
-            <h3>Motores</h3>
-            <table>
-              <thead><tr><th>Motor</th><th>Salida del L298N</th></tr></thead>
-              <tbody>
-                <tr><td>Motor izquierdo</td><td>OUT1 / OUT2</td></tr>
-                <tr><td>Motor derecho</td><td>OUT3 / OUT4</td></tr>
+                <tr><td>L298N</td><td>ENA</td><td>D5</td></tr>
+                <tr><td>L298N</td><td>IN1</td><td>D7</td></tr>
+                <tr><td>L298N</td><td>IN2</td><td>D6</td></tr>
+                <tr><td>L298N</td><td>IN3</td><td>D4</td></tr>
+                <tr><td>L298N</td><td>IN4</td><td>D3</td></tr>
+                <tr><td>L298N</td><td>ENB</td><td>D9</td></tr>
+                <tr><td>Receptor IR</td><td>Y / OUT</td><td>D10</td></tr>
+                <tr><td>Receptor IR</td><td>R / VCC</td><td>5V</td></tr>
+                <tr><td>Receptor IR</td><td>G / GND</td><td>GND</td></tr>
+                <tr><td>Buzzer</td><td>+ / S</td><td>D8</td></tr>
+                <tr><td>Buzzer</td><td>- / GND</td><td>GND</td></tr>
+                <tr><td>Portapilas</td><td>+</td><td>+12V del L298N</td></tr>
+                <tr><td>Portapilas</td><td>-</td><td>GND del L298N</td></tr>
+                <tr><td>L298N</td><td>5V</td><td>5V Arduino / Sensor Shield</td></tr>
+                <tr><td>L298N</td><td>GND</td><td>GND Arduino / Sensor Shield</td></tr>
+                <tr><td>Motor izquierdo</td><td>Cables</td><td>OUT1 / OUT2</td></tr>
+                <tr><td>Motor derecho</td><td>Cables</td><td>OUT3 / OUT4</td></tr>
               </tbody>
             </table>
           </article>
@@ -1048,7 +990,7 @@
 
       <section class="card next-mission">
         <h2>Siguiente misión</h2>
-        <p><strong>Hoy observamos, analizamos e identificamos.</strong> También dejamos documentado el mapa final de conexiones de Jimmy. En la Práctica 22 utilizaremos esta referencia para revisar el cableado electrónico y continuar con el Robot Soccer.</p>
+        <p><strong>Hoy observamos, analizamos e identificamos.</strong> También dejamos documentado el mapa final de conexiones del Robot Soccer. En la Práctica 22 utilizaremos esta referencia para revisar el cableado electrónico y continuar con el proyecto.</p>
       </section>
 
       <section class="card print-only">
