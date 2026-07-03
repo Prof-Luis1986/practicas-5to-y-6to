@@ -1229,6 +1229,28 @@ th {
   color: var(--muted);
 }
 
+.prototype-reference {
+  border-color: #b8d7ca;
+  background:
+    linear-gradient(135deg, #ffffff 0%, #f4fbf7 100%);
+}
+
+.prototype-reference__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.prototype-reference__grid--single {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 620px;
+}
+
+.prototype-reference h3 {
+  color: var(--accent);
+}
+
 .cloud-panel {
   margin-top: 1rem;
   border-color: #cfe0d7;
@@ -1619,6 +1641,10 @@ figcaption {
   }
 
   .mission-explanation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .prototype-reference__grid {
     grid-template-columns: 1fr;
   }
 
