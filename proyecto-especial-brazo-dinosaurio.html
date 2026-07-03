@@ -60,6 +60,11 @@
             <figcaption>Brazo de práctica: revisar peso, punto de giro, recorrido, pintura y espacio para el mecanismo.</figcaption>
           </figure>
         </div>
+        <video class="media-player media-player--compact media-player--vertical" controls muted playsinline preload="metadata">
+          <source src="Brazo_1Servo-sin-sonido.mp4" type="video/mp4" />
+          Tu navegador no puede reproducir este video.
+        </video>
+        <p class="worksheet-note">El video se muestra sin sonido para usarlo como referencia visual de la prueba con un servo.</p>
         <h3>Qué deben practicar con este prototipo</h3>
         <ul>
           <li>Ubicar el punto de giro y confirmar que el servo pueda mover el brazo sin forzarse.</li>
@@ -182,6 +187,174 @@
           <img src="img/diagrama-brazo-dinosaurio.png" alt="Diagrama de conexión del proyecto Brazo dinosaurio" />
           <figcaption>Diagrama de referencia del proyecto Brazo dinosaurio</figcaption>
         </figure>
+      </section>
+
+      <section class="card">
+        <h2>Códigos de prueba para servos</h2>
+        <p>Antes de conectar el sensor ultrasónico, el LED y el buzzer, prueba el movimiento del brazo solamente con servos. Estas pruebas ayudan a detectar si el mecanismo se atora, pesa demasiado o necesita otros ángulos antes de usar el código completo.</p>
+        <p class="worksheet-note">Realiza estas pruebas con el brazo separado del montaje final o con movimientos lentos. Si el servo se calienta, vibra demasiado o no puede mover la pieza, detén la prueba y ajusta el mecanismo.</p>
+
+        <h3>Prueba 1: Un servo</h3>
+        <p>Usa este código cuando el brazo se moverá con un solo servomotor conectado al pin 9. Observa si sube y baja suavemente.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Cable del servo</th>
+              <th>Arduino Uno</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Naranja (señal)</td>
+              <td>Pin 9</td>
+            </tr>
+            <tr>
+              <td>Rojo (VCC)</td>
+              <td>5V</td>
+            </tr>
+            <tr>
+              <td>Café/Negro (GND)</td>
+              <td>GND</td>
+            </tr>
+          </tbody>
+        </table>
+        <pre><code>#include &lt;Servo.h&gt;
+
+Servo servo;
+
+void setup() {
+  servo.attach(9);   // Servo en el pin 9
+  servo.write(0);
+  delay(1000);
+}
+
+void loop() {
+
+  // Sube lentamente
+  for (int pos = 0; pos &lt;= 180; pos++) {
+    servo.write(pos);
+    delay(8);
+  }
+
+  delay(800);
+
+  // Baja lentamente
+  for (int pos = 180; pos &gt;= 0; pos--) {
+    servo.write(pos);
+    delay(8);
+  }
+
+  delay(800);
+
+}</code></pre>
+
+        <h3>Prueba 2: Dos servos</h3>
+        <p>Usa este código si el brazo tendrá dos movimientos: hombro y muñeca. El servo del hombro va al pin 9 y el servo de la muñeca va al pin 10.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Servo</th>
+              <th>Cable</th>
+              <th>Arduino Uno</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Servo hombro</td>
+              <td>Naranja (señal)</td>
+              <td>Pin 9</td>
+            </tr>
+            <tr>
+              <td>Servo hombro</td>
+              <td>Rojo (VCC)</td>
+              <td>5V</td>
+            </tr>
+            <tr>
+              <td>Servo hombro</td>
+              <td>Café/Negro (GND)</td>
+              <td>GND</td>
+            </tr>
+            <tr>
+              <td>Servo muñeca</td>
+              <td>Naranja (señal)</td>
+              <td>Pin 10</td>
+            </tr>
+            <tr>
+              <td>Servo muñeca</td>
+              <td>Rojo (VCC)</td>
+              <td>5V</td>
+            </tr>
+            <tr>
+              <td>Servo muñeca</td>
+              <td>Café/Negro (GND)</td>
+              <td>GND</td>
+            </tr>
+          </tbody>
+        </table>
+        <pre><code>#include &lt;Servo.h&gt;
+
+Servo servoHombro;
+Servo servoMuneca;
+
+void setup() {
+  servoHombro.attach(9);   // Servo del hombro
+  servoMuneca.attach(10);  // Servo de la muñeca
+
+  servoHombro.write(0);
+  servoMuneca.write(0);
+
+  delay(1000);
+}
+
+void loop() {
+
+  // Sube el hombro
+  for (int pos = 0; pos &lt;= 180; pos++) {
+    servoHombro.write(pos);
+    delay(8);
+  }
+
+  delay(250);
+
+  // Sube la muñeca
+  for (int pos = 0; pos &lt;= 180; pos++) {
+    servoMuneca.write(pos);
+    delay(8);
+  }
+
+  delay(800);
+
+  // Baja el hombro
+  for (int pos = 180; pos &gt;= 0; pos--) {
+    servoHombro.write(pos);
+    delay(8);
+  }
+
+  delay(250);
+
+  // Baja la muñeca
+  for (int pos = 180; pos &gt;= 0; pos--) {
+    servoMuneca.write(pos);
+    delay(8);
+  }
+
+  delay(800);
+
+}</code></pre>
+
+        <h3>Registro de la prueba</h3>
+        <div class="worksheet-field">
+          <label for="servo-test-result-1">1. ¿Con cuál prueba funcionó mejor el mecanismo: un servo o dos servos?</label>
+          <textarea class="worksheet-textarea" id="servo-test-result-1" name="servo_test_result_1"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="servo-test-result-2">2. ¿En qué parte del recorrido el brazo se atoró, vibró o perdió fuerza?</label>
+          <textarea class="worksheet-textarea" id="servo-test-result-2" name="servo_test_result_2"></textarea>
+        </div>
+        <div class="worksheet-field">
+          <label for="servo-test-result-3">3. ¿Qué ángulos usarás como límite seguro en lugar de mover de 0 a 180 grados?</label>
+          <textarea class="worksheet-textarea" id="servo-test-result-3" name="servo_test_result_3"></textarea>
+        </div>
       </section>
 
       <section class="card">
