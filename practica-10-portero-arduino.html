@@ -10,7 +10,7 @@
   <header class="hero">
     <p class="tag">Fase III</p>
     <h1>Práctica 10: Portero con Arduino</h1>
-    <p class="subtitle">Proyecto de robótica escolar con dos opciones: control manual mediante botones o reacción automática mediante dos sensores ultrasónicos.</p>
+    <p class="subtitle">Proyecto de robótica escolar con tres opciones: control manual mediante botones, reacción automática mediante dos sensores ultrasónicos o una variante de referencia basada en el joystick.</p>
   </header>
 
   <div class="topbar">
@@ -23,7 +23,7 @@
         <h2>Guía de trabajo</h2>
         <p><strong>Proyecto:</strong> Portero con Arduino</p>
         <p><strong>Asignatura:</strong> Tecnología / Robótica</p>
-        <p><strong>Opciones del proyecto:</strong> Versión 1 con dos botones o Versión 2 con dos sensores ultrasónicos.</p>
+        <p><strong>Opciones del proyecto:</strong> Versión 1 con dos botones, Versión 2 con dos sensores ultrasónicos o Variante Joystick.</p>
 
         <div class="worksheet-meta">
           <div class="worksheet-field">
@@ -56,11 +56,13 @@
             <option value="">Selecciona una opción</option>
             <option value="version-1">Versión 1: Portero controlado con botones</option>
             <option value="version-2">Versión 2: Portero automático con dos ultrasónicos</option>
+            <option value="version-3">Versión 3: Variante Joystick</option>
           </select>
         </div>
         <ul>
           <li><a href="#version-1">Ir a la Versión 1: botones</a></li>
           <li><a href="#version-2">Ir a la Versión 2: sensores ultrasónicos</a></li>
+          <li><a href="#version-3">Ir a la Versión 3: Variante Joystick</a></li>
         </ul>
       </section>
 
@@ -424,10 +426,134 @@ void loop() {
         </ul>
       </section>
 
+      <section class="card" id="version-3">
+        <p class="tag">Opción 3</p>
+        <h2>Versión 3: Variante Joystick</h2>
+        <p>Esta variante controla el portero con un joystick usando el eje horizontal para mover el servomotor. Utiliza el diagrama y el video como referencia para observar cómo se conecta el joystick, cómo se sostiene el servomotor y qué ajustes podrían mejorar la estabilidad del proyecto.</p>
+      </section>
+
+      <section class="card">
+        <h2>Diagrama de referencia de la Variante Joystick</h2>
+        <figure>
+          <img src="JoySer.png" alt="Diagrama de referencia de la Variante Joystick con joystick y servomotor" />
+          <figcaption>Referencia visual para conectar el joystick y el servomotor en la Variante Joystick.</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Conexiones de la Variante Joystick</h2>
+
+        <h3>Joystick</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Pin del Joystick</th>
+              <th>Arduino Uno</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>GND</td>
+              <td>GND</td>
+            </tr>
+            <tr>
+              <td>+5V (VCC)</td>
+              <td>5V</td>
+            </tr>
+            <tr>
+              <td>VRX</td>
+              <td>A0</td>
+            </tr>
+            <tr>
+              <td>VRY</td>
+              <td>Sin conectar (o A1 si después quieres usar el otro eje)</td>
+            </tr>
+            <tr>
+              <td>SW</td>
+              <td>Sin conectar</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Servomotor</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Cable del Servo</th>
+              <th>Arduino Uno</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Rojo</td>
+              <td>5V</td>
+            </tr>
+            <tr>
+              <td>Café o Negro</td>
+              <td>GND</td>
+            </tr>
+            <tr>
+              <td>Naranja, Amarillo o Blanco (Señal)</td>
+              <td>D9</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Código de la Variante Joystick</h2>
+        <pre><code>#include &lt;Servo.h&gt;
+
+Servo servo;
+
+const int pinJoystick = A0;
+const int pinServo = 9;
+
+void setup() {
+  Serial.begin(9600);
+  servo.attach(pinServo);
+}
+
+void loop() {
+
+  int valor = analogRead(pinJoystick);
+
+  int angulo = map(valor, 0, 1023, 0, 180);
+
+  Serial.print("Joystick: ");
+  Serial.print(valor);
+  Serial.print("  Angulo: ");
+  Serial.println(angulo);
+
+  servo.write(angulo);
+
+  delay(20);
+}</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Video de la Variante Joystick</h2>
+        <video class="media-player media-player--compact" controls preload="metadata">
+          <source src="JOYSER.mp4" type="video/mp4" />
+          <source src="JOYSER.mov" type="video/quicktime" />
+        </video>
+      </section>
+
+      <section class="card">
+        <h2>Actividad de análisis de la Variante Joystick</h2>
+        <ol>
+          <li>Observar el video completo de la variante.</li>
+          <li>Identificar qué parte del mecanismo mueve directamente el servomotor.</li>
+          <li>Comparar esta estructura con la Versión 1 y la Versión 2.</li>
+          <li>Escribir qué cambio mecánico harías para que el portero sea más estable.</li>
+          <li>Explicar si esta variante funcionaría mejor con botones o con sensores ultrasónicos.</li>
+        </ol>
+      </section>
+
       <section class="card">
         <h2>Actividad práctica</h2>
         <ol>
-          <li>Seleccionar la Versión 1 o la Versión 2.</li>
+          <li>Seleccionar la Versión 1, la Versión 2 o la Variante Joystick.</li>
           <li>Armar el circuito correspondiente en protoboard.</li>
           <li>Verificar conexiones.</li>
           <li>Cargar en Arduino el código de la versión seleccionada.</li>
@@ -440,6 +566,7 @@ void loop() {
         <ul>
           <li>Versión 1: cambiar el tiempo de regreso automático para que vuelva al centro después de 1 segundo.</li>
           <li>Versión 2: modificar la distancia de activación y comparar el comportamiento con 15, 25 y 40 cm.</li>
+          <li>Versión 3: proponer una mejora mecánica para que el portero regrese al centro con mayor precisión.</li>
         </ul>
       </section>
 
@@ -447,7 +574,7 @@ void loop() {
         <h2>PRACTICARIO</h2>
 
         <h3>Datos del alumno</h3>
-        <p><strong>Proyecto:</strong> Portero Arduino — Versión 1 o Versión 2</p>
+        <p><strong>Proyecto:</strong> Portero Arduino — Versión 1, Versión 2 o Variante Joystick</p>
 
         <h3>Parte 1 - Componentes</h3>
         <div class="worksheet-field">
