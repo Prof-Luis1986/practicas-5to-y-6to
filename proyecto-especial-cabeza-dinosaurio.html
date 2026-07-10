@@ -10,7 +10,7 @@
   <header class="hero">
     <p class="tag">Proyectos especiales (Escape Room)</p>
     <h1>Cabeza dinosaurio</h1>
-    <p class="subtitle">Dos mecanismos de ojo y párpado animados con servomotores para simular mirada lateral y parpadeos en una cabeza de dinosaurio.</p>
+    <p class="subtitle">Cabeza de dinosaurio con dos rutas de producto final: ojos animatrónicos con Arduino y servomotores, u ojos digitales con ESP32 y pantallas redondas.</p>
   </header>
 
   <div class="topbar">
@@ -38,7 +38,7 @@
             <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
           </div>
         </div>
-        <p class="worksheet-note">Ajusta los ángulos de apertura y cierre según el mecanismo físico antes de presentar el proyecto.</p>
+        <p class="worksheet-note">Antes de elegir la ruta final, revisa el tamaño real de la cabeza, el espacio interno y la distancia entre los dos ojos.</p>
         <div class="button-row">
           <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
           <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
@@ -47,7 +47,277 @@
 
       <section class="card">
         <h2>Producto final identificado</h2>
-        <p>Programar dos mecanismos de ojo y párpado para una cabeza de dinosaurio. Cada modelo usa dos servomotores: uno mueve el ojo hacia izquierda, centro y derecha, y otro abre y cierra el párpado para simular parpadeos.</p>
+        <p>La cabeza de dinosaurio puede terminarse por dos vertientes válidas, según el espacio disponible y el efecto visual que se busque. La primera ruta usa Arduino y ojos animatrónicos funcionales con servomotores. La segunda ruta usa ESP32 y pantallas redondas para crear ojos digitales de reptil. Ambas pueden ser producto final si están bien justificadas, armadas y probadas.</p>
+      </section>
+
+      <section class="card">
+        <h2>Dos rutas posibles para el producto final</h2>
+        <p>La decisión no depende solo del código. También depende del tamaño de la cabeza, la separación entre los ojos, el espacio para servos, el peso del mecanismo y el tiempo disponible para calibrar. Si la cabeza permite montar varillas, soportes y párpados sin atorarse, la ruta animatrónica con Arduino es adecuada. Si el espacio es reducido o se busca un efecto visual estable con iris de reptil, la ruta digital con ESP32 puede ser mejor.</p>
+        <h3>Ruta principal: Arduino con tres servomotores</h3>
+        <p>Arduino Uno es adecuado cuando el objetivo principal es mover piezas físicas: globo ocular, soporte del ojo, varilla o clip del párpado. En esta ruta, cada servo recibe ángulos y el proyecto se concentra en calibrar movimiento, evitar roces y encontrar límites seguros. Antes de duplicar el mecanismo, se debe confirmar que la distancia entre los dos ojos permita instalar ambos conjuntos sin que las piezas choquen entre sí o contra la máscara.</p>
+        <figure>
+          <img src="UNO.jpg" alt="Placa Arduino Uno para controlar servomotores" />
+          <figcaption>Arduino Uno: se usa para controlar servomotores y probar movimientos físicos del ojo animatrónico.</figcaption>
+        </figure>
+        <video class="media-player media-player--compact media-player--vertical" controls muted playsinline preload="metadata">
+          <source src="animatronico.mp4" type="video/mp4" />
+          Tu navegador no puede reproducir este video.
+        </video>
+        <p class="worksheet-note">Referencia visual del ojo mecatrónico: sirve para observar el movimiento físico antes de decidir ángulos, soportes y espacio dentro de la cabeza.</p>
+        <ul>
+          <li>Servo horizontal en pin 2: mueve el ojo hacia un lado, centro y el otro lado.</li>
+          <li>Servo vertical en pin 3: mueve el ojo hacia abajo, centro y arriba.</li>
+          <li>Servo de párpado en pin 4: abre y cierra el párpado.</li>
+          <li>Es más directo para estudiantes que están aprendiendo control de servos.</li>
+          <li>Conviene cuando hay suficiente profundidad dentro de la cabeza para servos, soportes y varillas.</li>
+        </ul>
+        <h3>Ruta digital: ESP32 con pantallas redondas</h3>
+        <p>El ESP32 se usa para construir ojos digitales cuando se quiera dibujar el iris en pantallas redondas en lugar de mover un ojo físico. En esa ruta, cada ojo se dibuja en una pantalla TFT GC9A01 de 1.28 pulgadas, 240 x 240 pixeles, con comunicación SPI. Esta opción también puede ser producto final si las pantallas quedan bien centradas, la distancia entre ojos se ve natural para el tamaño de la cabeza y la animación se mantiene estable.</p>
+        <figure>
+          <img src="Esp32Board.png" alt="ESP32 colocado sobre expansion board con filas de señal, voltaje y tierra" />
+          <figcaption>ESP32 sobre expansion board: esta tarjeta permite conectar pantallas y otros módulos usando filas de señal, voltaje y tierra.</figcaption>
+        </figure>
+        <video class="media-player media-player--compact media-player--vertical" controls muted playsinline preload="metadata">
+          <source src="ojosdigitales.mp4" type="video/mp4" />
+          Tu navegador no puede reproducir este video.
+        </video>
+        <p class="worksheet-note">Referencia visual de los ojos digitales: sirve para revisar alineación, separación entre pantallas y estabilidad de la imagen con ESP32.</p>
+        <h3>Cómo decidir entre Arduino y ESP32</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Ruta</th>
+              <th>Producto final posible</th>
+              <th>Conviene cuando</th>
+              <th>Revisión obligatoria</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Arduino Uno</td>
+              <td>Ojos animatrónicos funcionales con movimiento físico y párpado</td>
+              <td>La cabeza tiene espacio para servos, soportes, cables y recorrido mecánico</td>
+              <td>Medir profundidad interna, ancho disponible y distancia entre ambos ojos antes de fijar piezas</td>
+            </tr>
+            <tr>
+              <td>ESP32</td>
+              <td>Ojos digitales de reptil con dos pantallas redondas TFT</td>
+              <td>La cabeza no permite mecanismos grandes o se busca un efecto visual más estable</td>
+              <td>Medir diámetro visible, separación entre pantallas y orientación para que ambos ojos queden alineados</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="worksheet-note">La entrega debe indicar cuál ruta se eligió y por qué. No se evalúa como mejor una ruta sobre la otra: se evalúa que la solución sea coherente con la cabeza construida y que funcione de forma estable.</p>
+        <details>
+          <summary>Ver documentación de la alternativa con ESP32 y pantallas</summary>
+          <h3>Hardware usado en la alternativa con ESP32</h3>
+          <ul>
+            <li>1 ESP32.</li>
+            <li>2 pantallas redondas TFT GC9A01 de 1.28 pulgadas, 240 x 240 pixeles, SPI.</li>
+            <li>Expansion board para ESP32 con filas S, V y G.</li>
+            <li>Cables Dupont.</li>
+          </ul>
+          <p class="worksheet-note">En la expansion board, S significa señal, V significa voltaje y G significa tierra. Los pines de señal de las pantallas deben conectarse en la fila S.</p>
+          <h3>Pines confirmados</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Señal</th>
+              <th>Ojo izquierdo</th>
+              <th>Ojo derecho</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>VCC</td>
+              <td>3V3</td>
+              <td>3V3</td>
+            </tr>
+            <tr>
+              <td>GND</td>
+              <td>GND</td>
+              <td>GND</td>
+            </tr>
+            <tr>
+              <td>SCL</td>
+              <td>GPIO21</td>
+              <td>GPIO22</td>
+            </tr>
+            <tr>
+              <td>SDA</td>
+              <td>GPIO23</td>
+              <td>GPIO16</td>
+            </tr>
+            <tr>
+              <td>DC</td>
+              <td>GPIO19</td>
+              <td>GPIO17</td>
+            </tr>
+            <tr>
+              <td>RST</td>
+              <td>GPIO18</td>
+              <td>GPIO2</td>
+            </tr>
+            <tr>
+              <td>CS</td>
+              <td>GPIO5</td>
+              <td>GPIO4</td>
+            </tr>
+          </tbody>
+        </table>
+        <h3>Librerías usadas</h3>
+        <pre><code>#include &lt;Adafruit_GC9A01A.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;SPI.h&gt;</code></pre>
+        <h3>Proceso de prueba</h3>
+        <ul>
+          <li>Primero se conectó y probó el ojo izquierdo.</li>
+          <li>Después se agregó el ojo derecho.</li>
+          <li>Se confirmó que ambas pantallas encendían y mostraban imagen con el ESP32.</li>
+          <li>Se probaron versiones con una pantalla, dos pantallas, iris tipo reptil, parpadeo, movimiento de ojos y pupila con efecto de dilatación.</li>
+        </ul>
+        <h3>Decisión actual para los ojos digitales</h3>
+        <p>En la ruta con ESP32, por ahora se recomienda dejar la pupila fija y animar solo textura ligera dentro del iris. Con el cableado actual, cada pantalla usa sus propios pines SPI por software y el ESP32 dibuja primero una pantalla y luego la otra. Cuando se intentan animaciones grandes, el borrado y repintado de pixeles puede notarse demasiado. La regla visual actual es: no mover la pupila, no mover párpados digitales y animar solo pequeños destellos o fibras del iris.</p>
+        <details>
+          <summary>Código base de ojos fijos</summary>
+          <pre><code>#include &lt;Adafruit_GC9A01A.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;SPI.h&gt;
+
+const int LEFT_TFT_SCK = 21;
+const int LEFT_TFT_MOSI = 23;
+const int LEFT_TFT_DC = 19;
+const int LEFT_TFT_RST = 18;
+const int LEFT_TFT_CS = 5;
+
+const int RIGHT_TFT_SCK = 22;
+const int RIGHT_TFT_MOSI = 16;
+const int RIGHT_TFT_DC = 17;
+const int RIGHT_TFT_RST = 2;
+const int RIGHT_TFT_CS = 4;
+
+Adafruit_GC9A01A leftEye(LEFT_TFT_CS, LEFT_TFT_DC, LEFT_TFT_MOSI, LEFT_TFT_SCK, LEFT_TFT_RST);
+Adafruit_GC9A01A rightEye(RIGHT_TFT_CS, RIGHT_TFT_DC, RIGHT_TFT_MOSI, RIGHT_TFT_SCK, RIGHT_TFT_RST);
+
+const int CX = 120;
+const int CY = 120;
+
+uint16_t rgb(Adafruit_GC9A01A &amp;d, int r, int g, int b) {
+  return d.color565(r, g, b);
+}
+
+bool insideEyeOpening(int x, int y) {
+  int dx = x - CX;
+  int curve = (dx * dx) / 115;
+  int topEdge = 51 + curve;
+  int bottomEdge = 190 - curve;
+  return y &gt;= topEdge &amp;&amp; y &lt;= bottomEdge;
+}
+
+uint16_t irisColor(Adafruit_GC9A01A &amp;d, int x, int y) {
+  int dx = x - CX;
+  int dy = y - CY;
+  float dist = sqrt(dx * dx + dy * dy);
+
+  if (dist &gt; 84 || !insideEyeOpening(x, y)) {
+    return GC9A01A_BLACK;
+  }
+
+  float angle = atan2(dy, dx);
+  float rays = sin(angle * 18.0 + dist * 0.16);
+
+  if (dist &lt; 25) return rgb(d, 224, 112, 8);
+  if (dist &lt; 43) return rgb(d, 204, 224, 26);
+
+  if (dist &lt; 61) {
+    if (rays &gt; 0.45) return rgb(d, 245, 242, 46);
+    return rgb(d, 96, 166, 14);
+  }
+
+  if (dist &lt; 75) {
+    if (rays &gt; 0.55) return rgb(d, 135, 190, 18);
+    return rgb(d, 24, 82, 7);
+  }
+
+  return rgb(d, 5, 23, 3);
+}
+
+void drawStaticEye(Adafruit_GC9A01A &amp;d) {
+  d.fillScreen(GC9A01A_BLACK);
+
+  for (int y = 0; y &lt; 240; y++) {
+    for (int x = 0; x &lt; 240; x++) {
+      uint16_t c = irisColor(d, x, y);
+      if (c != GC9A01A_BLACK) {
+        d.drawPixel(x, y, c);
+      }
+    }
+  }
+
+  d.drawCircle(CX, CY, 82, rgb(d, 2, 10, 1));
+  d.drawCircle(CX, CY, 55, rgb(d, 235, 229, 38));
+
+  d.fillTriangle(CX, CY - 80, CX - 16, CY, CX + 16, CY, GC9A01A_BLACK);
+  d.fillTriangle(CX, CY + 80, CX - 16, CY, CX + 16, CY, GC9A01A_BLACK);
+  d.fillRoundRect(CX - 8, CY - 68, 16, 136, 8, GC9A01A_BLACK);
+
+  d.fillCircle(CX - 22, CY - 30, 6, GC9A01A_WHITE);
+  d.fillCircle(CX - 20, CY - 28, 2, rgb(d, 230, 230, 230));
+}
+
+void beginDisplay(Adafruit_GC9A01A &amp;d) {
+  d.begin(8000000);
+  d.setRotation(0);
+  d.invertDisplay(true);
+}
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+
+  pinMode(LEFT_TFT_CS, OUTPUT);
+  pinMode(LEFT_TFT_DC, OUTPUT);
+  pinMode(LEFT_TFT_RST, OUTPUT);
+
+  pinMode(RIGHT_TFT_CS, OUTPUT);
+  pinMode(RIGHT_TFT_DC, OUTPUT);
+  pinMode(RIGHT_TFT_RST, OUTPUT);
+
+  digitalWrite(LEFT_TFT_CS, HIGH);
+  digitalWrite(RIGHT_TFT_CS, HIGH);
+
+  digitalWrite(LEFT_TFT_RST, HIGH);
+  delay(100);
+  digitalWrite(LEFT_TFT_RST, LOW);
+  delay(100);
+  digitalWrite(LEFT_TFT_RST, HIGH);
+  delay(300);
+
+  digitalWrite(RIGHT_TFT_RST, HIGH);
+  delay(100);
+  digitalWrite(RIGHT_TFT_RST, LOW);
+  delay(100);
+  digitalWrite(RIGHT_TFT_RST, HIGH);
+  delay(300);
+
+  beginDisplay(leftEye);
+  beginDisplay(rightEye);
+
+  drawStaticEye(leftEye);
+  drawStaticEye(rightEye);
+}
+
+void loop() {
+}</code></pre>
+        </details>
+          <h3>Ventajas del ESP32 para esta alternativa</h3>
+          <ul>
+            <li>Tiene suficientes GPIO para dos pantallas y otros módulos.</li>
+            <li>Es más potente que un Arduino Uno o Nano.</li>
+            <li>Puede manejar SPI, I2C, UART, PWM e I2S.</li>
+            <li>Puede controlar pantallas TFT y conectarse a microSD.</li>
+          </ul>
+        </details>
       </section>
 
       <section class="card prototype-reference">
@@ -68,10 +338,12 @@
           <source src="Ojo-sin-sonido.mp4" type="video/mp4" />
           Tu navegador no puede reproducir este video.
         </video>
-        <p class="worksheet-note">El video se muestra sin sonido para que se use como referencia visual del movimiento del prototipo.</p>
+        <p class="worksheet-note">El video se muestra sin sonido para que se use como referencia visual del movimiento del prototipo de ojo.</p>
         <h3>Qué deben practicar con estos prototipos</h3>
         <ul>
           <li>Identificar dónde se colocarán los servos y qué partes podrían estorbar el movimiento.</li>
+          <li>Medir la distancia entre los dos ojos y comprobar si caben mecanismos completos o pantallas redondas.</li>
+          <li>Comparar la profundidad interna de la cabeza con el espacio requerido por servos, varillas y cables.</li>
           <li>Ensayar lijado, unión de piezas, refuerzos y pintura sin arriesgar el modelo final.</li>
           <li>Probar ángulos pequeños antes de usar movimientos amplios en el mecanismo de ojos.</li>
           <li>Anotar errores visibles y decidir qué se corregirá en la versión final.</li>
@@ -95,76 +367,86 @@
           <textarea class="worksheet-textarea" id="prototype-head-test-4" name="prototype_head_test_4"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="prototype-head-test-5">5. ¿Qué decisión tomarán para que la cabeza final se vea mejor y funcione con más seguridad?</label>
+          <label for="prototype-head-test-5">5. ¿Qué ruta elegirán para el producto final, Arduino animatrónico o ESP32 digital, y qué medida de la cabeza justifica esa decisión?</label>
           <textarea class="worksheet-textarea" id="prototype-head-test-5" name="prototype_head_test_5"></textarea>
         </div>
         <h3>Evidencia mínima de esta etapa</h3>
         <ul>
           <li>Foto de la máscara y el ojo antes de hacer ajustes.</li>
           <li>Foto o video corto de una prueba de movimiento del ojo.</li>
+          <li>Medida aproximada del ancho de la cabeza, profundidad interna y distancia entre los dos ojos.</li>
           <li>Lista de al menos tres mejoras que se aplicarán al modelo final.</li>
           <li>Registro de los ángulos seguros encontrados para mover ojos y párpados.</li>
         </ul>
-        <p class="worksheet-note">Importante: estas imágenes sirven como referencia de prueba. La entrega final debe mantener la idea de una cabeza de dinosaurio expresiva, con dos modelos de ojo y párpado que miran hacia los lados y parpadean sin atorarse.</p>
+        <p class="worksheet-note">Importante: estas imágenes sirven como referencia de prueba. La entrega final debe mantener la idea de una cabeza de dinosaurio expresiva, ya sea con ojos animatrónicos funcionales o con ojos digitales estables.</p>
       </section>
 
       <section class="card">
-        <h2>Objetivo 1: Investigar cómo ocurre un parpadeo natural</h2>
-        <p><strong>Descripción:</strong> Observar durante un tiempo breve cómo parpadean las personas o un personaje animado. Identificar cuánto dura el cierre del párpado y cómo cambia la mirada antes o después del parpadeo.</p>
-        <p><strong>Entrega:</strong> Registro de cinco parpadeos observados y tres conclusiones sobre duración, pausa y posición de la mirada.</p>
-        <p><strong>Evaluación:</strong> Las conclusiones reconocen que el cierre es breve, la mirada puede moverse entre parpadeos y las pausas pueden variar.</p>
+        <h2>Objetivo 1: Investigar cómo se perciben ojos vivos</h2>
+        <p><strong>Descripción:</strong> Observar durante un tiempo breve cómo parpadean las personas, animales o personajes animados. Identificar qué hace que una mirada parezca viva: cierre breve del párpado, dirección de la mirada, brillo, textura del iris o pequeñas variaciones.</p>
+        <p><strong>Entrega:</strong> Registro de cinco observaciones y tres conclusiones sobre mirada, parpadeo, brillo o textura.</p>
+        <p><strong>Evaluación:</strong> Las conclusiones ayudan a justificar si conviene una solución mecánica con movimiento físico o una solución digital con ojos estables y expresivos.</p>
       </section>
 
       <section class="card">
         <h2>Objetivo 2: Planear los movimientos del ojo y el párpado</h2>
-        <p><strong>Descripción:</strong> Definir los estados mirar izquierda, mirar centro, mirar derecha, párpado abierto y párpado cerrado. Ordenar en una línea de tiempo las posiciones y pausas necesarias.</p>
-        <p><strong>Entrega:</strong> Secuencia ilustrada de cada estado con posiciones y tiempos aproximados.</p>
-        <p><strong>Evaluación:</strong> La secuencia distingue movimiento de mirada y movimiento de párpado, y puede repetirse en dos modelos con dos servos cada uno.</p>
+        <p><strong>Descripción:</strong> Definir la ruta que se usará. Si es Arduino, ordenar los estados mirar izquierda, mirar centro, mirar derecha, párpado abierto y párpado cerrado. Si es ESP32, definir ojo encendido, pupila fija, iris visible y animación ligera del iris.</p>
+        <p><strong>Entrega:</strong> Secuencia ilustrada de cada estado con posiciones, tiempos aproximados y medidas básicas de la cabeza.</p>
+        <p><strong>Evaluación:</strong> La secuencia distingue la ruta elegida y justifica si el tamaño de la cabeza y la distancia entre ojos permiten el montaje.</p>
       </section>
 
       <section class="card">
-        <h2>Objetivo 3: Diseñar el mecanismo de ojo y párpado</h2>
-        <p><strong>Descripción:</strong> Revisar el diagrama, identificar el servo del ojo y el servo del párpado de cada modelo, y crear un boceto que muestre cómo cada servo moverá su pieza sin chocar con la estructura.</p>
-        <p><strong>Entrega:</strong> Diagrama etiquetado y boceto frontal del mecanismo con el sentido de movimiento de cada servo.</p>
-        <p><strong>Evaluación:</strong> Cada servo está asociado con la pieza correcta y el diseño deja espacio para mirar y parpadear sin forzar el mecanismo.</p>
+        <h2>Objetivo 3: Diseñar el montaje de los ojos</h2>
+        <p><strong>Descripción:</strong> Revisar el diagrama y crear un boceto frontal de la cabeza. En la ruta Arduino, identificar servo horizontal, servo vertical y servo del párpado. En la ruta ESP32, ubicar las dos pantallas, su orientación, cables y soporte.</p>
+        <p><strong>Entrega:</strong> Diagrama etiquetado con medidas aproximadas, distancia entre ojos y sentido de montaje de la ruta elegida.</p>
+        <p><strong>Evaluación:</strong> El diseño deja espacio para mover el ojo y parpadear sin forzar el mecanismo, o para montar pantallas alineadas sin tapar el área visible.</p>
       </section>
 
       <section class="card">
-        <h2>Objetivo 4: Calibrar cada servo por separado</h2>
-        <p><strong>Descripción:</strong> Conectar un servo a la vez y probar ángulos pequeños hasta encontrar posiciones seguras para izquierda, centro, derecha, párpado abierto y párpado cerrado.</p>
-        <p><strong>Entrega:</strong> Tabla con los ángulos seguros del ojo y del párpado.</p>
-        <p><strong>Evaluación:</strong> Los valores fueron probados, no fuerzan el mecanismo y permiten distinguir claramente mirada y parpadeo.</p>
+        <h2>Objetivo 4: Calibrar la ruta elegida</h2>
+        <p><strong>Descripción:</strong> En Arduino, conectar un servo a la vez y probar ángulos pequeños hasta encontrar posiciones seguras. En ESP32, probar cada pantalla por separado, confirmar pines, orientación, brillo y alineación.</p>
+        <p><strong>Entrega:</strong> Tabla con ángulos seguros si se usan servos, o tabla de pines y prueba de encendido si se usan pantallas.</p>
+        <p><strong>Evaluación:</strong> Los valores o conexiones fueron probados y permiten un funcionamiento claro sin forzar mecanismo, cables ni pantallas.</p>
       </section>
 
       <section class="card">
-        <h2>Objetivo 5: Programar mirada y parpadeo</h2>
-        <p><strong>Descripción:</strong> Coordinar el servo del ojo con el servo del párpado en cada modelo. Probar diferentes duraciones hasta que el movimiento se vea claro y los párpados cierren sin golpear.</p>
-        <p><strong>Entrega:</strong> Video de tres ciclos completos y registro de la duración de cierre elegida.</p>
-        <p><strong>Evaluación:</strong> Los ojos se mueven a izquierda, centro y derecha; los párpados abren y cierran; y los cuatro servos regresan a posiciones seguras.</p>
+        <h2>Objetivo 5: Programar el comportamiento de los ojos</h2>
+        <p><strong>Descripción:</strong> En Arduino, coordinar el servo horizontal, el servo vertical y el servo del párpado. En ESP32, dibujar ambos ojos, mantener la pupila fija y probar una animación ligera en el iris.</p>
+        <p><strong>Entrega:</strong> Video de tres ciclos completos en Arduino, o video de los dos ojos digitales encendidos y estables en ESP32.</p>
+        <p><strong>Evaluación:</strong> La ruta Arduino muestra movimiento y parpadeo sin atorarse. La ruta ESP32 muestra ojos alineados, pupila estable y animación ligera sin repintado excesivo.</p>
       </section>
 
       <section class="card">
         <h2>Objetivo 6: Integrar el movimiento en la máscara</h2>
-        <p><strong>Descripción:</strong> Colocar los dos modelos de ojo y párpado dentro de la máscara. Probar si cada pieza mira a los lados y parpadea sin rozar, atorarse o perder fuerza.</p>
-        <p><strong>Entrega:</strong> Video comparativo con una prueba fuera de la máscara y una prueba dentro de la máscara.</p>
-        <p><strong>Evaluación:</strong> Las dos pruebas son visibles, el mecanismo conserva su recorrido y termina en una posición correcta.</p>
+        <p><strong>Descripción:</strong> Colocar la solución elegida dentro de la máscara. En la ruta Arduino, probar si el ojo puede moverse en horizontal, vertical y parpadear sin rozar. En la ruta ESP32, probar que ambas pantallas queden alineadas, separadas correctamente y visibles desde el frente.</p>
+        <p><strong>Entrega:</strong> Video comparativo con una prueba fuera de la máscara y una prueba dentro de la máscara, o fotos claras de alineación si se usan pantallas.</p>
+        <p><strong>Evaluación:</strong> La prueba muestra que el montaje cabe en la cabeza, que la separación entre ojos es coherente y que la solución funciona sin forzar piezas ni cables.</p>
       </section>
 
       <section class="card">
         <h2>Objetivo 7: Mejorar sincronización y montaje</h2>
-        <p><strong>Descripción:</strong> Observar roces, piezas flojas o movimientos invertidos y ajustar ángulos o tiempos sin cambiar las funciones principales del proyecto.</p>
-        <p><strong>Entrega:</strong> Lista de ajustes realizados y prueba continua de al menos cinco ciclos de mirada y parpadeo.</p>
-        <p><strong>Evaluación:</strong> Los mecanismos no se atoran, los servos no se fuerzan y ambos modelos conservan movimientos repetibles.</p>
+        <p><strong>Descripción:</strong> Observar roces, piezas flojas, movimientos invertidos, pantallas desalineadas o cables tensos. Ajustar ángulos, tiempos, soportes u orientación sin cambiar las funciones principales del proyecto.</p>
+        <p><strong>Entrega:</strong> Lista de ajustes realizados y prueba continua de al menos cinco ciclos de mirada y parpadeo, o cinco minutos de ojos digitales estables.</p>
+        <p><strong>Evaluación:</strong> Los mecanismos no se atoran, los servos no se fuerzan o, en la ruta digital, las pantallas conservan imagen estable y alineada.</p>
       </section>
 
       <section class="card">
         <h2>Materiales</h2>
+        <h3>Ruta Arduino animatrónica</h3>
         <ul>
           <li>1 Arduino Uno</li>
-          <li>4 servomotores SG90 o similares</li>
-          <li>2 mecanismos de ojo y párpado</li>
+          <li>3 servomotores SG90 o similares para un ojo</li>
+          <li>1 mecanismo de ojo animatrónico con eje horizontal, eje vertical y párpado</li>
           <li>Fuente externa regulada de 5 V para los servos</li>
           <li>Protoboard</li>
+          <li>Cables Dupont</li>
+          <li>1 cable USB</li>
+        </ul>
+        <h3>Ruta ESP32 digital</h3>
+        <ul>
+          <li>1 ESP32</li>
+          <li>2 pantallas redondas TFT GC9A01</li>
+          <li>Expansion board para ESP32</li>
           <li>Cables Dupont</li>
           <li>1 cable USB</li>
         </ul>
@@ -172,12 +454,12 @@
 
       <section class="card">
         <h2>Descripción general</h2>
-        <p>La práctica controla cuatro servos en total. Cada modelo tiene un servo para mover el ojo hacia los lados y otro servo para mover el párpado. El programa hace que ambos modelos miren a la izquierda, parpadeen, regresen al centro, miren a la derecha y vuelvan a parpadear.</p>
+        <p>La práctica permite elegir entre dos soluciones. En la ruta Arduino, se controlan tres servos en un ojo animatrónico: horizontal, vertical y párpado. En la ruta ESP32, se controlan dos pantallas redondas para mostrar ojos digitales con pupila fija e iris de reptil.</p>
       </section>
 
       <section class="card">
         <h2>Explicación del funcionamiento</h2>
-        <p>El programa usa la librería Servo para enviar ángulos a cada mecanismo. En el modelo 1, el ojo usa el pin 6 y el párpado usa el pin 9. En el modelo 2, el ojo usa el pin 10 y el párpado usa el pin 11. Los valores de ángulo definen centro, izquierda, derecha, párpado abierto y párpado cerrado.</p>
+        <p>En Arduino, el programa usa la librería Servo para enviar ángulos a cada mecanismo. El servo horizontal usa el pin 2, el servo vertical usa el pin 3 y el servo del párpado usa el pin 4. En ESP32, el programa usa las librerías Adafruit_GC9A01A, Adafruit_GFX y SPI para dibujar cada ojo en una pantalla TFT.</p>
       </section>
 
       <section class="card">
@@ -191,155 +473,102 @@
 
       <section class="card">
         <h2>Códigos de prueba para ojos</h2>
-        <p>Estos códigos sirven para probar el movimiento lateral antes de usar el modelo final con párpado. Primero prueba un solo ojo y después prueba dos ojos si el prototipo tendrá dos mecanismos sincronizados.</p>
+        <p>El código principal de prueba usa tres servos para un solo ojo: horizontal, vertical y párpado. Primero se calibra un ojo completo; después, si el proyecto necesita dos ojos, se duplica la lógica con cuidado para no forzar la fuente ni el mecanismo.</p>
 
-        <h3>Prueba 1: Un solo ojo</h3>
-        <p>Conecta el servo del ojo al pin 9. El ojo irá a la izquierda, regresará al centro, irá a la derecha y volverá al centro.</p>
+        <h3>Prueba principal: un ojo con tres servos</h3>
+        <p>Conecta el servo horizontal al pin 2, el servo vertical al pin 3 y el servo del párpado al pin 4. Esta prueba mueve cada eje por separado para identificar límites seguros antes de montar definitivamente la máscara.</p>
         <table>
           <thead>
             <tr>
-              <th>Componente</th>
-              <th>Cable</th>
-              <th>Arduino Uno</th>
+              <th>Servo</th>
+              <th>Función</th>
+              <th>Pin Arduino</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Servo SG90</td>
-              <td>Señal (naranja)</td>
-              <td>D9</td>
+              <td>Servo horizontal</td>
+              <td>Movimiento izquierda-derecha</td>
+              <td>D2</td>
             </tr>
             <tr>
-              <td>Servo SG90</td>
-              <td>VCC (rojo)</td>
-              <td>5V</td>
+              <td>Servo vertical</td>
+              <td>Movimiento arriba-abajo</td>
+              <td>D3</td>
             </tr>
             <tr>
-              <td>Servo SG90</td>
-              <td>GND (café/negro)</td>
-              <td>GND</td>
+              <td>Servo párpado</td>
+              <td>Apertura y cierre del párpado</td>
+              <td>D4</td>
             </tr>
           </tbody>
         </table>
         <pre><code>#include &lt;Servo.h&gt;
 
-Servo ojo;
+// Tus pines para un solo ojo
+const int pinHorizontal = 2;
+const int pinVertical   = 3;
+const int pinParpado    = 4;
 
-const int CENTRO = 90;
-const int IZQUIERDA = 75;
-const int DERECHA = 105;
+Servo servoH;
+Servo servoV;
+Servo servoP;
 
 void setup() {
-  ojo.attach(9);
-  ojo.write(CENTRO);
-  delay(1000);
+  servoH.attach(pinHorizontal);
+  servoV.attach(pinVertical);
+  servoP.attach(pinParpado);
+
+  // Todo inicia al centro/abierto por 2 segundos para que puedas acomodar la máscara
+  servoH.write(90);
+  servoV.write(90);
+  servoP.write(40); // Ajusta este valor si tu párpado inicia muy cerrado
+  delay(2000);
 }
 
 void loop() {
-
-  // Mira a la izquierda
-  ojo.write(IZQUIERDA);
-  delay(800);
-
-  // Centro
-  ojo.write(CENTRO);
-  delay(500);
-
-  // Mira a la derecha
-  ojo.write(DERECHA);
-  delay(800);
-
-  // Centro
-  ojo.write(CENTRO);
+  // --- 1. PRUEBA EJE HORIZONTAL (Pin 2) ---
+  // Se mueve de izquierda a derecha de forma controlada
+  servoH.write(60);  // Giro a un lado
   delay(1200);
-
-}</code></pre>
-
-        <h3>Prueba 2: Dos ojos</h3>
-        <p>Conecta el servo del ojo izquierdo al pin 9 y el servo del ojo derecho al pin 10. Los dos ojos se moverán al mismo lado y regresarán al centro.</p>
-        <table>
-          <thead>
-            <tr>
-              <th>Componente</th>
-              <th>Cable</th>
-              <th>Arduino Uno</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Ojo izquierdo</td>
-              <td>Señal</td>
-              <td>D9</td>
-            </tr>
-            <tr>
-              <td>Ojo izquierdo</td>
-              <td>VCC</td>
-              <td>5V</td>
-            </tr>
-            <tr>
-              <td>Ojo izquierdo</td>
-              <td>GND</td>
-              <td>GND</td>
-            </tr>
-            <tr>
-              <td>Ojo derecho</td>
-              <td>Señal</td>
-              <td>D10</td>
-            </tr>
-            <tr>
-              <td>Ojo derecho</td>
-              <td>VCC</td>
-              <td>5V</td>
-            </tr>
-            <tr>
-              <td>Ojo derecho</td>
-              <td>GND</td>
-              <td>GND</td>
-            </tr>
-          </tbody>
-        </table>
-        <pre><code>#include &lt;Servo.h&gt;
-
-Servo ojoIzq;
-Servo ojoDer;
-
-void setup() {
-
-  ojoIzq.attach(9);
-  ojoDer.attach(10);
-
-  ojoIzq.write(90);
-  ojoDer.write(90);
-
+  servoH.write(90);  // Regresa al centro
   delay(1000);
-}
-
-void loop() {
-
-  // Miran a la izquierda
-  ojoIzq.write(75);
-  ojoDer.write(77);
-  delay(800);
-
-  // Centro
-  ojoIzq.write(90);
-  ojoDer.write(90);
-  delay(500);
-
-  // Miran a la derecha
-  ojoIzq.write(105);
-  ojoDer.write(103);
-  delay(800);
-
-  // Centro
-  ojoIzq.write(90);
-  ojoDer.write(90);
+  servoH.write(120); // Giro al otro lado
   delay(1200);
+  servoH.write(90);  // Regreso al centro
+  delay(1500);
 
+  // --- 2. PRUEBA EJE VERTICAL (Pin 3) ---
+  // Se mueve de arriba a abajo
+  servoV.write(65);  // Mira hacia abajo
+  delay(1200);
+  servoV.write(90);  // Regresa al centro
+  delay(1000);
+  servoV.write(115); // Mira hacia arriba
+  delay(1200);
+  servoV.write(90);  // Regreso al centro
+  delay(1500);
+
+  // --- 3. PRUEBA PÁRPADO (Pin 4) ---
+  // Hace un parpadeo lento para revisar límites del clip/varilla
+  servoP.write(130); // Cierra párpado (Ajusta el ángulo si choca)
+  delay(600);
+  servoP.write(40);  // Abre párpado
+  delay(2500);       // Pausa antes de repetir todo el ciclo
 }</code></pre>
+        <p class="worksheet-note">Los valores 60, 90, 120, 65, 115, 130 y 40 son puntos de partida. Si el ojo roza, el párpado choca o la varilla se fuerza, detén la prueba y reduce el recorrido.</p>
 
         <h3>Modelo animatrónico de referencia</h3>
-        <p>En un modelo animatrónico como el de la imagen, los dos servos pueden usarse para mover un mismo ojo en dos direcciones: horizontal y vertical. Esta conexión sirve para pruebas de dirección antes de decidir el montaje final.</p>
+        <p>En un modelo animatrónico como el de la imagen, los servos pueden dividir el movimiento del ojo en tres funciones: eje horizontal, eje vertical y párpado. Esta conexión sirve para probar cada movimiento de forma separada antes de decidir el montaje final.</p>
+        <p>Como referencia de impresión 3D, revisa el modelo <a href="https://makerworld.com/es/models/1217249-animatronic-eye-v4#profileId-1233372" target="_blank" rel="noopener">Animatronic Eye V4 en MakerWorld</a>. El tutorial puede ser difuso, pero desde esa página se pueden descargar los archivos del modelo para fabricar los ojos animatrónicos y usarlos como base de montaje.</p>
+        <p class="worksheet-note">Los modelos también pueden buscarse como archivos STL en MakerWorld, Thingiverse o <a href="https://cults3d.com" target="_blank" rel="noopener">Cults3D</a>. Si el equipo no tiene impresora 3D, puede descargar los STL y mandarlos a imprimir en 3D con un servicio externo.</p>
+        <ul>
+          <li>Busca y descarga el modelo 3D del ojo animatrónico en formato STL.</li>
+          <li>Antes de imprimir, revisa qué piezas corresponden al soporte, al globo ocular y a las uniones con servos.</li>
+          <li>Compara las piezas descargadas con el espacio disponible dentro de la máscara de dinosaurio.</li>
+          <li>Si no hay impresora 3D disponible, prepara los archivos STL para mandarlos a imprimir.</li>
+          <li>Haz una prueba fuera de la máscara antes de pegar o atornillar cualquier parte.</li>
+        </ul>
         <table>
           <thead>
             <tr>
@@ -352,12 +581,17 @@ void loop() {
             <tr>
               <td>Servo 1</td>
               <td>Movimiento horizontal del ojo (izquierda-derecha)</td>
-              <td>D9</td>
+              <td>D2</td>
             </tr>
             <tr>
               <td>Servo 2</td>
               <td>Movimiento vertical del ojo (arriba-abajo)</td>
-              <td>D10</td>
+              <td>D3</td>
+            </tr>
+            <tr>
+              <td>Servo 3</td>
+              <td>Movimiento del párpado (abrir-cerrar)</td>
+              <td>D4</td>
             </tr>
           </tbody>
         </table>
@@ -373,7 +607,7 @@ void loop() {
             <tr>
               <td>Servo horizontal</td>
               <td>Señal</td>
-              <td>D9</td>
+              <td>D2</td>
             </tr>
             <tr>
               <td>Servo horizontal</td>
@@ -388,7 +622,7 @@ void loop() {
             <tr>
               <td>Servo vertical</td>
               <td>Señal</td>
-              <td>D10</td>
+              <td>D3</td>
             </tr>
             <tr>
               <td>Servo vertical</td>
@@ -400,9 +634,24 @@ void loop() {
               <td>GND</td>
               <td>GND</td>
             </tr>
+            <tr>
+              <td>Servo párpado</td>
+              <td>Señal</td>
+              <td>D4</td>
+            </tr>
+            <tr>
+              <td>Servo párpado</td>
+              <td>VCC</td>
+              <td>5V</td>
+            </tr>
+            <tr>
+              <td>Servo párpado</td>
+              <td>GND</td>
+              <td>GND</td>
+            </tr>
           </tbody>
         </table>
-        <p class="worksheet-note">Estas conexiones son para pruebas del ojo animatrónico. El código final de la práctica, más abajo, usa cuatro servos porque se trabajarán dos modelos: cada uno con ojo y párpado.</p>
+        <p class="worksheet-note">Estas conexiones son para la prueba principal del ojo animatrónico con Arduino: un servo horizontal, un servo vertical y un servo de párpado.</p>
 
         <h3>Registro de la prueba</h3>
         <div class="worksheet-field">
@@ -410,7 +659,7 @@ void loop() {
           <textarea class="worksheet-textarea" id="eye-servo-test-1" name="eye_servo_test_1"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="eye-servo-test-2">2. ¿Qué ángulos son seguros para izquierda, centro y derecha en tu prototipo?</label>
+          <label for="eye-servo-test-2">2. ¿Qué ángulos son seguros para izquierda, centro, derecha, arriba, abajo, párpado abierto y párpado cerrado?</label>
           <textarea class="worksheet-textarea" id="eye-servo-test-2" name="eye_servo_test_2"></textarea>
         </div>
         <div class="worksheet-field">
@@ -421,109 +670,100 @@ void loop() {
 
       <section class="card">
         <h2>Código completo</h2>
-        <p>Este es el código final para dos modelos. Cada modelo tiene un servo que mueve el ojo y un servo que mueve el párpado.</p>
+        <p>Este es el código completo para probar un ojo animatrónico con tres servos. Primero centra el ojo y abre el párpado durante dos segundos para acomodar la máscara; después prueba eje horizontal, eje vertical y párpado por separado.</p>
         <pre><code>#include &lt;Servo.h&gt;
 
-Servo ojoModelo1;
-Servo parpadoModelo1;
-Servo ojoModelo2;
-Servo parpadoModelo2;
+// Tus pines para un solo ojo
+const int pinHorizontal = 2;
+const int pinVertical   = 3;
+const int pinParpado    = 4;
 
-const int CENTRO_OJO = 90;
-const int IZQUIERDA = 70;
-const int DERECHA = 110;
-
-const int PARPADO1_ABIERTO = 90;
-const int PARPADO1_CERRADO = 35;
-
-const int PARPADO2_ABIERTO = 90;
-const int PARPADO2_CERRADO = 35;
+Servo servoH;
+Servo servoV;
+Servo servoP;
 
 void setup() {
-  ojoModelo1.attach(6);       // Ojo del modelo 1
-  parpadoModelo1.attach(9);   // Párpado del modelo 1
-  ojoModelo2.attach(10);      // Ojo del modelo 2
-  parpadoModelo2.attach(11);  // Párpado del modelo 2
+  servoH.attach(pinHorizontal);
+  servoV.attach(pinVertical);
+  servoP.attach(pinParpado);
 
-  ojoModelo1.write(CENTRO_OJO);
-  parpadoModelo1.write(PARPADO1_ABIERTO);
-  ojoModelo2.write(CENTRO_OJO);
-  parpadoModelo2.write(PARPADO2_ABIERTO);
-
-  delay(1000);
+  // Todo inicia al centro/abierto por 2 segundos para que puedas acomodar la máscara
+  servoH.write(90);
+  servoV.write(90);
+  servoP.write(40); // Ajusta este valor si tu párpado inicia muy cerrado
+  delay(2000);
 }
 
 void loop() {
-
-  // Miran a la izquierda
-  ojoModelo1.write(IZQUIERDA);
-  ojoModelo2.write(IZQUIERDA);
-  delay(700);
-
-  // Parpadeo de los dos modelos
-  parpadoModelo1.write(PARPADO1_CERRADO);
-  parpadoModelo2.write(PARPADO2_CERRADO);
-  delay(180);
-  parpadoModelo1.write(PARPADO1_ABIERTO);
-  parpadoModelo2.write(PARPADO2_ABIERTO);
-  delay(500);
-
-  // Miran al centro
-  ojoModelo1.write(CENTRO_OJO);
-  ojoModelo2.write(CENTRO_OJO);
-  delay(500);
-
-  // Miran a la derecha
-  ojoModelo1.write(DERECHA);
-  ojoModelo2.write(DERECHA);
-  delay(700);
-
-  // Parpadeo de los dos modelos
-  parpadoModelo1.write(PARPADO1_CERRADO);
-  parpadoModelo2.write(PARPADO2_CERRADO);
-  delay(180);
-  parpadoModelo1.write(PARPADO1_ABIERTO);
-  parpadoModelo2.write(PARPADO2_ABIERTO);
+  // --- 1. PRUEBA EJE HORIZONTAL (Pin 2) ---
+  // Se mueve de izquierda a derecha de forma controlada
+  servoH.write(60);  // Giro a un lado
+  delay(1200);
+  servoH.write(90);  // Regresa al centro
   delay(1000);
+  servoH.write(120); // Giro al otro lado
+  delay(1200);
+  servoH.write(90);  // Regreso al centro
+  delay(1500);
 
+  // --- 2. PRUEBA EJE VERTICAL (Pin 3) ---
+  // Se mueve de arriba a abajo
+  servoV.write(65);  // Mira hacia abajo
+  delay(1200);
+  servoV.write(90);  // Regresa al centro
+  delay(1000);
+  servoV.write(115); // Mira hacia arriba
+  delay(1200);
+  servoV.write(90);  // Regreso al centro
+  delay(1500);
+
+  // --- 3. PRUEBA PÁRPADO (Pin 4) ---
+  // Hace un parpadeo lento para revisar límites del clip/varilla
+  servoP.write(130); // Cierra párpado (Ajusta el ángulo si choca)
+  delay(600);
+  servoP.write(40);  // Abre párpado
+  delay(2500);       // Pausa antes de repetir todo el ciclo
 }</code></pre>
-        <p class="worksheet-note">Si un párpado se mueve al revés, invierte solo los valores de ese modelo. Por ejemplo: <code>const int PARPADO1_ABIERTO = 35;</code> y <code>const int PARPADO1_CERRADO = 90;</code>. Haz este cambio solo después de probar los mecanismos lentamente.</p>
+        <p class="worksheet-note">Si un eje se mueve al revés, no cambies todo el programa: ajusta primero el montaje o invierte solo los valores de ese servo. Si el párpado choca, reduce el ángulo de cierre antes de repetir la prueba.</p>
       </section>
 
       <section class="card">
         <h2>Producto final</h2>
-        <p><strong>Descripción:</strong> Dos mecanismos de ojo y párpado con cuatro servomotores en total: cada modelo controla la mirada lateral y realiza el parpadeo en una cabeza de dinosaurio.</p>
+        <p><strong>Descripción:</strong> El producto final puede ser una cabeza con ojo animatrónico de Arduino y servomotores, o una cabeza con dos ojos digitales de ESP32 y pantallas redondas. La elección debe corresponder al tamaño de la cabeza, la distancia entre ojos y el espacio interno disponible.</p>
         <p><strong>Entrega:</strong></p>
         <ul>
-          <li>Enlace de Drive con video de los dos modelos moviendo los ojos y realizando parpadeos.</li>
-          <li>Enlace de Tinkercad del circuito y código, si se realizó en simulador.</li>
-          <li>Documento o texto en Drive con la tabla de ángulos usados para cada ojo y cada párpado.</li>
+          <li>Enlace de Drive con video del producto funcionando dentro o frente a la cabeza de dinosaurio.</li>
+          <li>Indicación clara de la ruta elegida: Arduino animatrónico o ESP32 digital.</li>
+          <li>Medidas usadas para decidir: tamaño aproximado de la cabeza, profundidad interna y distancia entre los dos ojos.</li>
+          <li>Para Arduino: tabla de ángulos usados para el eje horizontal, eje vertical y párpado.</li>
+          <li>Para ESP32: foto o video de los dos ojos encendidos, alineados y con pupila fija estable.</li>
+          <li>Enlace de Tinkercad del circuito y código, si aplica.</li>
           <li>Los enlaces deben permitir acceso a cualquier persona que los tenga.</li>
         </ul>
-        <p><strong>Evaluación:</strong> Los dos modelos miran a izquierda, centro y derecha sin forzarse, los párpados abren y cierran correctamente, y los ángulos finales están registrados.</p>
+        <p><strong>Evaluación:</strong> La ruta elegida está justificada, el montaje cabe en la cabeza, la separación entre ojos se ve correcta y el sistema funciona de forma estable. En Arduino se revisa movimiento y parpadeo sin atorarse; en ESP32 se revisa imagen estable, alineación y animación ligera sin repintado excesivo.</p>
         <div class="worksheet-field">
-          <label><input name="evidence_1" type="checkbox" /> Agregué en Drive el video de los mecanismos</label>
+          <label><input name="evidence_1" type="checkbox" /> Agregué en Drive el video del mecanismo</label>
         </div>
         <div class="worksheet-field">
-          <label><input name="evidence_2" type="checkbox" /> Agregué el enlace de Tinkercad o la explicación del código</label>
+          <label><input name="evidence_2" type="checkbox" /> Expliqué si elegí Arduino animatrónico o ESP32 digital</label>
         </div>
         <div class="worksheet-field">
-          <label><input name="evidence_3" type="checkbox" /> Registré los ángulos finales</label>
+          <label><input name="evidence_3" type="checkbox" /> Registré medidas, ángulos o alineación final según la ruta elegida</label>
         </div>
       </section>
 
       <section class="card">
         <h2>Preguntas de reflexión</h2>
         <div class="worksheet-field">
-          <label for="reflection-1">1. ¿Por qué los ángulos de un servo pueden necesitar ajustes en cada maqueta?</label>
+          <label for="reflection-1">1. ¿Por qué la ruta elegida debe ajustarse al tamaño real de cada cabeza de dinosaurio?</label>
           <textarea class="worksheet-textarea" id="reflection-1" name="reflection_1"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="reflection-2">2. ¿Qué ventaja tiene usar intervalos aleatorios para el parpadeo?</label>
+          <label for="reflection-2">2. ¿Qué ventaja tiene usar ojos animatrónicos con Arduino y qué ventaja tiene usar ojos digitales con ESP32?</label>
           <textarea class="worksheet-textarea" id="reflection-2" name="reflection_2"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="reflection-3">3. ¿Cómo podrías activar la secuencia de mirada y parpadeo desde un sensor o botón?</label>
+          <label for="reflection-3">3. ¿Cómo podrías activar la mirada, el parpadeo o el encendido de los ojos desde un sensor o botón?</label>
           <textarea class="worksheet-textarea" id="reflection-3" name="reflection_3"></textarea>
         </div>
       </section>

@@ -538,7 +538,7 @@
     }
   </style>
 </head>
-<body class="locked-content robot-structure-page" data-worksheet-key="practica-21-estructura-robot-soccer" data-disable-project-links="true" data-allow-page-copy="true">
+<body class="locked-content robot-structure-page" data-worksheet-key="practica-21-estructura-robot-soccer" data-disable-project-links="true" data-allow-page-copy="true" data-allow-code-copy="true">
   <header class="hero">
     <p class="tag">Fase IV · Proyecto Robot Soccer · Misión 21</p>
     <h1>Práctica 21: Descubriendo cómo está construido nuestro Robot Soccer</h1>
@@ -978,6 +978,200 @@
         <div class="connection-note">
           <strong>Importante:</strong> todos los módulos deben compartir GND.
         </div>
+      </section>
+
+      <section class="card soccer-card">
+        <h2>Código de prueba del Robot Soccer</h2>
+        <p>Este programa usa los mismos pines del mapa final de conexiones: receptor IR en <code>D10</code>, buzzer en <code>D8</code>, puente H L298N en <code>D5, D7, D6, D4, D3 y D9</code>.</p>
+        <pre><code>#include &lt;IRremote.hpp&gt;
+
+// =====================
+// RECEPTOR IR
+// =====================
+#define IR_PIN 10
+
+// =====================
+// BUZZER
+// =====================
+#define BUZZER 8
+
+// =====================
+// BOTONES DEL CONTROL
+// =====================
+#define BTN_ARRIBA     0x18
+#define BTN_ABAJO      0x52
+#define BTN_IZQUIERDA  0x08
+#define BTN_DERECHA    0x5A
+#define BTN_OK         0x1C
+
+// =====================
+// PUENTE H L298N
+// =====================
+#define ENA 5
+#define IN1 7
+#define IN2 6
+
+#define IN3 4
+#define IN4 3
+#define ENB 9
+
+// =====================
+// VELOCIDAD
+// =====================
+const int VELOCIDAD = 255;
+
+uint8_t ultimoComando = 0;
+
+// =====================
+// CONTROL BUZZER
+// =====================
+unsigned long tiempoBeep = 0;
+bool beepActivo = false;
+
+void setup() {
+  Serial.begin(9600);
+
+  IrReceiver.begin(IR_PIN, ENABLE_LED_FEEDBACK);
+
+  pinMode(BUZZER, OUTPUT);
+  digitalWrite(BUZZER, LOW);
+
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(ENB, OUTPUT);
+
+  detener();
+
+  Serial.println("ROBOT SOCCER CON BUZZER LISTO");
+}
+
+void loop() {
+  actualizarBeep();
+
+  if (IrReceiver.decode()) {
+
+    uint8_t comando = IrReceiver.decodedIRData.command;
+
+    if (comando == 0x00) {
+      comando = ultimoComando;
+    } else {
+      ultimoComando = comando;
+    }
+
+    Serial.print("Comando usado: 0x");
+    Serial.println(comando, HEX);
+
+    switch (comando) {
+
+      case BTN_ARRIBA:
+        iniciarBeep(1200);
+        avanzar();
+        break;
+
+      case BTN_ABAJO:
+        iniciarBeep(900);
+        retroceder();
+        break;
+
+      case BTN_IZQUIERDA:
+        iniciarBeep(700);
+        girarIzquierda();
+        break;
+
+      case BTN_DERECHA:
+        iniciarBeep(700);
+        girarDerecha();
+        break;
+
+      case BTN_OK:
+        iniciarBeep(500);
+        detener();
+        break;
+    }
+
+    IrReceiver.resume();
+  }
+}
+
+// =====================
+// BUZZER SIN DELAY
+// =====================
+
+void iniciarBeep(int frecuencia) {
+  tone(BUZZER, frecuencia);
+  tiempoBeep = millis();
+  beepActivo = true;
+}
+
+void actualizarBeep() {
+  if (beepActivo &amp;&amp; millis() - tiempoBeep &gt;= 70) {
+    noTone(BUZZER);
+    beepActivo = false;
+  }
+}
+
+// =====================
+// FUNCIONES DE MOVIMIENTO
+// =====================
+
+void avanzar() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+
+  analogWrite(ENA, VELOCIDAD);
+  analogWrite(ENB, VELOCIDAD);
+}
+
+void retroceder() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+
+  analogWrite(ENA, VELOCIDAD);
+  analogWrite(ENB, VELOCIDAD);
+}
+
+void girarIzquierda() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+
+  analogWrite(ENA, VELOCIDAD);
+  analogWrite(ENB, VELOCIDAD);
+}
+
+void girarDerecha() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+
+  analogWrite(ENA, VELOCIDAD);
+  analogWrite(ENB, VELOCIDAD);
+}
+
+void detener() {
+  analogWrite(ENA, 0);
+  analogWrite(ENB, 0);
+
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+}</code></pre>
       </section>
 
       <section class="card soccer-card">

@@ -223,31 +223,31 @@ const SPECIAL_PROJECT_QUESTIONS = {
   ],
   "proyecto-especial-cabeza-dinosaurio": [
     [
-      "¿Qué características hacen que un parpadeo parezca natural y cuáles harían que pareciera robótico?",
-      "¿Cómo usarías tus observaciones para explicar por qué los intervalos entre parpadeos no deben ser siempre iguales?"
+      "¿Qué características hacen que unos ojos de dinosaurio parezcan vivos, aunque la solución sea mecánica o digital?",
+      "¿Qué medida de la cabeza puede cambiar por completo la ruta final del proyecto?"
     ],
     [
-      "¿Qué diferencias debe percibir un jugador entre el parpadeo natural y el modo de alerta?",
-      "¿Cómo representarías en tu línea de tiempo un movimiento que comienza normal y después comunica peligro?"
+      "¿Qué ruta elegiste para tu cabeza de dinosaurio y por qué conviene para el espacio disponible?",
+      "¿Cómo representarías en tu línea de tiempo el comportamiento de los ojos si usas servos o si usas pantallas?"
     ],
     [
-      "¿Por qué los servos izquierdo y derecho pueden necesitar sentidos o ángulos distintos aunque los ojos hagan la misma acción?",
+      "¿Por qué el servo horizontal, el servo vertical y el servo del párpado deben calibrarse por separado?",
       "¿Qué parte del mecanismo modificarías si un párpado chocara con la cabeza antes de cerrar por completo?"
     ],
     [
-      "¿Cómo determinaste los ángulos seguros de cada ojo y qué evidencia muestra que no están forzando el mecanismo?",
+      "¿Cómo determinaste los ángulos seguros del eje horizontal, eje vertical y párpado, y qué evidencia muestra que no están forzando el mecanismo?",
       "¿Qué riesgo existe al copiar exactamente los ángulos de otra maqueta sin calibrarlos en la tuya?"
     ],
     [
-      "¿Qué combinación de tiempo de cierre e intervalo produjo el parpadeo más natural y cómo lo decidiste?",
-      "¿Cómo cambiaría la expresión de la cabeza si los dos ojos cerraran con una diferencia de tiempo?"
+      "Si usas Arduino, ¿qué combinación de tiempo y ángulos produjo mejor movimiento? Si usas ESP32, ¿qué ajuste hizo más estable la imagen?",
+      "¿Cómo cambia la expresión de la cabeza si los ojos tienen movimiento físico o si muestran iris digitales fijos?"
     ],
     [
-      "¿Qué elementos del modo de alerta permiten distinguirlo del parpadeo normal sin agregar nuevos componentes?",
-      "¿En qué momento de una misión de escape room tendría sentido activar el modo de alerta y qué mensaje comunicaría?"
+      "¿Qué prueba dentro de la máscara confirma que la distancia entre los ojos se ve correcta?",
+      "¿En qué momento de una misión de escape room tendría sentido activar la mirada o encender los ojos?"
     ],
     [
-      "¿Qué ajuste mejoró más la coordinación de los ojos y cómo comparaste el funcionamiento antes y después?",
+      "¿Qué ajuste mejoró más la coordinación del ojo y cómo comparaste el funcionamiento antes y después?",
       "¿Qué prueba repetida usarías para asegurar que el mecanismo no se atore durante una presentación completa?"
     ]
   ],
@@ -630,236 +630,180 @@ void loop() {
   ],
   "proyecto-especial-cabeza-dinosaurio": [
     {
-      title: "Representar la secuencia antes de mover servos",
-      instruction: "Usa mensajes para verificar el orden abrir, esperar, cerrar y abrir. Primero valida la historia del movimiento.",
-      code: `void abrirOjos() {
-  Serial.println("OJOS ABIERTOS");
-}
-
-void cerrarOjos() {
-  Serial.println("OJOS CERRADOS");
-}
+      title: "Registrar medidas antes de elegir ruta",
+      instruction: "Usa variables para anotar el ancho, profundidad y distancia entre ojos. La decisión debe salir de esas medidas.",
+      code: `const int anchoCabezaCm = 28;
+const int profundidadCm = 16;
+const int distanciaEntreOjosCm = 9;
 
 void setup() {
   Serial.begin(9600);
-}
-
-void loop() {
-  abrirOjos();
-  delay(1000);
-  cerrarOjos();
-  delay(180);
-  abrirOjos();
-  delay(2000);
-}`,
-      expected: "El monitor muestra una secuencia clara de apertura y cierre."
-    },
-    {
-      title: "Guardar posiciones y tiempos con nombres",
-      instruction: "Evita números sin explicación. Modifica solo las constantes para comparar diferentes ritmos.",
-      code: `const int TIEMPO_CERRADO = 180;
-const int PAUSA_NORMAL = 3000;
-const int PAUSA_ALERTA = 300;
-
-void mostrarPlan() {
-  Serial.print("Cierre: ");
-  Serial.println(TIEMPO_CERRADO);
-  Serial.print("Pausa normal: ");
-  Serial.println(PAUSA_NORMAL);
-  Serial.print("Pausa alerta: ");
-  Serial.println(PAUSA_ALERTA);
-}
-
-void setup() {
-  Serial.begin(9600);
-  mostrarPlan();
+  Serial.println("MEDIDAS DE LA CABEZA");
+  Serial.print("Ancho: ");
+  Serial.println(anchoCabezaCm);
+  Serial.print("Profundidad: ");
+  Serial.println(profundidadCm);
+  Serial.print("Distancia entre ojos: ");
+  Serial.println(distanciaEntreOjosCm);
 }
 
 void loop() {
 }`,
-      expected: "Los valores importantes tienen nombres y pueden ajustarse en un solo lugar."
+      expected: "El monitor muestra las medidas que justificarán la ruta elegida."
     },
     {
-      title: "Mover un ojo antes de coordinar los dos",
-      instruction: "Comprueba un solo servo. No montes ambos hasta encontrar posiciones seguras de apertura y cierre.",
+      title: "Decidir entre Arduino y ESP32",
+      instruction: "Compara medidas mínimas. Cambia los valores para justificar si caben servos o si conviene usar pantallas.",
+      code: `const int profundidadCm = 16;
+const int distanciaEntreOjosCm = 9;
+
+bool cabeMecanismoArduino() {
+  return profundidadCm >= 14 && distanciaEntreOjosCm >= 8;
+}
+
+void setup() {
+  Serial.begin(9600);
+  if (cabeMecanismoArduino()) {
+    Serial.println("Ruta sugerida: Arduino animatronico");
+  } else {
+    Serial.println("Ruta sugerida: ESP32 con ojos digitales");
+  }
+}
+
+void loop() {
+}`,
+      expected: "La sugerencia cambia cuando las medidas no permiten un mecanismo amplio."
+    },
+    {
+      title: "Calibrar un ojo animatrónico",
+      instruction: "Si elegiste Arduino, prueba un servo a la vez antes de duplicar mecanismos o fijar piezas en la cabeza.",
       code: `#include <Servo.h>
 
-Servo ojoIzq;
-const int ABIERTO = 30;
-const int CERRADO = 95;
+Servo servoHorizontal;
+const int IZQUIERDA = 60;
+const int CENTRO = 90;
+const int DERECHA = 120;
 
 void setup() {
-  ojoIzq.attach(9);
+  servoHorizontal.attach(2);
+  servoHorizontal.write(CENTRO);
+  delay(1000);
 }
 
 void loop() {
-  ojoIzq.write(ABIERTO);
+  servoHorizontal.write(IZQUIERDA);
+  delay(1000);
+  servoHorizontal.write(CENTRO);
+  delay(1000);
+  servoHorizontal.write(DERECHA);
+  delay(1000);
+  servoHorizontal.write(CENTRO);
   delay(1500);
-  ojoIzq.write(CERRADO);
-  delay(500);
 }`,
-      expected: "Un ojo abre y cierra sin golpear ni forzar el mecanismo."
+      expected: "El ojo se mueve sin golpear la máscara ni forzar el servo."
     },
     {
-      title: "Calibrar dos ojos con constantes independientes",
-      instruction: "Cada servo conserva sus propios ángulos. Así una corrección no obliga a cambiar toda la secuencia.",
+      title: "Probar tres servos de un ojo",
+      instruction: "Usa constantes separadas para horizontal, vertical y párpado. Ajusta solo los valores que choquen con tu mecanismo.",
       code: `#include <Servo.h>
 
-Servo ojoIzq;
-Servo ojoDer;
-const int IZQ_ABIERTO = 30;
-const int IZQ_CERRADO = 95;
-const int DER_ABIERTO = 150;
-const int DER_CERRADO = 85;
+Servo horizontal;
+Servo vertical;
+Servo parpado;
+
+const int CENTRO = 90;
+const int PARPADO_ABIERTO = 40;
+const int PARPADO_CERRADO = 130;
 
 void setup() {
-  ojoIzq.attach(9);
-  ojoDer.attach(10);
+  horizontal.attach(2);
+  vertical.attach(3);
+  parpado.attach(4);
+  horizontal.write(CENTRO);
+  vertical.write(CENTRO);
+  parpado.write(PARPADO_ABIERTO);
 }
 
 void loop() {
-  ojoIzq.write(IZQ_ABIERTO);
-  ojoDer.write(DER_ABIERTO);
+  horizontal.write(60);
+  delay(800);
+  horizontal.write(CENTRO);
+  delay(800);
+  vertical.write(115);
+  delay(800);
+  vertical.write(CENTRO);
+  delay(800);
+  parpado.write(PARPADO_CERRADO);
+  delay(400);
+  parpado.write(PARPADO_ABIERTO);
   delay(1000);
-  ojoIzq.write(IZQ_CERRADO);
-  ojoDer.write(DER_CERRADO);
-  delay(500);
 }`,
-      expected: "Los dos ojos alcanzan posiciones seguras aunque usen ángulos diferentes."
+      expected: "Los tres movimientos se distinguen y regresan a posiciones seguras."
     },
     {
-      title: "Crear funciones reutilizables de parpadeo",
-      instruction: "Separa abrirOjos, cerrarOjos y parpadeoNatural. loop solo solicita el comportamiento.",
-      code: `#include <Servo.h>
-
-Servo izquierdo;
-Servo derecho;
-
-void abrirOjos() {
-  izquierdo.write(30);
-  derecho.write(150);
-}
-
-void cerrarOjos() {
-  izquierdo.write(95);
-  derecho.write(85);
-}
-
-void parpadeoNatural() {
-  cerrarOjos();
-  delay(180);
-  abrirOjos();
-}
+      title: "Verificar la ruta ESP32 por etapas",
+      instruction: "Si elegiste ESP32, prueba primero mensajes de estado antes de conectar o presentar las dos pantallas.",
+      code: `const bool ojoIzquierdoListo = true;
+const bool ojoDerechoListo = true;
+const bool pupilaFija = true;
 
 void setup() {
-  izquierdo.attach(9);
-  derecho.attach(10);
-  abrirOjos();
-}
-
-void loop() {
-  parpadeoNatural();
-  delay(3000);
-}`,
-      expected: "loop es breve y el parpadeo completo se reconoce por el nombre de una función."
-    },
-    {
-      title: "Agregar un comportamiento sin alterar el anterior",
-      instruction: "Conserva parpadeoNatural y agrega modoAlerta como una función diferente. No copies toda la lógica dentro de loop.",
-      code: `#include <Servo.h>
-
-Servo izquierdo;
-Servo derecho;
-
-void abrirOjos() {
-  izquierdo.write(30);
-  derecho.write(150);
-}
-
-void cerrarOjos() {
-  izquierdo.write(95);
-  derecho.write(85);
-}
-
-void parpadeoNatural() {
-  cerrarOjos();
-  delay(180);
-  abrirOjos();
-}
-
-void parpadeoDesfasado() {
-  izquierdo.write(95);
-  delay(100);
-  derecho.write(85);
-  delay(180);
-  abrirOjos();
-}
-
-void modoAlerta() {
-  parpadeoDesfasado();
-  delay(300);
-  parpadeoDesfasado();
-}
-
-void setup() {
-  izquierdo.attach(9);
-  derecho.attach(10);
-  abrirOjos();
-  delay(1000);
-  parpadeoNatural();
-  delay(1000);
-  modoAlerta();
+  Serial.begin(115200);
+  Serial.println("Prueba ESP32 ojos digitales");
+  Serial.println(ojoIzquierdoListo ? "Ojo izquierdo OK" : "Revisar ojo izquierdo");
+  Serial.println(ojoDerechoListo ? "Ojo derecho OK" : "Revisar ojo derecho");
+  Serial.println(pupilaFija ? "Pupila fija OK" : "Evitar mover la pupila");
 }
 
 void loop() {
 }`,
-      expected: "Los dos comportamientos pueden ejecutarse por separado y modoAlerta reutiliza otra función."
+      expected: "El equipo verifica que ambos ojos y la regla de pupila fija estén documentados."
     },
     {
-      title: "Programar intervalos sin detener toda la lógica",
-      instruction: "Prueba millis para decidir cuándo parpadear. Esta estructura permite añadir después otros comportamientos sin llenar loop de delays.",
-      code: `#include <Servo.h>
-
-Servo izquierdo;
-Servo derecho;
-
-unsigned long cambioAnterior = 0;
-unsigned long proximoParpadeo = 3000;
-bool ojosCerrados = false;
-
-void abrirOjos() {
-  izquierdo.write(30);
-  derecho.write(150);
-  ojosCerrados = false;
-}
-
-void cerrarOjos() {
-  izquierdo.write(95);
-  derecho.write(85);
-  ojosCerrados = true;
-}
+      title: "Definir una animación ligera para ESP32",
+      instruction: "Controla pocos parámetros. La animación debe tocar el iris, no la pupila.",
+      code: `const int fibrasAnimadas = 44;
+const int intervaloMs = 80;
+const float avanceFase = 0.32;
 
 void setup() {
-  izquierdo.attach(9);
-  derecho.attach(10);
-  randomSeed(analogRead(A0));
-  abrirOjos();
+  Serial.begin(115200);
+  Serial.println("Parametros de iris digital");
+  Serial.print("Fibras: ");
+  Serial.println(fibrasAnimadas);
+  Serial.print("Intervalo ms: ");
+  Serial.println(intervaloMs);
+  Serial.print("Avance fase: ");
+  Serial.println(avanceFase);
 }
 
 void loop() {
-  unsigned long ahora = millis();
+}`,
+      expected: "Los parámetros principales quedan visibles para ajustar la animación sin mover la pupila."
+    },
+    {
+      title: "Documentar la entrega final",
+      instruction: "Imprime una lista de evidencias distinta para cada ruta. Así el equipo no entrega pruebas incompletas.",
+      code: `const bool rutaArduino = false;
 
-  if (!ojosCerrados && ahora >= proximoParpadeo) {
-    cerrarOjos();
-    cambioAnterior = ahora;
+void setup() {
+  Serial.begin(9600);
+  Serial.println("EVIDENCIA FINAL");
+  Serial.println("- Video dentro o frente a la cabeza");
+  Serial.println("- Medidas de cabeza y distancia entre ojos");
+
+  if (rutaArduino) {
+    Serial.println("- Tabla de angulos seguros");
+    Serial.println("- Prueba de mirada y parpadeo");
+  } else {
+    Serial.println("- Dos pantallas alineadas");
+    Serial.println("- Pupila fija e iris estable");
   }
+}
 
-  if (ojosCerrados && ahora - cambioAnterior >= 180) {
-    abrirOjos();
-    proximoParpadeo = ahora + random(3000, 7000);
-  }
+void loop() {
 }`,
-      expected: "Los dos servos parpadean juntos con intervalos variables sin detener el programa con delays largos."
+      expected: "La entrega cambia según la ruta seleccionada y conserva las medidas como evidencia obligatoria."
     }
   ],
   "proyecto-especial-brazo-dinosaurio": [
@@ -1570,9 +1514,9 @@ const SPECIAL_PROJECT_OBJECTIVE_REQUIREMENTS = {
     ["1 Arduino Uno", "1 cable USB"],
     ["1 Arduino Uno", "2 servomotores SG90 o similares (se prueba uno a la vez)", "1 protoboard", "Cables Dupont", "1 cable USB", "Mecanismo de párpados u ojos"],
     ["1 Arduino Uno", "2 servomotores SG90 o similares", "1 protoboard", "Cables Dupont", "1 cable USB", "Mecanismo de párpados u ojos", "Fuente externa regulada de 5 V para los servos"],
-    ["1 Arduino Uno", "2 servomotores SG90 o similares", "Mecanismo de párpados u ojos", "1 protoboard", "Cables Dupont", "1 cable USB", "Fuente externa regulada de 5 V para los servos"],
-    ["1 Arduino Uno", "2 servomotores SG90 o similares", "Mecanismo de párpados u ojos", "1 protoboard", "Cables Dupont", "1 cable USB", "Fuente externa regulada de 5 V para los servos"],
-    ["1 Arduino Uno", "2 servomotores SG90 o similares", "Mecanismo de párpados u ojos", "1 protoboard", "Cables Dupont", "1 cable USB", "Fuente externa regulada de 5 V para los servos"]
+    ["1 Arduino Uno o 1 ESP32", "Mecanismo de párpados u ojos o 2 pantallas TFT GC9A01", "1 protoboard o expansion board", "Cables Dupont", "1 cable USB", "Fuente externa regulada de 5 V para servos si aplica"],
+    ["1 Arduino Uno o 1 ESP32", "Mecanismo de párpados u ojos o 2 pantallas TFT GC9A01", "1 protoboard o expansion board", "Cables Dupont", "1 cable USB", "Fuente externa regulada de 5 V para servos si aplica"],
+    ["1 Arduino Uno o 1 ESP32", "Mecanismo de párpados u ojos o 2 pantallas TFT GC9A01", "1 protoboard o expansion board", "Cables Dupont", "1 cable USB", "Fuente externa regulada de 5 V para servos si aplica"]
   ],
   "proyecto-especial-brazo-dinosaurio": [
     ["1 Arduino Uno", "1 cable USB"],
@@ -1652,45 +1596,45 @@ const SPECIAL_PROJECT_PEDAGOGY = {
   "proyecto-especial-cabeza-dinosaurio": {
     order: 2,
     title: "Cabeza dinosaurio",
-    learn: "Aprenderás a controlar dos servomotores y a usar tiempos distintos para crear movimientos que parezcan naturales.",
-    build: "Construirás ojos o párpados que parpadean y cambian a un modo de alerta.",
+    learn: "Aprenderás a elegir y justificar una ruta para la cabeza: ojos animatrónicos con Arduino o ojos digitales con ESP32.",
+    build: "Construirás una cabeza de dinosaurio expresiva con ojos funcionales, ya sea mediante servomotores o pantallas redondas.",
     future: "En el Escape Room hará que el dinosaurio parezca vivo y reaccione durante la aventura.",
-    importance: "El movimiento de los ojos crea suspenso y ayuda a contar que el dinosaurio despertó o detectó algo. Sin esta parte, la cabeza permanecería inmóvil y perdería gran parte de su efecto.",
-    codeReaction: "los dos ojos se abran, se cierren y cambien al modo de alerta",
-    role: "animación de la criatura",
+    importance: "Los ojos crean suspenso y ayudan a contar que el dinosaurio despertó o detectó algo. La solución debe elegirse según el tamaño de la cabeza, la distancia entre ojos y el espacio interno disponible.",
+    codeReaction: "los ojos funcionen de forma estable según la ruta elegida: movimiento y parpadeo en Arduino, o imagen digital alineada en ESP32",
+    role: "sistema de ojos de dinosaurio",
     context: {
       paragraphs: [
         "Los personajes de películas, videojuegos y parques temáticos parecen vivos cuando realizan movimientos pequeños y creíbles. Un parpadeo, una mirada o una pausa pueden comunicar calma, sorpresa o peligro sin utilizar palabras.",
-        "La cabeza de dinosaurio usará dos servomotores para mover sus ojos o párpados. Los ángulos indicarán hasta dónde se moverá cada pieza y las pausas decidirán el ritmo. Si todas las pausas fueran idénticas, el movimiento parecería una máquina repetitiva.",
-        "Dentro del Escape Room, los ojos podrán despertar cuando avance la historia o cambiar a un modo de alerta cuando el jugador active una pista."
+        "La cabeza de dinosaurio puede resolverse por dos rutas. Una usa Arduino y servomotores para mover ojos animatrónicos. La otra usa ESP32 y pantallas redondas para mostrar ojos digitales de reptil.",
+        "Antes de decidir, se debe medir la cabeza, revisar la distancia entre los ojos y comprobar si hay espacio suficiente para servos, varillas, cables o pantallas."
       ],
       choice: {
-        question: "¿Qué ayuda a que un parpadeo parezca más natural?",
-        options: ["Variar algunas pausas", "Mover un solo cable", "Usar siempre el mismo ángulo para todo"],
-        answer: "Variar algunas pausas"
+        question: "¿Qué dato ayuda a elegir entre ojos animatrónicos y ojos digitales?",
+        options: ["La distancia entre los ojos", "El color del cable USB", "El nombre del archivo"],
+        answer: "La distancia entre los ojos"
       },
-      trueFalse: "Los ángulos indican posiciones y las pausas ayudan a controlar el ritmo.",
-      fill: "Completa: los movimientos pequeños pueden comunicar emociones sin utilizar ______.",
-      open: "¿En qué momento de la aventura deberían cambiar los ojos al modo de alerta?"
+      trueFalse: "Arduino y ESP32 pueden ser productos finales válidos si la elección está justificada por el montaje.",
+      fill: "Completa: antes de fijar los ojos se debe revisar el tamaño de la cabeza y la distancia entre los ______.",
+      open: "¿Qué ruta conviene más para tu cabeza de dinosaurio y qué medida física justifica tu decisión?"
     },
     deliverables: [
       "La hoja completa con los siete objetivos marcados.",
-      "Una tabla con los ángulos seguros de cada ojo.",
-      "El enlace de Tinkercad, si la prueba se realizó en simulador.",
-      "Un enlace de Drive con un video del parpadeo natural y del modo de alerta.",
-      "El boceto del mecanismo y una lista de los ajustes finales."
+      "La ruta final elegida: Arduino animatrónico o ESP32 digital.",
+      "Medidas de la cabeza: ancho aproximado, profundidad interna y distancia entre ojos.",
+      "Un enlace de Drive con video del producto funcionando.",
+      "Para Arduino: tabla de ángulos seguros. Para ESP32: evidencia de pantallas alineadas y estables."
     ],
     checks: {
       choice: {
-        question: "¿Por qué se prueban los servos uno por uno antes de mover los dos ojos?",
-        options: ["Para encontrar ángulos seguros", "Para cambiar el color de los ojos", "Para medir distancias"],
-        answer: "Para encontrar ángulos seguros"
+        question: "¿Por qué se mide la cabeza antes de elegir la ruta final?",
+        options: ["Para saber si caben mecanismos o pantallas", "Para cambiar la velocidad del USB", "Para evitar escribir código"],
+        answer: "Para saber si caben mecanismos o pantallas"
       },
-      trueFalse: "Un parpadeo natural siempre debe repetirse con exactamente la misma pausa.",
-      fill: "Completa: los valores de apertura y cierre deben ajustarse al ______ construido.",
+      trueFalse: "La ruta ESP32 con pantallas también puede ser producto final si funciona y está bien integrada.",
+      fill: "Completa: la separación entre ojos debe verse coherente con el tamaño de la ______.",
       match: [
-        ["Servomotores", "Mueven los ojos o párpados"],
-        ["Ángulos y pausas", "Definen la posición y el ritmo"]
+        ["Arduino", "Mueve ojos animatrónicos con servos"],
+        ["ESP32", "Muestra ojos digitales en pantallas"]
       ]
     }
   },
