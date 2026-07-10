@@ -10,7 +10,7 @@
   <header class="hero">
     <p class="tag">Proyectos especiales (Escape Room)</p>
     <h1>Brazo dinosaurio</h1>
-    <p class="subtitle">Brazo animado con servo, sensor ultrasónico, LED y buzzer para activar una reacción mecánica al detectar proximidad.</p>
+    <p class="subtitle">Brazo animado con sensor ultrasónico, luz y sonido. La ruta principal usa servomotor, pero puede cambiarse a motor paso a paso si el peso o el efecto palanca afectan el movimiento.</p>
   </header>
 
   <div class="topbar">
@@ -38,7 +38,7 @@
             <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
           </div>
         </div>
-        <p class="worksheet-note">El código de esta práctica está preparado para un brazo con un servo. Ajusta los ángulos según tu mecanismo físico.</p>
+        <p class="worksheet-note">El código principal está preparado para servomotor. Si el brazo es pesado, largo o impreso en 3D, revisa la alternativa con motor paso a paso antes de fijar el montaje final.</p>
         <div class="button-row">
           <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
           <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
@@ -47,7 +47,7 @@
 
       <section class="card">
         <h2>Producto final identificado</h2>
-        <p>Diseñar un brazo de dinosaurio que reaccione cuando un participante se acerca, combinando movimiento, luz y sonido para crear una señal de sorpresa o advertencia.</p>
+        <p>Diseñar un brazo de dinosaurio que reaccione cuando un participante se acerca, combinando movimiento, luz y sonido para crear una señal de sorpresa o advertencia. En la mayoría de pruebas se usa un servomotor, pero si el brazo impreso en 3D pesa demasiado o el efecto palanca reduce la fuerza del servo, se puede optar por un motor paso a paso con driver ULN2003.</p>
       </section>
 
       <section class="card prototype-reference">
@@ -104,6 +104,35 @@
         <p class="worksheet-note">Importante: el prototipo es solo para práctica. La entrega final debe conservar el enfoque del proyecto: un brazo de dinosaurio estable, seguro y capaz de reaccionar con movimiento, luz y sonido cuando detecta proximidad.</p>
       </section>
 
+      <section class="card prototype-reference">
+        <h2>Modelo final y elección del motor</h2>
+        <p>La primera vertiente de esta práctica usa un servomotor porque es simple de programar y suficiente para brazos ligeros. Si el brazo está hecho de cartón, foamboard, madera balsa o madera muy ligera, normalmente no habrá problema siempre que el punto de giro esté bien colocado y el recorrido sea corto.</p>
+        <p>Si el brazo está impreso en 3D, pesa más o queda muy largo, puede aparecer el efecto palanca. El efecto palanca ocurre cuando una pieza larga multiplica el esfuerzo que debe hacer el motor: aunque el peso parezca pequeño, si está lejos del eje de giro exige más fuerza para levantarlo o moverlo. Por eso un servo pequeño puede vibrar, calentarse, trabarse o no completar el recorrido.</p>
+        <p>En ese caso se recomienda considerar un motor paso a paso 28BYJ-48 con driver ULN2003. No se mueve por ángulos directos como un servo; se mueve por pasos. Eso permite hacer recorridos cortos, repetibles y con más control, aunque requiere una librería y más cables.</p>
+        <div class="prototype-reference__grid">
+          <figure>
+            <img src="IMG_2570.JPG" alt="Mecanismo final del brazo de dinosaurio con servomotores y Arduino" />
+            <figcaption>Montaje final del brazo: revisar peso, punto de giro y esfuerzo real antes de decidir si basta el servomotor.</figcaption>
+          </figure>
+          <figure>
+            <img src="BrazoDino.jpg" alt="Brazo de dinosaurio usado como referencia de forma y pintura" />
+            <figcaption>Referencia física del brazo: mientras más largo o pesado sea, mayor será el efecto palanca sobre el motor.</figcaption>
+          </figure>
+        </div>
+        <video class="media-player media-player--compact media-player--vertical" controls muted playsinline preload="metadata">
+          <source src="Brazo_Final.mp4" type="video/mp4" />
+          Tu navegador no puede reproducir este video.
+        </video>
+        <p class="worksheet-note">El video final está convertido a MP4 y sin audio para que se reproduzca mejor en el navegador.</p>
+        <h3>Regla de decisión</h3>
+        <ul>
+          <li>Usa servomotor si el brazo es de cartón, foamboard o madera ligera y se mueve sin vibrar.</li>
+          <li>Considera motor paso a paso si el brazo es impreso en 3D, largo, pesado o el servo pierde fuerza.</li>
+          <li>Reduce el recorrido antes de cambiar de motor: a veces un movimiento corto produce mejor efecto y exige menos esfuerzo.</li>
+          <li>Usa fuente externa de 5 V si el motor lo requiere; no alimentes motores exigentes solo desde el pin de 5 V del Arduino.</li>
+        </ul>
+      </section>
+
       <section class="card">
         <h2>Objetivo 1: Investigar reacciones mecánicas seguras</h2>
         <p><strong>Descripción:</strong> Analizar ejemplos de barreras, figuras animadas o mecanismos que pasan del reposo a una acción. Identificar qué hace que el movimiento sea visible sin ser peligroso.</p>
@@ -120,16 +149,16 @@
 
       <section class="card">
         <h2>Objetivo 3: Diseñar el brazo y sus conexiones</h2>
-        <p><strong>Descripción:</strong> Revisar el diagrama eléctrico y diseñar una estructura ligera que el servo pueda mover. Definir la ubicación del sensor, LED, buzzer y punto de giro.</p>
-        <p><strong>Entrega:</strong> Diagrama etiquetado y boceto lateral del brazo con medidas aproximadas y sentido de movimiento.</p>
-        <p><strong>Evaluación:</strong> El diseño incluye todos los componentes, deja libre el recorrido y usa un brazo suficientemente ligero para el servo.</p>
+        <p><strong>Descripción:</strong> Revisar el diagrama eléctrico y diseñar una estructura ligera que el servo pueda mover. Si el brazo es impreso en 3D o el efecto palanca es alto, comparar la opción de motor paso a paso con driver ULN2003. Definir la ubicación del sensor, LED, buzzer, punto de giro y motor.</p>
+        <p><strong>Entrega:</strong> Diagrama etiquetado y boceto lateral del brazo con medidas aproximadas, sentido de movimiento y motor elegido.</p>
+        <p><strong>Evaluación:</strong> El diseño incluye todos los componentes, deja libre el recorrido y justifica si el brazo puede moverse con servo o si conviene motor paso a paso.</p>
       </section>
 
       <section class="card">
-        <h2>Objetivo 4: Probar sensor, señales y servo</h2>
-        <p><strong>Descripción:</strong> Comprobar por separado la lectura de distancia, el encendido del LED, el sonido del buzzer y el movimiento del servo entre dos ángulos seguros.</p>
-        <p><strong>Entrega:</strong> Lista de verificación de los cuatro componentes y tabla con los ángulos iniciales de reposo y ataque.</p>
-        <p><strong>Evaluación:</strong> Los componentes funcionan de forma individual, la distancia se mide correctamente y el servo no llega a sus límites físicos.</p>
+        <h2>Objetivo 4: Probar sensor, señales y motor</h2>
+        <p><strong>Descripción:</strong> Comprobar por separado la lectura de distancia, el encendido del LED, el sonido del buzzer y el movimiento del motor. En servo, probar dos ángulos seguros. En paso a paso, probar un recorrido corto por pasos.</p>
+        <p><strong>Entrega:</strong> Lista de verificación de los componentes y tabla con ángulos de servo o cantidad de pasos usados.</p>
+        <p><strong>Evaluación:</strong> Los componentes funcionan de forma individual, la distancia se mide correctamente y el motor elegido no llega a sus límites físicos.</p>
       </section>
 
       <section class="card">
@@ -158,26 +187,27 @@
         <ul>
           <li>1 Arduino Uno</li>
           <li>1 sensor ultrasónico HC-SR04</li>
-          <li>1 servomotor SG90, MG90S o similar</li>
+          <li>1 servomotor SG90, MG90S o similar para brazo ligero</li>
+          <li>Opcional: 1 motor paso a paso 28BYJ-48 con driver ULN2003 para brazo impreso en 3D o más pesado</li>
           <li>1 LED rojo</li>
           <li>1 resistencia de 220 ohms</li>
           <li>1 buzzer pasivo</li>
           <li>Protoboard</li>
           <li>Cables Dupont</li>
           <li>1 cable USB</li>
-          <li>Fuente externa regulada de 5 V si el servo lo requiere</li>
+          <li>Fuente externa regulada de 5 V si el servo o motor paso a paso lo requiere</li>
           <li>Estructura mecánica del brazo</li>
         </ul>
       </section>
 
       <section class="card">
         <h2>Descripción general</h2>
-        <p>El brazo permanece en reposo mientras no detecta objetos cerca. Cuando el sensor identifica una distancia menor al umbral, el servo mueve el brazo, el LED enciende y el buzzer emite una alerta breve.</p>
+        <p>El brazo permanece en reposo mientras no detecta objetos cerca. Cuando el sensor identifica una distancia menor al umbral, el motor mueve el brazo, el LED enciende y el buzzer emite una alerta breve. La versión base usa servomotor; la versión alternativa usa motor paso a paso si el peso o el efecto palanca hacen que el servo no sea suficiente.</p>
       </section>
 
       <section class="card">
         <h2>Explicación del funcionamiento</h2>
-        <p>El sensor ultrasónico mide la distancia constantemente. Si un objeto entra en el rango definido, se llama a la función activarBrazo. Esta función mueve el servo entre dos ángulos, activa el LED y genera sonidos. Al terminar, el brazo vuelve a su posición inicial.</p>
+        <p>El sensor ultrasónico mide la distancia constantemente. Si un objeto entra en el rango definido, se llama a la función activarBrazo. En la versión con servo, esta función mueve el brazo entre dos ángulos, activa el LED y genera sonidos. En la versión con motor paso a paso, el movimiento se define por pasos de avance y regreso. Al terminar, el brazo vuelve a su posición inicial.</p>
       </section>
 
       <section class="card">
@@ -190,8 +220,8 @@
       </section>
 
       <section class="card">
-        <h2>Códigos de prueba para servos</h2>
-        <p>Antes de conectar el sensor ultrasónico, el LED y el buzzer, prueba el movimiento del brazo solamente con servos. Estas pruebas ayudan a detectar si el mecanismo se atora, pesa demasiado o necesita otros ángulos antes de usar el código completo.</p>
+        <h2>Códigos de prueba para motores</h2>
+        <p>Antes de conectar el sensor ultrasónico, el LED y el buzzer, prueba el movimiento del brazo solamente con el motor elegido. Estas pruebas ayudan a detectar si el mecanismo se atora, pesa demasiado, necesita otros ángulos o requiere cambiar de servo a motor paso a paso antes de usar el código completo.</p>
         <p class="worksheet-note">Realiza estas pruebas con el brazo separado del montaje final o con movimientos lentos. Si el servo se calienta, vibra demasiado o no puede mover la pieza, detén la prueba y ajusta el mecanismo.</p>
 
         <h3>Prueba 1: Un servo</h3>
@@ -342,17 +372,98 @@ void loop() {
 
 }</code></pre>
 
+        <h3>Alternativa: motor paso a paso 28BYJ-48 con ULN2003</h3>
+        <p>Usa esta alternativa si el brazo impreso en 3D pesa demasiado, el servo vibra, se calienta o no logra vencer el efecto palanca. Este ejemplo usa un recorrido corto de 120 pasos para que el brazo solo se mueva una pequeña parte en horizontal y no dé vueltas completas.</p>
+        <p class="worksheet-note">Para usar este código instala la librería <code>AccelStepper</code>. Aunque el cableado físico va IN1-D8, IN2-D9, IN3-D10 e IN4-D11, en AccelStepper el orden <code>8, 10, 9, 11</code> suele funcionar mejor con el driver ULN2003.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Driver ULN2003</th>
+              <th>Arduino Uno</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>IN1</td>
+              <td>D8</td>
+            </tr>
+            <tr>
+              <td>IN2</td>
+              <td>D9</td>
+            </tr>
+            <tr>
+              <td>IN3</td>
+              <td>D10</td>
+            </tr>
+            <tr>
+              <td>IN4</td>
+              <td>D11</td>
+            </tr>
+            <tr>
+              <td>VCC</td>
+              <td>5V externo recomendado</td>
+            </tr>
+            <tr>
+              <td>GND</td>
+              <td>GND común con Arduino</td>
+            </tr>
+          </tbody>
+        </table>
+        <pre><code>#include &lt;AccelStepper.h&gt;
+
+// Motor 28BYJ-48 con driver ULN2003
+// Conexiones:
+// IN1 -&gt; D8
+// IN2 -&gt; D9
+// IN3 -&gt; D10
+// IN4 -&gt; D11
+//
+// En AccelStepper este orden suele funcionar mejor con ULN2003:
+AccelStepper motor(AccelStepper::FULL4WIRE, 8, 10, 9, 11);
+
+// Movimiento corto para brazo de dinosaurio
+const int pasosRecorrido = 120;
+
+void setup() {
+  Serial.begin(9600);
+
+  motor.setMaxSpeed(350.0);
+  motor.setAcceleration(120.0);
+
+  Serial.println("Prueba estable de motor paso a paso");
+}
+
+void loop() {
+  Serial.println("Avanza");
+  motor.moveTo(pasosRecorrido);
+
+  while (motor.distanceToGo() != 0) {
+    motor.run();
+  }
+
+  delay(700);
+
+  Serial.println("Regresa");
+  motor.moveTo(0);
+
+  while (motor.distanceToGo() != 0) {
+    motor.run();
+  }
+
+  delay(1000);
+}</code></pre>
+
         <h3>Registro de la prueba</h3>
         <div class="worksheet-field">
-          <label for="servo-test-result-1">1. ¿Con cuál prueba funcionó mejor el mecanismo: un servo o dos servos?</label>
+          <label for="servo-test-result-1">1. ¿Con cuál prueba funcionó mejor el mecanismo: un servo, dos servos o motor paso a paso?</label>
           <textarea class="worksheet-textarea" id="servo-test-result-1" name="servo_test_result_1"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="servo-test-result-2">2. ¿En qué parte del recorrido el brazo se atoró, vibró o perdió fuerza?</label>
+          <label for="servo-test-result-2">2. ¿En qué parte del recorrido el brazo se atoró, vibró, perdió fuerza o mostró efecto palanca?</label>
           <textarea class="worksheet-textarea" id="servo-test-result-2" name="servo_test_result_2"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="servo-test-result-3">3. ¿Qué ángulos usarás como límite seguro en lugar de mover de 0 a 180 grados?</label>
+          <label for="servo-test-result-3">3. ¿Qué ángulos o cantidad de pasos usarás como límite seguro?</label>
           <textarea class="worksheet-textarea" id="servo-test-result-3" name="servo_test_result_3"></textarea>
         </div>
       </section>
@@ -460,15 +571,16 @@ void loop() {
 
       <section class="card">
         <h2>Producto final</h2>
-        <p><strong>Descripción:</strong> Brazo animado con servomotor, sensor ultrasónico, LED y buzzer que reacciona al detectar proximidad y después regresa al reposo.</p>
+        <p><strong>Descripción:</strong> Brazo animado con sensor ultrasónico, LED y buzzer que reacciona al detectar proximidad y después regresa al reposo. Puede usar servomotor si el brazo es ligero, o motor paso a paso si el brazo impreso en 3D o el efecto palanca exigen más control del movimiento.</p>
         <p><strong>Entrega:</strong></p>
         <ul>
           <li>Enlace de Drive con video del brazo armado y su activación por proximidad.</li>
           <li>Enlace de Tinkercad del circuito y código, si se realizó en simulador.</li>
-          <li>Documento o texto en Drive con los ángulos usados para reposo y ataque.</li>
+          <li>Documento o texto en Drive con los ángulos usados para reposo y ataque, o los pasos usados si se eligió motor paso a paso.</li>
+          <li>Explicación breve del motor elegido: servo para estructura ligera o paso a paso si el brazo impreso en 3D generó demasiado efecto palanca.</li>
           <li>Los enlaces deben permitir acceso a cualquier persona que los tenga.</li>
         </ul>
-        <p><strong>Evaluación:</strong> El sensor activa el brazo en el rango definido, el servo ejecuta la reacción y regresa al reposo, el LED y el buzzer acompañan la acción y el montaje es estable.</p>
+        <p><strong>Evaluación:</strong> El sensor activa el brazo en el rango definido, el motor ejecuta la reacción y regresa al reposo, el LED y el buzzer acompañan la acción y el montaje es estable. La elección del motor debe estar justificada por peso, material, longitud del brazo y efecto palanca.</p>
         <div class="worksheet-field">
           <label><input name="evidence_1" type="checkbox" /> Agregué en Drive el video del brazo</label>
         </div>
@@ -476,7 +588,7 @@ void loop() {
           <label><input name="evidence_2" type="checkbox" /> Agregué el enlace de Tinkercad o la explicación del código</label>
         </div>
         <div class="worksheet-field">
-          <label><input name="evidence_3" type="checkbox" /> Agregué video de activación</label>
+          <label><input name="evidence_3" type="checkbox" /> Justifiqué si usé servomotor o motor paso a paso</label>
         </div>
       </section>
 
@@ -487,7 +599,7 @@ void loop() {
           <textarea class="worksheet-textarea" id="reflection-1" name="reflection_1"></textarea>
         </div>
         <div class="worksheet-field">
-          <label for="reflection-2">2. ¿Por qué es importante ajustar los ángulos antes de usar el mecanismo final?</label>
+          <label for="reflection-2">2. ¿Cómo afectó el efecto palanca al movimiento del brazo y qué motor conviene usar?</label>
           <textarea class="worksheet-textarea" id="reflection-2" name="reflection_2"></textarea>
         </div>
         <div class="worksheet-field">

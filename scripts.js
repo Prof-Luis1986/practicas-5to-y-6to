@@ -261,15 +261,15 @@ const SPECIAL_PROJECT_QUESTIONS = {
       "¿Qué comportamiento tendría el brazo si una persona permaneciera frente al sensor y cómo evita tu plan activaciones continuas?"
     ],
     [
-      "¿Cómo influyen el peso y la longitud del brazo en el esfuerzo que debe realizar el servomotor?",
-      "¿Qué cambiarías en la estructura si el servo puede moverse solo, pero no logra mover el brazo construido?"
+      "¿Cómo influyen el peso, la longitud del brazo y el efecto palanca en el esfuerzo que debe realizar el motor?",
+      "¿Qué cambiarías si el servo puede moverse solo, pero no logra mover el brazo construido o impreso en 3D?"
     ],
     [
       "¿Qué aprendiste al probar por separado el sensor, el servo, el LED y el buzzer que habría sido difícil descubrir con todo conectado?",
       "Si la distancia es correcta pero el brazo no se mueve, ¿qué componentes y conexiones revisarías antes de modificar el código?"
     ],
     [
-      "¿Cómo afectan los ángulos, la velocidad y la pausa a la impresión de ataque o advertencia?",
+      "¿Cómo afectan los ángulos, pasos, velocidad y pausa a la impresión de ataque o advertencia?",
       "¿Qué evidencia usarías para decidir que el movimiento es visible y dramático, pero sigue siendo seguro?"
     ],
     [
@@ -1521,11 +1521,11 @@ const SPECIAL_PROJECT_OBJECTIVE_REQUIREMENTS = {
   "proyecto-especial-brazo-dinosaurio": [
     ["1 Arduino Uno", "1 cable USB"],
     ["1 Arduino Uno", "1 cable USB"],
-    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90, MG90S o similar", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB", "Estructura mecánica ligera del brazo"],
-    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90, MG90S o similar", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB"],
-    ["1 Arduino Uno", "1 servomotor SG90, MG90S o similar", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "Estructura mecánica ligera del brazo", "1 protoboard", "Cables Dupont", "1 cable USB"],
-    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90, MG90S o similar", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB", "Estructura mecánica ligera del brazo"],
-    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90, MG90S o similar", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB", "Estructura mecánica ligera del brazo", "Fuente externa regulada de 5 V si el servo lo requiere"]
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90/MG90S o 1 motor paso a paso 28BYJ-48 con ULN2003", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB", "Estructura mecánica del brazo"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90/MG90S o 1 motor paso a paso 28BYJ-48 con ULN2003", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB"],
+    ["1 Arduino Uno", "1 servomotor SG90/MG90S o 1 motor paso a paso 28BYJ-48 con ULN2003", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "Estructura mecánica del brazo", "1 protoboard", "Cables Dupont", "1 cable USB"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90/MG90S o 1 motor paso a paso 28BYJ-48 con ULN2003", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB", "Estructura mecánica del brazo"],
+    ["1 Arduino Uno", "1 sensor ultrasónico HC-SR04", "1 servomotor SG90/MG90S o 1 motor paso a paso 28BYJ-48 con ULN2003", "1 LED rojo", "1 resistencia de 220 ohms", "1 buzzer pasivo", "1 protoboard", "Cables Dupont", "1 cable USB", "Estructura mecánica del brazo", "Fuente externa regulada de 5 V si el motor lo requiere"]
   ],
   "proyecto-especial-huevo-dinosaurio": [
     ["1 Arduino Uno", "1 cable USB"],
@@ -1642,15 +1642,15 @@ const SPECIAL_PROJECT_PEDAGOGY = {
     order: 3,
     title: "Brazo dinosaurio",
     learn: "Aprenderás a usar un sensor para activar una reacción mecánica de manera controlada y segura.",
-    build: "Construirás un brazo que se mueve, enciende una luz y produce un sonido cuando alguien se acerca.",
+    build: "Construirás un brazo que se mueve, enciende una luz y produce un sonido cuando alguien se acerca, usando servo o motor paso a paso según el peso del brazo.",
     future: "En el Escape Room funcionará como una sorpresa o advertencia que se activa por proximidad.",
-    importance: "Esta parte convierte la presencia del jugador en una reacción visible. Sin el sensor y la secuencia de reinicio, el brazo tendría que activarse manualmente o podría moverse sin control.",
+    importance: "Esta parte convierte la presencia del jugador en una reacción visible. La elección del motor debe considerar peso, longitud y efecto palanca para que el brazo no se trabe ni pierda fuerza.",
     codeReaction: "el brazo reaccione una sola vez cuando alguien se acerque y vuelva a prepararse al alejarse",
     role: "reacción mecánica de sorpresa",
     context: {
       paragraphs: [
         "Las puertas automáticas, las barreras de estacionamiento y algunas figuras de parques temáticos reaccionan cuando detectan que una persona se acerca. Primero reciben información de un sensor y después realizan un movimiento.",
-        "El brazo de dinosaurio seguirá esa misma idea: permanecerá quieto, detectará cercanía y realizará una reacción con movimiento, luz y sonido. También necesitará una regla de reinicio para no repetir la acción sin control mientras alguien permanece frente al sensor.",
+        "El brazo de dinosaurio seguirá esa misma idea: permanecerá quieto, detectará cercanía y realizará una reacción con movimiento, luz y sonido. Si el brazo es ligero puede moverse con servo; si es impreso en 3D o el efecto palanca es alto, puede convenir un motor paso a paso.",
         "En el Escape Room, el brazo puede sorprender al jugador o advertirle que llegó a una zona especial. El movimiento debe verse claramente, pero siempre mantenerse fuera de su alcance."
       ],
       choice: {
@@ -1667,7 +1667,7 @@ const SPECIAL_PROJECT_PEDAGOGY = {
       "El boceto del brazo y tres reglas de seguridad.",
       "El enlace de Tinkercad, si utilizaste simulador.",
       "Un enlace de Drive con tres activaciones completas del brazo.",
-      "Las distancias, ángulos, tiempos y mejoras finales registrados."
+      "Las distancias, ángulos o pasos, tiempos, motor elegido y mejoras finales registrados."
     ],
     checks: {
       choice: {
@@ -1679,7 +1679,7 @@ const SPECIAL_PROJECT_PEDAGOGY = {
       fill: "Completa: el sensor detecta la cercanía y el ______ mueve el brazo.",
       match: [
         ["Sensor ultrasónico", "Detecta que alguien se acercó"],
-        ["Servomotor", "Mueve el brazo"]
+        ["Motor", "Mueve el brazo"]
       ]
     }
   },
