@@ -47,7 +47,8 @@
 
       <section class="card">
         <h2>Producto final identificado</h2>
-        <p>Construir un contenedor interactivo que cambie luces y sonidos según la distancia detectada, simulando los estados de reposo, actividad, alerta y peligro dentro de una misión de escape room.</p>
+        <p>Construir un contenedor interactivo que cambie luces y sonidos según la distancia detectada, simulando los estados de reposo, actividad, alerta y peligro dentro de una misión de escape room. Si el alcance del equipo lo permite, puede agregarse una pantalla OLED para mostrar mensajes de estado.</p>
+        <p><strong>Alcance:</strong> Son válidas ambas versiones del proyecto. La versión base usa sensor ultrasónico, anillo NeoPixel y buzzer. La versión final o avanzada agrega pantalla OLED. La elección depende de la decisión del equipo, el tiempo disponible, los materiales y el nivel de complejidad que quieran alcanzar.</p>
       </section>
 
       <section class="card">
@@ -66,15 +67,15 @@
 
       <section class="card">
         <h2>Objetivo 3: Diseñar el sistema y sus conexiones</h2>
-        <p><strong>Descripción:</strong> Identificar la función del sensor ultrasónico, el aro NeoPixel y el buzzer. Revisar el diagrama y planear dónde colocar cada componente en el contenedor.</p>
+        <p><strong>Descripción:</strong> Identificar la función del sensor ultrasónico, el aro NeoPixel y el buzzer. Si el equipo elige la versión avanzada, también debe integrar la pantalla OLED. Revisar el diagrama y planear dónde colocar cada componente en el contenedor.</p>
         <p><strong>Entrega:</strong> Diagrama etiquetado y boceto del montaje físico con la ubicación de los componentes.</p>
         <p><strong>Evaluación:</strong> El diagrama incluye alimentación, tierra y pines de señal correctos; el sensor queda orientado hacia la zona de detección.</p>
       </section>
 
       <section class="card">
         <h2>Objetivo 4: Probar los componentes por separado</h2>
-        <p><strong>Descripción:</strong> Realizar tres pruebas breves: leer una distancia en el monitor serial, encender el aro con un color fijo y producir un tono corto con el buzzer.</p>
-        <p><strong>Entrega:</strong> Registro escrito de las tres pruebas y enlace de Drive con un video breve que muestre qué funcionó.</p>
+        <p><strong>Descripción:</strong> Realizar pruebas breves de cada componente elegido: leer una distancia en el monitor serial, encender el aro con un color fijo y producir un tono corto con el buzzer. En la versión avanzada, agregar la prueba de mostrar un texto simple en la pantalla OLED.</p>
+        <p><strong>Entrega:</strong> Registro escrito de las pruebas realizadas y enlace de Drive con un video breve que muestre qué funcionó.</p>
         <p><strong>Evaluación:</strong> Cada componente responde por separado y las lecturas del sensor son razonables al compararlas con una regla.</p>
       </section>
 
@@ -101,11 +102,13 @@
 
       <section class="card">
         <h2>Materiales</h2>
+        <p>Los primeros materiales corresponden a la versión base. La pantalla OLED se utiliza solo si el equipo decide realizar la versión avanzada.</p>
         <ul>
           <li>1 Arduino Uno</li>
           <li>1 sensor ultrasónico HC-SR04</li>
           <li>1 aro NeoPixel de 12 LEDs</li>
           <li>1 buzzer pasivo</li>
+          <li>1 pantalla OLED I2C 128 x 64</li>
           <li>Protoboard</li>
           <li>Cables Dupont</li>
           <li>1 cable USB</li>
@@ -115,12 +118,12 @@
 
       <section class="card">
         <h2>Descripción general</h2>
-        <p>El contenedor permanece en reposo cuando no hay objetos cerca. Al detectar proximidad, cambia de estado y genera efectos visuales y sonoros para indicar actividad, alerta o peligro.</p>
+        <p>El contenedor permanece en reposo cuando no hay objetos cerca. Al detectar proximidad, cambia de estado y genera efectos visuales y sonoros para indicar actividad, alerta o peligro. En la versión avanzada, la pantalla OLED también muestra el estado actual.</p>
       </section>
 
       <section class="card">
         <h2>Explicación del funcionamiento</h2>
-        <p>El sensor HC-SR04 mide la distancia. El programa compara esa lectura con varios rangos y ejecuta una función distinta para cada estado. El aro NeoPixel comunica el nivel de riesgo mediante color y movimiento, mientras el buzzer produce patrones de sonido.</p>
+        <p>El sensor HC-SR04 mide la distancia. El programa compara esa lectura con varios rangos y ejecuta una función distinta para cada estado. El aro NeoPixel comunica el nivel de riesgo mediante color y movimiento, el buzzer produce patrones de sonido y, si se trabaja la versión avanzada, la pantalla OLED muestra el estado actual.</p>
         <ul>
           <li>Más de 50 cm: reposo.</li>
           <li>Entre 26 y 50 cm: actividad.</li>
@@ -139,10 +142,54 @@
       </section>
 
       <section class="card">
-        <h2>Código completo</h2>
-        <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
+        <h2>Conexión general</h2>
+        <p>Antes de cargar el programa, verifica que todos los módulos usados compartan tierra con el Arduino y que los pines de señal coincidan con el código. Las conexiones de OLED aplican únicamente para la versión avanzada.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Pin del componente</th>
+              <th>Arduino Uno</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Anillo NeoPixel</td><td>DIN</td><td>D6</td></tr>
+            <tr><td>Anillo NeoPixel</td><td>VCC</td><td>5 V</td></tr>
+            <tr><td>Anillo NeoPixel</td><td>GND</td><td>GND</td></tr>
+            <tr><td>HC-SR04</td><td>TRIG</td><td>D9</td></tr>
+            <tr><td>HC-SR04</td><td>ECHO</td><td>D10</td></tr>
+            <tr><td>HC-SR04</td><td>VCC</td><td>5 V</td></tr>
+            <tr><td>HC-SR04</td><td>GND</td><td>GND</td></tr>
+            <tr><td>Buzzer</td><td>Señal</td><td>D5</td></tr>
+            <tr><td>Buzzer</td><td>GND</td><td>GND</td></tr>
+            <tr><td>OLED</td><td>SDA</td><td>A4</td></tr>
+            <tr><td>OLED</td><td>SCL</td><td>A5</td></tr>
+            <tr><td>OLED</td><td>VCC</td><td>5 V</td></tr>
+            <tr><td>OLED</td><td>GND</td><td>GND</td></tr>
+          </tbody>
+        </table>
+      </section>
 
-// ---------- PINES ----------
+      <section class="card">
+        <h2>Versión final</h2>
+        <p>Esta versión final muestra un alcance avanzado: integra sensor ultrasónico, anillo NeoPixel, buzzer y pantalla OLED para mostrar el estado del contenedor mientras cambian las luces y sonidos. La versión base sin OLED también es válida si cumple los cuatro estados y está bien documentada.</p>
+        <figure>
+          <img src="Contenedor_Final.png" alt="Versión final del proyecto Contenedor" />
+          <figcaption>Versión final del proyecto Contenedor</figcaption>
+        </figure>
+      </section>
+
+      <section class="card">
+        <h2>Código final</h2>
+        <p>Este código corresponde a la versión avanzada con pantalla OLED. Si el equipo decide trabajar la versión base, puede usar el código sin OLED siempre que conserve la lógica de medición, rangos, luces y sonidos.</p>
+        <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+#include &lt;Wire.h&gt;
+
+// =====================================================
+// PINES
+// =====================================================
 #define PIN_NEOPIXEL 6
 #define NUM_PIXELS 12
 
@@ -151,12 +198,39 @@
 
 #define BUZZER_PIN 5
 
-// ---------- CONFIGURACIÓN ----------
-Adafruit_NeoPixel ring(NUM_PIXELS, PIN_NEOPIXEL, NEO_GRB + NEO_KHZ800);
+// =====================================================
+// PANTALLA OLED
+// =====================================================
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+#define OLED_ADDRESS 0x3C
 
+Adafruit_SSD1306 display(
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  &amp;Wire,
+  OLED_RESET
+);
+
+// =====================================================
+// ANILLO NEOPIXEL
+// =====================================================
+Adafruit_NeoPixel ring(
+  NUM_PIXELS,
+  PIN_NEOPIXEL,
+  NEO_GRB + NEO_KHZ800
+);
+
+// =====================================================
+// VARIABLES
+// =====================================================
 long duracion;
 int distancia;
 
+// =====================================================
+// CONFIGURACIÓN INICIAL
+// =====================================================
 void setup() {
   Serial.begin(9600);
 
@@ -164,71 +238,122 @@ void setup() {
   pinMode(ECHO_PIN, INPUT);
   pinMode(BUZZER_PIN, OUTPUT);
 
+  // Inicializar NeoPixel
   ring.begin();
   ring.setBrightness(40);
+  ring.clear();
   ring.show();
 
   noTone(BUZZER_PIN);
+
+  // Inicializar pantalla OLED
+  if (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS)) {
+    Serial.println(&quot;No se encontro la pantalla OLED.&quot;);
+
+    // Detiene el programa si no detecta la pantalla
+    while (true) {
+      delay(100);
+    }
+  }
+
+  mostrarInicio();
 }
 
+// =====================================================
+// PROGRAMA PRINCIPAL
+// =====================================================
 void loop() {
   distancia = medirDistancia();
 
-  Serial.print("Distancia: ");
+  Serial.print(&quot;Distancia: &quot;);
   Serial.print(distancia);
-  Serial.println(" cm");
+  Serial.println(&quot; cm&quot;);
 
   if (distancia &gt; 50) {
     estadoReposo();
-  } 
-  else if (distancia &gt; 25 &amp;&amp; distancia &lt;= 50) {
+  }
+  else if (distancia &gt; 25) {
     estadoActividad();
-  } 
-  else if (distancia &gt; 10 &amp;&amp; distancia &lt;= 25) {
+  }
+  else if (distancia &gt; 10) {
     estadoAlerta();
-  } 
+  }
   else {
     estadoPeligro();
   }
 }
 
-// ---------- MEDICIÓN HC-SR04 ----------
+// =====================================================
+// MEDICIÓN DEL SENSOR HC-SR04
+// =====================================================
 int medirDistancia() {
   digitalWrite(TRIG_PIN, LOW);
   delayMicroseconds(2);
 
   digitalWrite(TRIG_PIN, HIGH);
   delayMicroseconds(10);
+
   digitalWrite(TRIG_PIN, LOW);
 
   duracion = pulseIn(ECHO_PIN, HIGH, 30000);
 
+  // Si no recibe eco, se considera fuera de rango
   if (duracion == 0) {
     return 999;
   }
 
   int distanciaCm = duracion * 0.034 / 2;
+
   return distanciaCm;
 }
 
-// ---------- ESTADOS ----------
+// =====================================================
+// ESTADOS DEL PROYECTO
+// =====================================================
 void estadoReposo() {
+  mostrarEstado(
+    &quot;CAPSULA ESTABLE&quot;,
+    &quot;REPOSO&quot;,
+    distancia
+  );
+
   ring.setBrightness(25);
   colorFijo(0, 20, 120);
+
   sonidoLatidoSuave();
 }
 
 void estadoActividad() {
+  mostrarEstado(
+    &quot;SUJETO DETECTADO&quot;,
+    &quot;ACTIVIDAD&quot;,
+    distancia
+  );
+
   pulsoColor(0, 120, 40);
+
   sonidoBiologico();
 }
 
 void estadoAlerta() {
+  mostrarEstado(
+    &quot;ANOMALIA&quot;,
+    &quot;ALERTA&quot;,
+    distancia
+  );
+
   efectoGiro(180, 80, 0, 45);
+
   sonidoAnomalia();
 }
 
 void estadoPeligro() {
+  mostrarEstado(
+    &quot;CONTENCION&quot;,
+    &quot;PELIGRO&quot;,
+    distancia
+  );
+
   ring.setBrightness(70);
 
   colorFijo(255, 0, 0);
@@ -238,11 +363,88 @@ void estadoPeligro() {
   delay(100);
 }
 
-// ---------- EFECTOS DE LUZ ----------
+// =====================================================
+// PANTALLA DE INICIO
+// =====================================================
+void mostrarInicio() {
+  display.clearDisplay();
+
+  display.setTextColor(SSD1306_WHITE);
+
+  display.setTextSize(2);
+  display.setCursor(15, 5);
+  display.println(&quot;BIO-LAB&quot;);
+
+  display.drawLine(0, 28, 127, 28, SSD1306_WHITE);
+
+  display.setTextSize(1);
+  display.setCursor(18, 36);
+  display.println(&quot;CAPSULA FETUS-01&quot;);
+
+  display.setCursor(27, 50);
+  display.println(&quot;INICIANDO...&quot;);
+
+  display.display();
+
+  delay(2000);
+}
+
+// =====================================================
+// MOSTRAR ESTADO EN OLED
+// =====================================================
+void mostrarEstado(
+  const char* titulo,
+  const char* estado,
+  int distanciaActual
+) {
+  display.clearDisplay();
+
+  display.setTextColor(SSD1306_WHITE);
+
+  // Encabezado
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.println(&quot;BIO-LAB / FETUS-01&quot;);
+
+  display.drawLine(0, 11, 127, 11, SSD1306_WHITE);
+
+  // Mensaje principal
+  display.setTextSize(1);
+  display.setCursor(0, 17);
+  display.println(titulo);
+
+  // Estado
+  display.setTextSize(2);
+  display.setCursor(0, 29);
+  display.println(estado);
+
+  // Distancia
+  display.setTextSize(1);
+  display.setCursor(0, 53);
+  display.print(&quot;Distancia: &quot;);
+
+  if (distanciaActual &gt;= 999) {
+    display.print(&quot;FUERA&quot;);
+  }
+  else {
+    display.print(distanciaActual);
+    display.print(&quot; cm&quot;);
+  }
+
+  display.display();
+}
+
+// =====================================================
+// EFECTOS DE LUZ
+// =====================================================
 void colorFijo(int rojo, int verde, int azul) {
   for (int i = 0; i &lt; NUM_PIXELS; i++) {
-    ring.setPixelColor(i, ring.Color(rojo, verde, azul));
+    ring.setPixelColor(
+      i,
+      ring.Color(rojo, verde, azul)
+    );
   }
+
   ring.show();
 }
 
@@ -260,26 +462,42 @@ void pulsoColor(int rojo, int verde, int azul) {
   }
 }
 
-void efectoGiro(int rojo, int verde, int azul, int espera) {
+void efectoGiro(
+  int rojo,
+  int verde,
+  int azul,
+  int espera
+) {
   ring.clear();
 
   for (int i = 0; i &lt; NUM_PIXELS; i++) {
-    ring.setPixelColor(i, ring.Color(rojo, verde, azul));
+    ring.setPixelColor(
+      i,
+      ring.Color(rojo, verde, azul)
+    );
+
     ring.show();
     delay(espera);
+
     ring.setPixelColor(i, 0);
   }
+
+  ring.show();
 }
 
-// ---------- SONIDOS ----------
+// =====================================================
+// SONIDOS
+// =====================================================
 void sonidoLatidoSuave() {
   tone(BUZZER_PIN, 180);
   delay(80);
+
   noTone(BUZZER_PIN);
   delay(50);
 
   tone(BUZZER_PIN, 130);
   delay(110);
+
   noTone(BUZZER_PIN);
   delay(800);
 }
@@ -287,16 +505,19 @@ void sonidoLatidoSuave() {
 void sonidoBiologico() {
   tone(BUZZER_PIN, 350);
   delay(100);
+
   noTone(BUZZER_PIN);
   delay(60);
 
   tone(BUZZER_PIN, 480);
   delay(100);
+
   noTone(BUZZER_PIN);
   delay(180);
 
   tone(BUZZER_PIN, 300);
   delay(160);
+
   noTone(BUZZER_PIN);
   delay(300);
 }
@@ -304,16 +525,19 @@ void sonidoBiologico() {
 void sonidoAnomalia() {
   tone(BUZZER_PIN, 520);
   delay(90);
+
   noTone(BUZZER_PIN);
   delay(60);
 
   tone(BUZZER_PIN, 760);
   delay(90);
+
   noTone(BUZZER_PIN);
   delay(60);
 
   tone(BUZZER_PIN, 420);
   delay(120);
+
   noTone(BUZZER_PIN);
   delay(220);
 }
@@ -335,7 +559,7 @@ void sonidoContencion() {
 
       <section class="card">
         <h2>Producto final</h2>
-        <p><strong>Descripción:</strong> Contenedor interactivo que cambia luces y sonidos según la distancia detectada para representar cuatro niveles de seguridad.</p>
+        <p><strong>Descripción:</strong> Contenedor interactivo que cambia luces y sonidos según la distancia detectada para representar cuatro niveles de seguridad. La pantalla OLED es una mejora válida para equipos que elijan mayor alcance.</p>
         <p><strong>Entrega:</strong></p>
         <ul>
           <li>Enlace de Tinkercad del circuito y código, si se realizó en simulador.</li>
@@ -343,7 +567,7 @@ void sonidoContencion() {
           <li>Documento o texto en Drive que explique cómo cambia el sistema según la distancia.</li>
           <li>Los enlaces deben permitir acceso a cualquier persona que los tenga.</li>
         </ul>
-        <p><strong>Evaluación:</strong> El sensor identifica los cuatro rangos, el aro NeoPixel y el buzzer comunican el estado correspondiente, el montaje funciona de manera estable y el alumno explica la relación entre distancia y respuesta.</p>
+        <p><strong>Evaluación:</strong> El sensor identifica los cuatro rangos, el aro NeoPixel y el buzzer comunican el estado correspondiente, el montaje funciona de manera estable y el alumno explica la relación entre distancia y respuesta. Si el equipo eligió OLED, la pantalla también debe mostrar el estado correcto.</p>
         <div class="worksheet-field">
           <label><input name="evidence_1" type="checkbox" /> Agregué el enlace de Tinkercad o Drive del circuito</label>
         </div>
