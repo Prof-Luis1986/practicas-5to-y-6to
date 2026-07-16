@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prácticas Área 1</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-shell">
+    <nav class="topbar" aria-label="Navegación principal">
+      <a class="brand" href="#inicio">Prácticas Área 1</a>
+      <div class="nav-actions">
+        <a href="#practicas">Prácticas</a>
+        <a href="#panel-profesor" id="teacher-link" hidden>Profesor</a>
+        <button class="secondary-button" type="button" id="login-button">Entrar con Google</button>
+        <button class="ghost-button" type="button" id="logout-button" hidden>Salir</button>
+      </div>
+    </nav>
+
+    <section class="hero" id="inicio">
+      <div class="hero-art" role="img" aria-label="Flujo visual de algoritmos"></div>
+      <div class="hero-content">
+        <div class="hero-copy">
+          <p class="eyebrow">Informática aplicada a la ciencia y a la industria</p>
+          <h1>Practicario digital Área 1</h1>
+          <p>Curso organizado por unidades con guías de trabajo, lectura en voz alta, recursos de Classroom, evidencias y envío a Firebase con cuenta de Gmail.</p>
+        </div>
+        <aside class="login-card" aria-label="Inicio de sesión">
+          <p class="eyebrow">Acceso del alumno</p>
+          <h2>Inicia sesión para entregar prácticas</h2>
+          <p id="hero-session-detail">Usa tu cuenta de Gmail. Tus entregas quedarán asociadas a tu correo.</p>
+          <button class="primary-button wide" type="button" id="hero-login-button">Entrar con Google</button>
+          <a href="#practicas" class="secondary-link">Ver unidades del curso</a>
+        </aside>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="status-strip" aria-live="polite">
+      <div>
+        <strong id="session-title">Sesión no iniciada</strong>
+        <span id="session-detail">Inicia sesión con Gmail para enviar prácticas a Firebase.</span>
+      </div>
+      <span class="status-pill" id="connection-status">Listo</span>
+    </section>
+
+    <section class="course-home" aria-label="Resumen del curso">
+      <div class="section-heading">
+        <p class="eyebrow">Ruta anual</p>
+        <h2>Unidades del curso</h2>
+        <p>El contenido del Classroom se integró como guías internas de trabajo. Cada unidad concentra prácticas, evidencias y criterios de entrega.</p>
+      </div>
+      <div class="course-stats">
+        <div>
+          <span>Unidades</span>
+          <strong>5</strong>
+        </div>
+        <div>
+          <span>Prácticas cargadas</span>
+          <strong id="activity-count">0</strong>
+        </div>
+        <div>
+          <span>Guías integradas</span>
+          <strong id="guide-count">0</strong>
+        </div>
+      </div>
+      <div class="unit-overview" id="unit-overview"></div>
+    </section>
+
+    <section class="workspace" id="practicas">
+      <aside class="activity-list" aria-label="Lista de prácticas">
+        <div class="section-heading compact">
+          <p class="eyebrow">Programa</p>
+          <h2>Unidades y prácticas</h2>
+        </div>
+        <div class="unit-tabs" id="unit-tabs" aria-label="Ir a unidad"></div>
+        <div id="activity-list"></div>
+      </aside>
+
+      <section class="activity-detail" aria-label="Detalle de práctica">
+        <div class="empty-state" id="empty-state">
+          <p class="eyebrow">Selecciona una práctica</p>
+          <h2>El contenido aparecerá aquí</h2>
+          <p>El alumno puede revisar instrucciones, completar campos y enviar su trabajo. Los borradores se guardan localmente mientras termina.</p>
+        </div>
+
+        <form id="practice-form" hidden>
+          <div class="section-heading">
+            <p class="eyebrow" id="practice-kicker">Actividad</p>
+            <h2 id="practice-title"></h2>
+            <p id="practice-description"></p>
+          </div>
+
+          <div class="meta-grid">
+            <div>
+              <span>Unidad</span>
+              <strong id="practice-unit"></strong>
+            </div>
+            <div>
+              <span>Duración sugerida</span>
+              <strong id="practice-duration"></strong>
+            </div>
+            <div>
+              <span>Producto esperado</span>
+              <strong id="practice-output"></strong>
+            </div>
+            <div>
+              <span>Estado</span>
+              <strong id="practice-status">Borrador</strong>
+            </div>
+          </div>
+
+          <section class="learning-tools" aria-label="Herramientas de apoyo">
+            <div>
+              <h3>Apoyo de lectura</h3>
+              <p>Usa la lectura en voz alta para escuchar el objetivo, instrucciones y preguntas de la práctica.</p>
+            </div>
+            <div class="tool-actions">
+              <button class="secondary-button" type="button" id="read-overview">Leer guía</button>
+              <button class="secondary-button" type="button" id="read-integrated-guide">Leer guía completa</button>
+              <button class="secondary-button" type="button" id="read-questions">Leer preguntas</button>
+              <button class="ghost-button danger" type="button" id="stop-reading">Detener voz</button>
+            </div>
+          </section>
+
+          <article class="instruction-panel intro-panel">
+            <h3>Antes de iniciar</h3>
+            <p id="practice-intro"></p>
+          </article>
+
+          <article class="instruction-panel">
+            <h3>Recursos de apoyo</h3>
+            <div class="resource-list" id="resource-list"></div>
+          </article>
+
+          <article class="instruction-panel guide-panel" id="integrated-guide-panel">
+            <button class="guide-toggle" type="button" id="guide-toggle" aria-expanded="true">
+              Ocultar guía de trabajo integrada
+            </button>
+            <div class="guide-content" id="integrated-guide"></div>
+          </article>
+
+          <article class="instruction-panel">
+            <h3>Instrucciones paso a paso</h3>
+            <ol id="practice-steps"></ol>
+          </article>
+
+          <article class="instruction-panel">
+            <h3>Entregables</h3>
+            <ul id="deliverable-list"></ul>
+          </article>
+
+          <article class="instruction-panel">
+            <h3>Criterios de evaluación</h3>
+            <ul id="rubric-list"></ul>
+          </article>
+
+          <div id="question-fields"></div>
+
+          <article class="instruction-panel">
+            <h3>Evidencia opcional</h3>
+            <label for="evidence-url">Liga a archivo, captura, documento o video</label>
+            <input id="evidence-url" name="evidenceUrl" type="url" placeholder="https://...">
+          </article>
+
+          <section class="auto-grade-panel" aria-live="polite">
+            <div>
+              <p class="eyebrow">Autocalificación</p>
+              <h3 id="grade-title">Puntaje preliminar: sin calcular</h3>
+              <p id="grade-detail">El sitio revisa respuestas, evidencia, extensión y cumplimiento mínimo antes de enviar.</p>
+            </div>
+            <button class="secondary-button" type="button" id="calculate-grade">Calcular antes de enviar</button>
+            <ul id="grade-breakdown"></ul>
+          </section>
+
+          <div class="form-actions">
+            <button class="primary-button" type="submit">Enviar práctica</button>
+            <button class="secondary-button" type="button" id="save-draft">Guardar borrador</button>
+            <button class="ghost-button danger" type="button" id="clear-draft">Limpiar respuestas</button>
+          </div>
+          <p class="form-note" id="form-message">Los envíos quedan asociados al correo de Gmail con el que iniciaste sesión.</p>
+        </form>
+      </section>
+    </section>
+
+    <section class="teacher-panel" id="panel-profesor" hidden>
+      <div class="section-heading">
+        <p class="eyebrow">Profesor</p>
+        <h2>Entregas recibidas</h2>
+        <p>Esta vista aparece solo para <strong>practicas.simon1@gmail.com</strong> desde el cliente. Refuerza el acceso con las reglas de Firestore incluidas.</p>
+      </div>
+
+      <div class="toolbar">
+        <select id="submission-filter" aria-label="Filtrar entregas por actividad">
+          <option value="all">Todas las prácticas</option>
+        </select>
+        <button class="secondary-button" type="button" id="refresh-submissions">Actualizar</button>
+      </div>
+
+      <div class="submission-list" id="submission-list"></div>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
