@@ -10,7 +10,7 @@
   <header class="hero">
     <p class="tag">Informática - Arduino</p>
     <h1>Prácticas organizadas por fases</h1>
-    <p class="subtitle">Usa el menú izquierdo para cambiar entre Fase I, Fase II, Fase III, Fase IV, Test y Proyectos especiales para abrir cada práctica en su página independiente.</p>
+    <p class="subtitle">Usa el menú izquierdo para cambiar entre Fase I, Fase II, Fase III, Fase IV, Fase V, Test y Proyectos especiales para abrir cada práctica en su página independiente.</p>
   </header>
 
   <div class="page-layout">
@@ -21,6 +21,7 @@
         <a href="#fase-ii" class="phase-link" data-phase="fase-ii">Fase II</a>
         <a href="#fase-iii" class="phase-link" data-phase="fase-iii">Fase III</a>
         <a href="#fase-iv" class="phase-link" data-phase="fase-iv">Fase IV</a>
+        <a href="#fase-v" class="phase-link" data-phase="fase-v">Fase V</a>
         <a href="#test" class="phase-link" data-phase="test">Test</a>
         <a href="#proyectos-especiales" class="phase-link" data-phase="proyectos-especiales">Proyectos especiales (Escape Room)</a>
       </nav>
@@ -185,25 +186,32 @@
             </article>
           </a>
 
-          <a class="practice-tile" href="practica-17-robot-sumo-4wd.html">
+          <a class="practice-tile" href="practica-17-ingeniero-sin-plano.html">
             <article class="card">
               <span class="phase-label">Fase IV</span>
               <h2>Práctica 17</h2>
-              <p>Robot sumo autónomo 4WD de 1 kg con Arduino, L298N, TCRT5000 y ultrasónico, con calibración, búsqueda y ataque.</p>
+              <p>Reto avanzado para deducir conexiones, interpretar código incompleto y diseñar un sistema funcional sin diagrama.</p>
             </article>
           </a>
 
-          <a class="practice-tile" href="practica-18-ingeniero-sin-plano.html">
+        </div>
+      </section>
+
+      <section class="card phase-panel" id="fase-v" data-phase="fase-v" hidden>
+        <h2>Fase V</h2>
+        <p>Diseño, construcción y programación de robots móviles, desde el análisis de componentes hasta la navegación autónoma.</p>
+        <div class="home-grid">
+          <a class="practice-tile" href="practica-18-robot-sumo-4wd.html">
             <article class="card">
-              <span class="phase-label">Fase IV</span>
+              <span class="phase-label">Fase V</span>
               <h2>Práctica 18</h2>
-              <p>Reto avanzado para deducir conexiones, interpretar código incompleto y diseñar un sistema funcional sin diagrama.</p>
+              <p>Robot sumo autónomo 4WD de 1 kg con Arduino, L298N, TCRT5000 y ultrasónico, con calibración, búsqueda y ataque.</p>
             </article>
           </a>
 
           <a class="practice-tile" href="practica-19-conociendo-disenando-robot-soccer.html">
             <article class="card">
-              <span class="phase-label">Fase IV</span>
+              <span class="phase-label">Fase V</span>
               <h2>Práctica 19</h2>
               <p>Investigación, planeación, diseño digital y estrategia inicial para crear una propuesta propia de robot soccer.</p>
             </article>
@@ -211,7 +219,7 @@
 
           <a class="practice-tile" href="practica-20-componentes-robot-soccer.html">
             <article class="card">
-              <span class="phase-label">Fase IV</span>
+              <span class="phase-label">Fase V</span>
               <h2>Práctica 20: Robot Soccer – Conociendo los componentes</h2>
               <p>Exploración del Arduino UNO, puente H, Shield V5 y motorreductores antes de construir y programar el robot.</p>
             </article>
@@ -219,7 +227,7 @@
 
           <a class="practice-tile" href="practica-20-1-marcador-inteligente-robot-soccer.html">
             <article class="card">
-              <span class="phase-label">Fase IV</span>
+              <span class="phase-label">Fase V</span>
               <h2>Práctica 20.1: Marcador Inteligente para Robot Soccer</h2>
               <p>Construcción de un marcador automático con Arduino, LCD I2C, sensor ultrasónico y buzzer para detectar goles.</p>
             </article>
@@ -227,9 +235,17 @@
 
           <a class="practice-tile" href="practica-21-estructura-robot-soccer.html">
             <article class="card">
-              <span class="phase-label">Fase IV</span>
+              <span class="phase-label">Fase V</span>
               <h2>Práctica 21: Descubriendo cómo está construido nuestro Robot Soccer</h2>
               <p>Misión de ingeniería inversa para observar el robot terminado, ubicar sus componentes y comprender su estructura física.</p>
+            </article>
+          </a>
+
+          <a class="practice-tile" href="practica-22-robot-esquiva-obstaculos.html">
+            <article class="card">
+              <span class="phase-label">Fase V</span>
+              <h2>Práctica 22: Robot autónomo esquiva obstáculos</h2>
+              <p>Construcción del chasis, sensor ultrasónico sobre servomotor y programación en PictoBlox o C++ para detectar obstáculos y elegir una ruta.</p>
             </article>
           </a>
 
@@ -327,7 +343,7 @@
   </footer>
 
   <script>
-    const validPhases = ["fase-i", "fase-ii", "fase-iii", "fase-iv", "test", "proyectos-especiales"];
+    const validPhases = ["fase-i", "fase-ii", "fase-iii", "fase-iv", "fase-v", "test", "proyectos-especiales"];
     const phaseLinks = document.querySelectorAll(".phase-link");
     const phasePanels = document.querySelectorAll(".phase-panel");
 

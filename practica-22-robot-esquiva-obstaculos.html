@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 22 - Robot autónomo esquiva obstáculos</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="locked-content robot-obstacles-page" data-worksheet-key="practica-22-robot-esquiva-obstaculos" data-disable-project-links="true" data-allow-page-copy="true" data-allow-code-copy="true">
+  <header class="hero">
+    <p class="tag">Fase V · Robótica móvil</p>
+    <h1>Práctica 22: Robot autónomo esquiva obstáculos</h1>
+    <p class="subtitle">Construye un robot que mida distancias, explore ambos lados y realice el giro necesario para continuar por la ruta más libre.</p>
+  </header>
+
+  <div class="topbar">
+    <a class="topbar__link" href="index.html#fase-v">Volver al índice</a>
+  </div>
+
+  <main class="page-shell">
+    <div class="container">
+      <section class="card">
+        <h2>Guía de trabajo</h2>
+        <p><strong>Duración sugerida:</strong> 3 a 4 sesiones</p>
+        <p><strong>Producto esperado:</strong> robot autónomo funcional, programa, pruebas, video y documentación del proceso.</p>
+        <div class="worksheet-meta">
+          <div class="worksheet-field">
+            <label for="student-name">Nombre</label>
+            <input class="worksheet-input" id="student-name" name="student_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="group-name">Grupo</label>
+            <input class="worksheet-input" id="group-name" name="group_name" type="text" />
+          </div>
+          <div class="worksheet-field">
+            <label for="delivery-date">Fecha</label>
+            <input class="worksheet-input" id="delivery-date" name="delivery_date" type="date" />
+          </div>
+        </div>
+        <div class="button-row">
+          <button class="action-button" data-worksheet-action="print" type="button">Guardar mis respuestas en PDF</button>
+          <button class="action-button action-button--secondary" data-worksheet-action="reset" type="button">Borrar respuestas</button>
+        </div>
+      </section>
+
+      <section class="card obstacle-highlight">
+        <h2>El chasis no tiene que imprimirse en 3D</h2>
+        <p>La impresión 3D es solamente una opción. Puedes construir la base con una <strong>tabla delgada, MDF, acrílico reutilizado o cartón rígido</strong>. Lo importante es que no se doble, que permita fijar los componentes y que las ruedas giren sin rozar.</p>
+        <ul>
+          <li>Sujeta firmemente motores, batería, Arduino y controlador.</li>
+          <li>Evita puntas, tornillos o cables expuestos que puedan causar un corto.</li>
+          <li>Deja espacio para que el servomotor gire sin golpear la estructura.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>1. Armado real del chasis y el robot</h2>
+        <p>Observa las fotografías y compara cada etapa con tu propio montaje. Tu chasis puede tener otra forma o material, pero debe cumplir la misma función.</p>
+        <div class="robot-photo-grid">
+          <figure><img src="img/practica-22/chasis-frontal.jpg" alt="Vista frontal del chasis con motores y rueda loca" /><figcaption>1. Revisa la alineación de motores, ruedas y rueda loca.</figcaption></figure>
+          <figure><img src="img/practica-22/motores-rueda-loca.jpg" alt="Vista inferior del chasis con motores y rueda loca" /><figcaption>2. Comprueba que la base sea estable y que las ruedas giren libremente.</figcaption></figure>
+          <figure><img src="img/practica-22/puente-h-cableado.jpg" alt="Puente H y cableado montados sobre el chasis" /><figcaption>3. Fija el puente H y ordena los cables de alimentación y motores.</figcaption></figure>
+          <figure><img src="img/practica-22/servo-ultrasonico.jpg" alt="Sensor ultrasónico instalado sobre un servomotor" /><figcaption>4. Centra el servo a 90° antes de montar el sensor ultrasónico.</figcaption></figure>
+          <figure><img src="img/practica-22/arduino-shield.jpg" alt="Arduino con shield sobre la placa superior del robot" /><figcaption>5. Coloca Arduino o el shield sin forzar conectores ni cables.</figcaption></figure>
+          <figure><img src="img/practica-22/base-superior.jpg" alt="Base superior perforada del robot" /><figcaption>6. La placa superior puede sustituirse por tabla o cartón rígido.</figcaption></figure>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>2. Materiales y conexiones</h2>
+        <ul>
+          <li>Arduino Uno o compatible.</li>
+          <li>Dos motores DC con ruedas y una rueda loca.</li>
+          <li>Puente H o shield controlador de motores.</li>
+          <li>Sensor ultrasónico HC-SR04.</li>
+          <li>Servomotor, batería, cables y material para el chasis.</li>
+        </ul>
+        <table>
+          <thead><tr><th>Elemento</th><th>Conexiones del proyecto</th></tr></thead>
+          <tbody>
+            <tr><td>Motor 1</td><td>Dirección 1: 7 · Dirección 2: 8 · PWM: 5</td></tr>
+            <tr><td>Motor 2</td><td>Dirección 1: 9 · Dirección 2: 10 · PWM: 6</td></tr>
+            <tr><td>Servomotor</td><td>Señal: pin 3</td></tr>
+            <tr><td>HC-SR04</td><td>TRIG: 12 · ECHO: 11</td></tr>
+          </tbody>
+        </table>
+        <p class="worksheet-note"><strong>Seguridad:</strong> no alimentes los motores desde el pin de 5 V de Arduino. Usa la entrada de potencia del controlador y verifica la tierra común (GND) de acuerdo con tu módulo.</p>
+      </section>
+
+      <section class="card">
+        <h2>3. Opción A: programación con bloques en PictoBlox</h2>
+        <p>Selecciona Arduino Uno y el modo <strong>Upload</strong>. El programa mide al frente; cuando encuentra un obstáculo detiene los motores, observa a izquierda y derecha y ejecuta el giro programado hacia la ruta disponible.</p>
+        <figure class="pictoblox-figure">
+          <img src="img/practica-22/pictoblox-bloques.png" alt="Programa por bloques del robot esquiva obstáculos en PictoBlox" />
+          <figcaption>Programa completo por bloques del robot esquiva obstáculos.</figcaption>
+        </figure>
+        <ol>
+          <li>Configura los dos motores y centra el servo en 90°.</li>
+          <li>Mide la distancia con TRIG 12 y ECHO 11.</li>
+          <li>Si hay más de 25 cm libres, avanza al 50%.</li>
+          <li>Si aparece un obstáculo, detente y mide a 150° y 30°.</li>
+          <li>Realiza el giro indicado por la comparación de las mediciones.</li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>4. Opción B: código C++ generado en PictoBlox</h2>
+        <p>Puedes programar mediante bloques o trabajar con el código generado. Verifica el sentido físico de los motores durante las primeras pruebas.</p>
+        <pre><code>// This C++ code is generated by PictoBlox
+#include &lt;motor.h&gt;
+#include &lt;Servo.h&gt;
+
+Motor Motor1(7, 8, 5);
+Motor Motor2(9, 10, 6);
+Servo Servo3;
+
+float getDistance(int trig, int echo) {
+  pinMode(trig, OUTPUT);
+  digitalWrite(trig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig, LOW);
+  pinMode(echo, INPUT);
+  return pulseIn(echo, HIGH) / 58.0;
+}
+
+float Distancia;
+float DistanciaIzquierda;
+float DistanciaDerecha;
+
+void setup() {
+  Servo3.attach(3);
+  Servo3.write(90);
+}
+
+void loop() {
+  Distancia = getDistance(12, 11);
+
+  if (Distancia &gt; 25) {
+    Motor1.moveMotor(2.55 * 50);
+    Motor2.moveMotor(2.55 * 50);
+  } else {
+    Motor1.freeMotor();
+    Motor2.freeMotor();
+
+    Servo3.write(150);
+    delay(1000);
+    DistanciaIzquierda = getDistance(12, 11);
+
+    Servo3.write(30);
+    delay(1000);
+    DistanciaDerecha = getDistance(12, 11);
+
+    Servo3.write(90);
+    delay(1000);
+
+    if (DistanciaIzquierda &gt; DistanciaDerecha) {
+      Motor1.moveMotor(-(2.55 * 50));
+      Motor2.moveMotor(2.55 * 50);
+    } else {
+      Motor1.moveMotor(2.55 * 50);
+      Motor2.moveMotor(-(2.55 * 50));
+    }
+
+    delay(650);
+    Motor1.freeMotor();
+    Motor2.freeMotor();
+  }
+}</code></pre>
+        <p class="worksheet-note">El tiempo de giro de 650 ms es un punto de partida. Debe calibrarse según la batería, el peso, las ruedas y la superficie. La biblioteca <code>motor.h</code> debe estar disponible en el entorno usado por PictoBlox.</p>
+      </section>
+
+      <section class="card">
+        <h2>5. Pruebas obligatorias</h2>
+        <p>Realiza las ocho situaciones y registra distancia, decisión esperada, decisión observada, error y corrección.</p>
+        <ol>
+          <li>Camino libre.</li><li>Obstáculo frontal.</li><li>Salida solamente por la derecha.</li><li>Salida solamente por la izquierda.</li>
+          <li>Callejón sin salida.</li><li>Obstáculo angosto.</li><li>Superficie con lecturas inestables.</li><li>Batería con carga reducida.</li>
+        </ol>
+        <div class="worksheet-field">
+          <label for="test-log">Bitácora de pruebas, errores y correcciones</label>
+          <textarea class="worksheet-textarea worksheet-textarea--tall" id="test-log" name="test_log" placeholder="Prueba 1: distancia..., decisión..., resultado..., corrección..."></textarea>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>6. Preguntas de análisis</h2>
+        <div class="worksheet-field"><label for="q1">1. ¿Cómo transforma el robot una distancia en una decisión de movimiento?</label><textarea class="worksheet-textarea" id="q1" name="q1"></textarea></div>
+        <div class="worksheet-field"><label for="q2">2. ¿Qué función cumplen el sensor ultrasónico y el servomotor cuando el camino está bloqueado?</label><textarea class="worksheet-textarea" id="q2" name="q2"></textarea></div>
+        <div class="worksheet-field"><label for="q3">3. ¿Qué distancia mínima y qué tiempo de giro funcionaron mejor? Sustenta con pruebas.</label><textarea class="worksheet-textarea" id="q3" name="q3"></textarea></div>
+        <div class="worksheet-field"><label for="q4">4. Describe un error, su causa, la prueba de diagnóstico y la corrección aplicada.</label><textarea class="worksheet-textarea" id="q4" name="q4"></textarea></div>
+        <div class="worksheet-field"><label for="q5">5. ¿Cómo mejorarías la navegación del robot?</label><textarea class="worksheet-textarea" id="q5" name="q5"></textarea></div>
+      </section>
+
+      <section class="card">
+        <h2>7. Evidencias y entrega</h2>
+        <ul>
+          <li>Inventario y diagrama de conexiones adaptado al equipo real.</li>
+          <li>Fotos del armado, incluido el material usado para el chasis.</li>
+          <li>Captura de bloques o código como texto copiable.</li>
+          <li>Tabla de ocho pruebas con correcciones.</li>
+          <li>Video de 60 a 90 segundos con el robot funcionando.</li>
+          <li>Página individual de Google Sites con proceso y reflexión.</li>
+        </ul>
+        <div class="worksheet-field"><label for="evidence-link">Liga pública de la evidencia</label><input class="worksheet-input" id="evidence-link" name="evidence_link" type="url" placeholder="https://sites.google.com/..." /></div>
+        <div class="worksheet-field"><label for="conclusion">Conclusión personal</label><textarea class="worksheet-textarea" id="conclusion" name="conclusion"></textarea></div>
+      </section>
+
+      <section class="card print-only"><h2>Firma de revisión</h2><p>Profesor: ____________________________________</p></section>
+    </div>
+  </main>
+
+  <div class="image-lightbox" id="image-lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="image-lightbox__dialog">
+      <button type="button" class="image-lightbox__close" id="image-lightbox-close" aria-label="Cerrar imagen ampliada">&times;</button>
+      <figure class="image-lightbox__figure">
+        <img class="image-lightbox__image" id="image-lightbox-image" alt="" />
+        <figcaption class="image-lightbox__caption" id="image-lightbox-caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <footer class="site-footer">Sitio web desarrollado por el profesor Luis Alfonso Martinez Alfaro - Tecnologias y programacion</footer>
+  <script src="scripts.js?v=20260625b"></script>
+</body>
+</html>
